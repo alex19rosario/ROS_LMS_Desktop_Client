@@ -1,8 +1,11 @@
 package com.ros.lmsdesktopclient.views;
 
+import com.ros.lmsdesktopclient.util.Roles;
+import com.ros.lmsdesktopclient.util.TokenHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 
@@ -12,6 +15,8 @@ import java.util.ResourceBundle;
 public class MainMenuController implements Initializable {
 
     @FXML private MenuButton menuBtnAccount;
+    @FXML private Button btnManageAccounts;
+    @FXML private Button btnAddStaff;
 
     @FXML
     private void addBook(ActionEvent actionEvent) {
@@ -43,6 +48,13 @@ public class MainMenuController implements Initializable {
         MenuItem updateAccountItem = new MenuItem("Update Account Information");
         MenuItem logoutItem = new MenuItem("Log Out");
         menuBtnAccount.getItems().addAll(updateAccountItem, logoutItem);
+
+        System.out.println(TokenHandler.getInstance().getAuthorities());
+        //Render GUI according to role
+        if(!TokenHandler.getInstance().getAuthorities().contains(Roles.ADMIN.str())){
+            btnManageAccounts.setVisible(false);
+            btnAddStaff.setVisible(false);
+        }
 
         updateAccountItem.setOnAction(event -> {
             System.out.println("Updating account...");

@@ -1,0 +1,17 @@
+package com.ros.lmsdesktopclient.util;
+
+public enum Roles {
+    ADMIN("ROLE_ADMIN"),
+    STAFF("ROLE_STAFF"),
+    MEMBER("ROLE_MEMBER");
+
+    private String str;
+
+    Roles(String str){
+        this.str = str;
+    }
+
+    public String str(){
+        return this.str;
+    }
+}
