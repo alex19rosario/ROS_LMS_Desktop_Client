@@ -1,11 +1,11 @@
 module com.example.lmsdesktopclient {
     requires javafx.fxml;
-    requires java.prefs;
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires com.auth0.jwt;
-    requires java.xml;
     requires javafx.controls;
+    requires java.desktop;
+    requires java.prefs;
 
 
     opens com.ros.lmsdesktopclient to javafx.fxml;

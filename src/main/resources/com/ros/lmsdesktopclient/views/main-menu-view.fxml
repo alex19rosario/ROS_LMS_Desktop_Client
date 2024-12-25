@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+
+<BorderPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../styles/mainMenuStylesheet.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ros.lmsdesktopclient.views.MainMenuController">
+    <center>
+        <FlowPane fx:id="bodyPane" prefHeight="584.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="btnAddBook" mnemonicParsing="false" onAction="#addBook" text="Add Book" />
+                <Button fx:id="btnAddMember" mnemonicParsing="false" onAction="#addMember" text="Add Member" />
+                <Button fx:id="btnIssueBook" mnemonicParsing="false" onAction="#issueBook" text="Issue Book" />
+                <Button fx:id="btnReturnBook" mnemonicParsing="false" onAction="#returnBook" text="Return Book" />
+                <Button fx:id="btnManageBooks" mnemonicParsing="false" onAction="#manageBooks" text="Manage Books" />
+                <Button fx:id="btnMonitor" mnemonicParsing="false" onAction="#monitor" text="Monitor" />
+                <Button fx:id="btnManageAccounts" mnemonicParsing="false" onAction="#manageAccounts" text="Manage Accounts" />
+                <Button fx:id="btnAddStaff" mnemonicParsing="false" onAction="#addStaff" text="Add Staff" />
+            </children>
+        </FlowPane>
+    </center>
+    <top>
+        <BorderPane fx:id="headerPane" prefHeight="100.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <left>
+                <Label fx:id="lblMenu" text="Menu" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets left="50.0" />
+                    </BorderPane.margin>
+                </Label>
+            </left>
+            <right>
+                <MenuButton fx:id="menuBtnAccount" maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="81.0" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets right="50.0" />
+                    </BorderPane.margin>
+                </MenuButton>
+            </right>
+        </BorderPane>
+    </top>
+</BorderPane>

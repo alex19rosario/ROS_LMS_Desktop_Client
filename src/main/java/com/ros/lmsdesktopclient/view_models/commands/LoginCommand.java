@@ -3,6 +3,8 @@ package com.ros.lmsdesktopclient.view_models.commands;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.LoginService;
 import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
 import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
 import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
@@ -49,7 +51,9 @@ public class LoginCommand extends Command {
     }
 
     private void onSuccess(){
-        System.out.println("Success");
+        double sceneWidth = this.viewHandler.getSceneWidth();
+        double sceneHeight = this.viewHandler.getSceneHeight();
+        ViewHandler.setScene(Views.MAIN_MENU.getView(), sceneWidth, sceneHeight);
     }
 
     private void onFailure(){
