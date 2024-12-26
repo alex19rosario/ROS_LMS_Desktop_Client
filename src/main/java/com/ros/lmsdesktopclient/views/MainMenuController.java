@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.util.Roles;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.view_models.MainMenuViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,6 +20,7 @@ public class MainMenuController implements Initializable {
     @FXML private MenuButton menuBtnAccount;
     @FXML private Button btnManageAccounts;
     @FXML private Button btnAddStaff;
+    private MainMenuViewModel mainMenuViewModel;
 
     @FXML
     private void addBook(ActionEvent actionEvent) {
@@ -47,12 +49,12 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        mainMenuViewModel = new MainMenuViewModel();
         MenuItem updateAccountItem = new MenuItem("Update Account Information");
         MenuItem logoutItem = new MenuItem("Log Out");
         menuBtnAccount.getItems().addAll(updateAccountItem, logoutItem);
         menuBtnAccount.setText(TokenHandler.getInstance().getUsername());
 
-        System.out.println(TokenHandler.getInstance().getAuthorities());
         //Render GUI according to role
         if(!TokenHandler.getInstance().getAuthorities().contains(Roles.ADMIN.str())){
             btnManageAccounts.setVisible(false);
@@ -64,10 +66,7 @@ public class MainMenuController implements Initializable {
         });
 
         logoutItem.setOnAction(event -> {
-            TokenHandler.getInstance().clear();
-            double width = ViewHandler.getInstance().getSceneWidth();
-            double height = ViewHandler.getInstance().getSceneHeight();
-            ViewHandler.switchTo(Views.LOGIN.getView(), width, height);
+            mainMenuViewModel.executeLogOutCommand();
         });
     }
 }

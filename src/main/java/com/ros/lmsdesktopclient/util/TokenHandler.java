@@ -132,7 +132,7 @@ public class TokenHandler {
     }
 
     // Clear all saved data
-    public void clear() {
+    public void removeAll() {
         preferences.remove(TOKEN_KEY);
         preferences.remove(AUTHORITIES_KEY);
     }
