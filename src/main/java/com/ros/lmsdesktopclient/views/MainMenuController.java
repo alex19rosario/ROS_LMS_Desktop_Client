@@ -64,9 +64,6 @@ public class MainMenuController implements Initializable {
         });
 
         logoutItem.setOnAction(event -> {
-            System.out.println("Logging out...");
-            //Delete token
-            //move to log in screen
             TokenHandler.getInstance().clear();
             double width = ViewHandler.getInstance().getSceneWidth();
             double height = ViewHandler.getInstance().getSceneHeight();
