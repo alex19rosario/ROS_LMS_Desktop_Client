@@ -22,6 +22,7 @@ public class TokenHandler {
 
     private static final String TOKEN_KEY = "token";
     private static final String AUTHORITIES_KEY = "authorities";
+    private static final String USERNAME_KEY = "sub";
     private final Preferences preferences;
     private final RSAPublicKey publicKey;
 
@@ -87,6 +88,23 @@ public class TokenHandler {
         }
     }
 
+    private String extractUsernameFromToken(String token){
+        try {
+            // Create the JWT verifier using the public key
+            Algorithm algorithm = Algorithm.RSA256(publicKey, null);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+
+            // Decode and verify the token
+            DecodedJWT decodedJWT = verifier.verify(token);
+
+            // Extract the "sub" claim
+            return decodedJWT.getClaim(USERNAME_KEY).asString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to decode token and extract username", e);
+        }
+    }
+
     private Set<String> getAuthorities(String strAuthorities){
         return Arrays.stream(strAuthorities.split("\\s+")) // Split by whitespace (one or more spaces)
                 .collect(Collectors.toSet());
@@ -96,6 +114,7 @@ public class TokenHandler {
     public void saveToken(String token) {
         preferences.put(TOKEN_KEY, token);
         preferences.put(AUTHORITIES_KEY, extractAuthoritiesFromToken(token));
+        preferences.put(USERNAME_KEY, extractUsernameFromToken(token));
     }
 
     // Retrieve the token from Preferences
@@ -108,8 +127,12 @@ public class TokenHandler {
         return getAuthorities(preferences.get(AUTHORITIES_KEY, null));
     }
 
+    public String getUsername(){
+        return preferences.get(USERNAME_KEY, null);
+    }
+
     // Clear all saved data
-    public void clear() {
+    public void removeAll() {
         preferences.remove(TOKEN_KEY);
         preferences.remove(AUTHORITIES_KEY);
     }

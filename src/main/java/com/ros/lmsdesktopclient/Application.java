@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -9,11 +9,10 @@ import java.io.IOException;
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("views/login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
         stage.setTitle("Ros Library Management System");
-        stage.setScene(scene);
-        stage.show();
+        ViewHandler.getInstance(stage);
+        ViewHandler.switchTo(Views.LOGIN.getView());
+        ViewHandler.getInstance().start();
     }
 
     public static void main(String[] args) {

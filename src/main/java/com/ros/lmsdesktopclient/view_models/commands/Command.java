@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.view_models.commands;
 
 import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,12 +19,14 @@ public abstract class Command<T> {
     private ExecutorService pool;
     private Task<T> commandTask;
     private Alerts alert;
+    protected final ViewHandler viewHandler;
 
 
     public Command() {
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
         this.pool = Executors.newVirtualThreadPerTaskExecutor();
+        this.viewHandler = ViewHandler.getInstance();
     }
 
     protected abstract Task<T> createCommandTask();
