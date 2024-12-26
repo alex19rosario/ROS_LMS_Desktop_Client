@@ -10,9 +10,9 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("Ros Library Management System");
-        ViewHandler viewHandler = ViewHandler.getInstance(stage);
-        viewHandler.setScene(Views.LOGIN.getView());
-        viewHandler.start();
+        ViewHandler.getInstance(stage);
+        ViewHandler.switchTo(Views.LOGIN.getView());
+        ViewHandler.getInstance().start();
     }
 
     public static void main(String[] args) {

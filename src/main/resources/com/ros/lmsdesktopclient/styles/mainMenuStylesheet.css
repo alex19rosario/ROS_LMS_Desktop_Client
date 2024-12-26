@@ -39,5 +39,10 @@ FlowPane {
     -fx-background-color: #005fa3; /* Darker blue on hover */
 }
 
+#menuBtnAccount{
+    -fx-font-size: 16px; /* Larger font size for the title */
+    -fx-text-fill: #0077cc; /* Blue text color */
+}
+
 
 

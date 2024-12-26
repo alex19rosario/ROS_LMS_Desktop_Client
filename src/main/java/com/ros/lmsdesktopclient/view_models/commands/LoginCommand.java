@@ -53,7 +53,7 @@ public class LoginCommand extends Command {
     private void onSuccess(){
         double sceneWidth = this.viewHandler.getSceneWidth();
         double sceneHeight = this.viewHandler.getSceneHeight();
-        ViewHandler.setScene(Views.MAIN_MENU.getView(), sceneWidth, sceneHeight);
+        ViewHandler.switchTo(Views.MAIN_MENU.getView(), sceneWidth, sceneHeight);
     }
 
     private void onFailure(){

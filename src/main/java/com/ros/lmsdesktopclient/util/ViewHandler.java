@@ -43,7 +43,7 @@ public class ViewHandler {
         return scene.getHeight();
     }
 
-    public static void setScene(String view)  {
+    public static void switchTo(String view)  {
         fxmlLoader = new FXMLLoader(Application.class.getResource(view));
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 700);
@@ -53,7 +53,7 @@ public class ViewHandler {
         }
     }
 
-    public static void setScene(String view, double width, double height)  {
+    public static void switchTo(String view, double width, double height)  {
         fxmlLoader = new FXMLLoader(Application.class.getResource(view));
         try {
             scene = new Scene(fxmlLoader.load(), width, height);

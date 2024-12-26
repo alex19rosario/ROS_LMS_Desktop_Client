@@ -2,6 +2,8 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.util.Roles;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.Views;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,6 +50,7 @@ public class MainMenuController implements Initializable {
         MenuItem updateAccountItem = new MenuItem("Update Account Information");
         MenuItem logoutItem = new MenuItem("Log Out");
         menuBtnAccount.getItems().addAll(updateAccountItem, logoutItem);
+        menuBtnAccount.setText(TokenHandler.getInstance().getUsername());
 
         System.out.println(TokenHandler.getInstance().getAuthorities());
         //Render GUI according to role
@@ -62,6 +65,12 @@ public class MainMenuController implements Initializable {
 
         logoutItem.setOnAction(event -> {
             System.out.println("Logging out...");
+            //Delete token
+            //move to log in screen
+            TokenHandler.getInstance().clear();
+            double width = ViewHandler.getInstance().getSceneWidth();
+            double height = ViewHandler.getInstance().getSceneHeight();
+            ViewHandler.switchTo(Views.LOGIN.getView(), width, height);
         });
     }
 }
