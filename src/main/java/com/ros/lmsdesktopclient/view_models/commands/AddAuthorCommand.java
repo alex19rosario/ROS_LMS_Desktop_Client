@@ -10,7 +10,7 @@ import java.util.List;
 public class AddAuthorCommand extends Command {
 
     private final ObservableList<AuthorInputModel> authorInputs;
-    private List<AuthorModel> authors;
+    private final List<AuthorModel> authors;
 
     public AddAuthorCommand(ObservableList<AuthorInputModel> authorInputs, List<AuthorModel> authors){
         this.authorInputs = authorInputs;
@@ -25,6 +25,7 @@ public class AddAuthorCommand extends Command {
                 AuthorInputModel authorInputModel = new AuthorInputModel();
                 AuthorModel authorModel = new AuthorModel();
                 authorInputModel.getTfFirstName().textProperty().bindBidirectional(authorModel.firstNameProperty());
+                authorInputModel.getTfLastName().textProperty().bindBidirectional(authorModel.lastNameProperty());
                 authorInputs.addFirst(authorInputModel);
                 authors.addFirst(authorModel);
                 return null;

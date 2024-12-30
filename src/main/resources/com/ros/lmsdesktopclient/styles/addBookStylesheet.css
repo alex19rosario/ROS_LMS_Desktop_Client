@@ -18,7 +18,8 @@
 /* Label styles */
 Label {
     -fx-font-size: 16px;
-    -fx-text-fill: #333333; /* Dark gray text color */
+    -fx-text-fill: #333333;/* Dark gray text color */
+    -fx-padding: 0 20px 0 0;
 }
 
 /* TextField styles */
@@ -46,10 +47,28 @@ Button {
     -fx-background-radius: 5px; /* Rounded corners */
 }
 
+#btnAddGenre{
+    -fx-font-size: 24px;
+    -fx-background-color: #0077cc; /* Blue background color for buttons */
+    -fx-text-fill: #ffffff; /* White text color for buttons */
+    -fx-pref-width: 40; /* Set a preferred width */
+    -fx-pref-height: 40px; /* Set a preferred height */
+    -fx-background-radius: 5px; /* Rounded corners */
+}
+
+#authorPane{
+    -fx-alignment: left; /* Centers content in the center region */
+}
+
 /* TableView styles */
-TableView {
+#tableViewAuthor {
     -fx-pref-width: 605px;
     -fx-pref-height: 200px;
+}
+
+#tableViewGenre {
+    -fx-pref-width: 400px;
+    -fx-pref-height: 100px;
 }
 
 /* TableView column styles */
