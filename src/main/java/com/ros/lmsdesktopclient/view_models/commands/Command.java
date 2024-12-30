@@ -16,17 +16,15 @@ public abstract class Command<T> {
     private final BooleanProperty running;
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
-    private ExecutorService pool;
+    private final ExecutorService pool;
     private Task<T> commandTask;
     private Alerts alert;
-    protected final ViewHandler viewHandler;
 
 
     public Command() {
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
         this.pool = Executors.newVirtualThreadPerTaskExecutor();
-        this.viewHandler = ViewHandler.getInstance();
     }
 
     protected abstract Task<T> createCommandTask();

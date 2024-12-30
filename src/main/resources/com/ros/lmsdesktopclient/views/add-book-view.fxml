@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ros.lmsdesktopclient.views.AddBookController"
+            fx:id="parentPane"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0"
+            stylesheets="@../styles/addBookStylesheet.css">
+    <top>
+        <BorderPane fx:id="headerPane" prefHeight="100.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <left>
+                <Label fx:id="lblAddingBook" text="Adding a new book" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets left="50.0" />
+                    </BorderPane.margin>
+                </Label>
+            </left>
+        </BorderPane>
+    </top>
+    <center>
+        <VBox fx:id="bodyPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <children>
+                <BorderPane fx:id="paneISBN" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="1000.0">
+                    <left>
+                        <Label fx:id="lblISBN" text="ISBN" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <TextField fx:id="tfISBN" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                            <BorderPane.margin>
+                                <Insets right="600.0" />
+                            </BorderPane.margin>
+                        </TextField>
+                    </center>
+                </BorderPane>
+                <BorderPane fx:id="titlePane" prefHeight="50.0" prefWidth="1000.0">
+                    <left>
+                        <Label fx:id="lblTitle" text="Title" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <TextField fx:id="tfTitle" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                            <BorderPane.margin>
+                                <Insets right="600.0" />
+                            </BorderPane.margin>
+                        </TextField>
+                    </center>
+                </BorderPane>
+                <BorderPane fx:id="genrePane" prefHeight="50.0" prefWidth="1000.0">
+                    <left>
+                        <Label fx:id="lblGenre" text="Genre" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <ComboBox fx:id="cbGenre" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                            <BorderPane.margin>
+                                <Insets right="600.0" />
+                            </BorderPane.margin>
+                        </ComboBox>
+                    </center>
+                </BorderPane>
+                <BorderPane fx:id="authorPane" prefHeight="200.0" prefWidth="200.0">
+                    <right>
+                        <Button fx:id="btnAddAuthor" mnemonicParsing="false" onAction="#addAuthor" text="+" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets right="100.0" />
+                            </BorderPane.margin>
+                        </Button>
+                    </right>
+                    <center>
+                        <TableView fx:id="tableViewAuthor" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="598.0" BorderPane.alignment="CENTER">
+                            <columns>
+                                <TableColumn fx:id="columnFirstName" prefWidth="300.0" text="Author's First Name" />
+                                <TableColumn fx:id="columnLastName" prefWidth="300.0" text="Author's Last Name" />
+                            </columns>
+                            <BorderPane.margin>
+                                <Insets right="50.0" top="50.0" />
+                            </BorderPane.margin>
+                        </TableView>
+                    </center>
+                    <left>
+                        <Label text="Author/s" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                </BorderPane>
+                <BorderPane fx:id="footerPane" prefHeight="200.0" prefWidth="200.0">
+                    <left>
+                        <Button fx:id="btnGoBack" mnemonicParsing="false" onAction="#goBack" text="Go Back" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Button>
+                    </left>
+                    <right>
+                        <Button fx:id="btnAddBook" mnemonicParsing="false" onAction="#addBook" text="Add Book" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets right="50.0" />
+                            </BorderPane.margin>
+                        </Button>
+                    </right>
+                </BorderPane>
+            </children>
+            <BorderPane.margin>
+                <Insets top="50.0" />
+            </BorderPane.margin>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,63 @@
+#headerPane {
+    -fx-background-color: #e1dfdf; /* Light gray background */
+}
+
+#lblAddingBook {
+    -fx-font-size: 24px; /* Larger font size for the title */
+    -fx-text-fill: #0077cc; /* Blue text color */
+}
+
+/* addBookStylesheet.css */
+
+/* General styles */
+#parentPane {
+    -fx-background-color: #f5f5f5; /* Light gray background */
+    -fx-font-family: "Arial", sans-serif;
+}
+
+/* Label styles */
+Label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333; /* Dark gray text color */
+}
+
+/* TextField styles */
+TextField, ComboBox {
+    -fx-font-size: 14px;
+    -fx-pref-width: 250px; /* Set a preferred width */
+}
+
+/* Button styles */
+Button {
+    -fx-font-size: 16px;
+    -fx-background-color: #0077cc; /* Blue background color for buttons */
+    -fx-text-fill: #ffffff; /* White text color for buttons */
+    -fx-pref-width: 120px; /* Set a preferred width */
+    -fx-pref-height: 40px; /* Set a preferred height */
+    -fx-background-radius: 5px; /* Rounded corners */
+}
+
+#btnAddAuthor {
+    -fx-font-size: 24px;
+    -fx-background-color: #0077cc; /* Blue background color for buttons */
+    -fx-text-fill: #ffffff; /* White text color for buttons */
+    -fx-pref-width: 40; /* Set a preferred width */
+    -fx-pref-height: 40px; /* Set a preferred height */
+    -fx-background-radius: 5px; /* Rounded corners */
+}
+
+/* TableView styles */
+TableView {
+    -fx-pref-width: 605px;
+    -fx-pref-height: 200px;
+}
+
+/* TableView column styles */
+TableColumn {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333; /* Dark gray text color */
+}
+
+#bodyPane Button:hover {
+    -fx-background-color: #005fa3; /* Darker blue on hover */
+}
