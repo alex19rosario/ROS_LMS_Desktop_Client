@@ -36,7 +36,7 @@ public class AddBookController implements Initializable {
 
     @FXML
     private void addBook(ActionEvent actionEvent) {
-
+        addBookViewModel.testBinding();
     }
 
     @FXML

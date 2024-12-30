@@ -10,13 +10,13 @@ import javafx.concurrent.Task;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class Command<T> {
+public abstract class Command {
     private final DoubleProperty progress;
     private final BooleanProperty running;
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
     private static final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
-    private Task<T> commandTask;
+    private Task<Void> commandTask;
     private Alerts alert;
 
 
@@ -25,7 +25,7 @@ public abstract class Command<T> {
         this.running = new SimpleBooleanProperty();
     }
 
-    protected abstract Task<T> createCommandTask();
+    protected abstract Task<Void> createCommandTask();
 
     public void setOnCommandSuccess(Runnable onCommandSuccess){
         this.onCommandSuccess = onCommandSuccess;
@@ -43,7 +43,7 @@ public abstract class Command<T> {
         return running;
     }
 
-    public Task<T> getCommandTask() {
+    public Task<Void> getCommandTask() {
         return commandTask;
     }
 
