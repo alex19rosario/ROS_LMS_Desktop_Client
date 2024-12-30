@@ -10,6 +10,7 @@ module com.example.lmsdesktopclient {
 
     opens com.ros.lmsdesktopclient to javafx.fxml;
     opens com.ros.lmsdesktopclient.views to javafx.fxml;
+    opens com.ros.lmsdesktopclient.models to javafx.base;
     exports com.ros.lmsdesktopclient;
     exports com.ros.lmsdesktopclient.views to javafx.fxml;
     exports com.ros.lmsdesktopclient.models to com.fasterxml.jackson.databind;
