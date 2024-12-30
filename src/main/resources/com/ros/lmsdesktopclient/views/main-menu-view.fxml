@@ -16,7 +16,7 @@
                 <Button fx:id="btnIssueBook" mnemonicParsing="false" onAction="#issueBook" text="Issue Book" />
                 <Button fx:id="btnReturnBook" mnemonicParsing="false" onAction="#returnBook" text="Return Book" />
                 <Button fx:id="btnManageBooks" mnemonicParsing="false" onAction="#manageBooks" text="Manage Books" />
-                <Button fx:id="btnMonitor" mnemonicParsing="false" onAction="#monitor" text="Monitor" />
+                <Button fx:id="btnStats" mnemonicParsing="false" onAction="#monitor" text="Stats" />
                 <Button fx:id="btnManageAccounts" mnemonicParsing="false" onAction="#manageAccounts" text="Manage Accounts" />
                 <Button fx:id="btnAddStaff" mnemonicParsing="false" onAction="#addStaff" text="Add Staff" />
             </children>
