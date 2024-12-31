@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
 
     private void checkForm(LoginModel loginModel){
         if(!loginModel.isComplete()){
-            throw new EmptyFieldsException("There are empty fields");
+            throw new EmptyFieldsException("Login form: there are empty fields");
         }
     }
 

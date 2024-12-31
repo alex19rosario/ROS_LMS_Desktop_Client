@@ -67,14 +67,19 @@ public class BookModel implements Model {
 
     @Override
     public boolean isComplete() {
-        return !this.getIsbn().isEmpty() &&
-                !this.getTitle().isEmpty() &&
-                this.genres.stream().noneMatch(genre -> Arrays.stream(genre.get().split(""))
-                        .noneMatch(c -> c.equalsIgnoreCase(" "))) &&
-                Arrays.stream(this.getIsbn().split(""))
-                        .noneMatch(c -> c.equalsIgnoreCase(" ")) &&
-                Arrays.stream(this.getTitle().split(""))
-                        .noneMatch(c -> c.equalsIgnoreCase(" "));
+        // Check if ISBN and Title are non-empty and do not contain spaces
+        if (this.getIsbn().isEmpty() || this.getIsbn().contains(" ")) {
+            return false;
+        }
+        if (this.getTitle().isEmpty() || this.getTitle().isBlank()) {
+            return false;
+        }
+        // Check if all genres are non-empty and do not contain spaces
+        if (this.genres.isEmpty() || this.genres.stream().anyMatch(genre -> genre.get().trim().isEmpty())) {
+            return false;
+        }
+        // All checks passed
+        return true;
     }
 
     @Override

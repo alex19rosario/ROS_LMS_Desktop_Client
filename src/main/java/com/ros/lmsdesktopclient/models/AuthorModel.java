@@ -47,12 +47,11 @@ public class AuthorModel implements Model {
 
     @Override
     public boolean isComplete() {
-        return !this.getFirstName().isEmpty() &&
-                !this.getLastName().isEmpty() &&
-                Arrays.stream(this.getFirstName().split(""))
-                        .noneMatch(c -> c.equalsIgnoreCase(" ")) &&
-                Arrays.stream(this.getLastName().split(""))
-                        .noneMatch(c -> c.equalsIgnoreCase(" "));
+        if(this.getFirstName().isEmpty() || this.getFirstName().isBlank())
+            return false;
+        if(this.getLastName().isEmpty() || this.getLastName().isBlank())
+            return false;
+        return true;
     }
 
     @Override

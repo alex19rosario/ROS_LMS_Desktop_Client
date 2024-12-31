@@ -4,11 +4,9 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.services.AddBookServiceImpl;
 import com.ros.lmsdesktopclient.util.Views;
-import com.ros.lmsdesktopclient.view_models.commands.AddAuthorCommand;
-import com.ros.lmsdesktopclient.view_models.commands.AddGenreCommand;
-import com.ros.lmsdesktopclient.view_models.commands.Command;
-import com.ros.lmsdesktopclient.view_models.commands.OpenViewCommand;
+import com.ros.lmsdesktopclient.view_models.commands.*;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +19,7 @@ public class AddBookViewModel {
     private final Command openMainViewCommand;
     private final Command addAuthorCommand;
     private final Command addGenreCommand;
+    private final Command addBookCommand;
     private final ListProperty<AuthorInputModel> authorInputs;
     private final ListProperty<GenreInputModel> genreInputs;
     private BookModel book;
@@ -44,6 +43,8 @@ public class AddBookViewModel {
         genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
         genreInputs.addFirst(genreInputModel);
         addGenreCommand = new AddGenreCommand(genreInputs.get(), book);
+
+        addBookCommand = new AddBookCommand(book, authors, new AddBookServiceImpl());
     }
 
     public ObservableList<AuthorInputModel> getAuthorInputs() {
@@ -83,7 +84,7 @@ public class AddBookViewModel {
     }
 
     public void executeAddBookCommand(){
-        System.out.println(this.book);
+        this.addBookCommand.execute();
     }
 
 }
