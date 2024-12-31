@@ -4,7 +4,7 @@ import com.ros.lmsdesktopclient.dtos.AuthorDTO;
 import com.ros.lmsdesktopclient.dtos.BookDTO;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
-import com.ros.lmsdesktopclient.services.AddBookService;
+import com.ros.lmsdesktopclient.services.service.AddBookService;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;

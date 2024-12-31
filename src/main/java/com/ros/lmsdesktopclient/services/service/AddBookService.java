@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.services.service;
 
 import com.ros.lmsdesktopclient.dtos.BookDTO;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -6,7 +6,7 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 import java.net.http.HttpClient;
 
 public interface AddBookService {
-    void addBook(BookDTO book, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException;
+    void addBook(BookDTO book, HttpClient client) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException;
     //Check fields
     //Check network
     //Check server

@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.services.service;
 
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;

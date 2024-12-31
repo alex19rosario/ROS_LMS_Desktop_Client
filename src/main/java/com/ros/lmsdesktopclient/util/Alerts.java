@@ -9,8 +9,8 @@ public enum Alerts {
     EMPTY_FIELDS_WARN("Empty Fields", "Empty Fields", "Please fill out all required fields.", Alert.AlertType.WARNING),
     EXPIRED_SESSION_ERROR("Session Expired", "Session Timeout", "Your session has expired. Please log in again to continue.", Alert.AlertType.ERROR),
     EXISTING_BOOK_ERROR("Book Already Exists", "Book Already Exists", "A book with the specified ISBN already exists", Alert.AlertType.ERROR),
-    INVALID_ISBN_ERROR("Ivalid ISBN", "Invalid ISBN", "The provided ISBN format is incorrect.", Alert.AlertType.ERROR),
-    BOOK_ADDED_SUCCESS("Success","Book Added Successfully" ,"The books was added successfully" , Alert.AlertType.CONFIRMATION);
+    INVALID_ISBN_ERROR("Invalid ISBN", "Invalid ISBN", "The provided ISBN format is incorrect.", Alert.AlertType.ERROR),
+    BOOK_ADDED_SUCCESS("Success","Book Added Successfully" ,"The books was added successfully" , Alert.AlertType.INFORMATION);
 
     private final String title;
     private final String header;

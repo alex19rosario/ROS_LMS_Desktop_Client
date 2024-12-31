@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.view_models.commands;
 
 import com.ros.lmsdesktopclient.models.LoginModel;
-import com.ros.lmsdesktopclient.services.LoginService;
+import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;

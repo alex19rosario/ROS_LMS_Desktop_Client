@@ -4,7 +4,7 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.services.AddBookServiceImpl;
+import com.ros.lmsdesktopclient.services.service_impl.AddBookServiceImpl;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.view_models.commands.*;
 import javafx.beans.property.ListProperty;
