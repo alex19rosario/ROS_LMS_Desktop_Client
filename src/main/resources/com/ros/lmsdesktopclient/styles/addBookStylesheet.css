@@ -68,7 +68,7 @@ Button {
 
 #tableViewGenre {
     -fx-pref-width: 400px;
-    -fx-pref-height: 100px;
+    -fx-pref-height: 150px;
 }
 
 /* TableView column styles */
