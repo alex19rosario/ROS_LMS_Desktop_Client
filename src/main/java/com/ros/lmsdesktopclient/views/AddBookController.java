@@ -38,6 +38,15 @@ public class AddBookController implements Initializable {
         tfISBN.textProperty().bindBidirectional(addBookViewModel.getBook().isbnProperty());
         tfTitle.textProperty().bindBidirectional(addBookViewModel.getBook().titleProperty());
 
+        // Set numeric filter for ISBN field
+        tfISBN.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) { // Allow only digits
+                return change;
+            }
+            return null; // Reject the change
+        }));
+
         // Register key pressed event handler for relevant fields
         tfISBN.setOnKeyPressed(this::handleKeyPressed);
         tfTitle.setOnKeyPressed(this::handleKeyPressed);
