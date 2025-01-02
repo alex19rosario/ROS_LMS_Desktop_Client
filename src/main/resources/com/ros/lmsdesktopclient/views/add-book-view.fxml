@@ -65,7 +65,7 @@
                      </columns>
                   </TableView>
                   <Button fx:id="btnAddGenre" mnemonicParsing="false" onAction="#addGenre" text="+" />
-                  <Label fx:id="lblAddGenres" text="(Alt + G)" />
+                  <Label fx:id="lblAddGenres" text="(Ctrl)" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -83,7 +83,7 @@
                             </columns>
                         </TableView>
                         <Button fx:id="btnAddAuthor" mnemonicParsing="false" onAction="#addAuthor" text="+" />
-                  <Label text="(Alt + A)" />
+                  <Label text="(Alt)" />
                </children>
                <padding>
                   <Insets left="50.0" />

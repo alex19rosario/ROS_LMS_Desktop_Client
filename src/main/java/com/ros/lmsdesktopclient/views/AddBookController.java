@@ -26,6 +26,8 @@ public class AddBookController implements Initializable {
     @FXML private TableView<GenreInputModel> tableViewGenre;
     @FXML private TableColumn<GenreInputModel, ComboBox<String>> columnGenre;
     @FXML private Button btnAddBook;
+    @FXML private Button btnAddGenre;
+    @FXML private Button btnAddAuthor;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,6 +54,7 @@ public class AddBookController implements Initializable {
         tfTitle.setOnKeyPressed(this::handleKeyPressed);
         tableViewAuthor.setOnKeyPressed(this::handleKeyPressed);
         tableViewGenre.setOnKeyPressed(this::handleKeyPressed);
+
     }
 
     @FXML
@@ -68,6 +71,14 @@ public class AddBookController implements Initializable {
         if (event.getCode() == KeyCode.ENTER) {
             Effects.applyHover(btnAddBook, "-fx-background-color: #005fa3;", 150);
             addBookViewModel.executeAddBookCommand();// Trigger login on Enter key press
+        }
+        else if(event.getCode() == KeyCode.CONTROL) {
+            Effects.applyHover(btnAddGenre, "-fx-background-color: #005fa3;", 150);
+            addBookViewModel.executeAddGenreCommand();
+        }
+        else if(event.getCode() == KeyCode.ALT) {
+            Effects.applyHover(btnAddAuthor, "-fx-background-color: #005fa3;", 150);
+            addBookViewModel.executeAddAuthorCommand();
         }
     }
 
