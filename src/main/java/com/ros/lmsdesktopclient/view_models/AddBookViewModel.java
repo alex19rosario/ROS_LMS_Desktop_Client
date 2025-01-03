@@ -4,6 +4,8 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.services.ServiceFactory;
+import com.ros.lmsdesktopclient.services.service.AddBookService;
 import com.ros.lmsdesktopclient.services.service_impl.AddBookServiceImpl;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.view_models.commands.*;
@@ -43,8 +45,8 @@ public class AddBookViewModel {
         genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
         genreInputs.addFirst(genreInputModel);
         addGenreCommand = new AddGenreCommand(genreInputs.get(), book);
-
-        addBookCommand = new AddBookCommand(book, authors, new AddBookServiceImpl());
+        AddBookService addBookService = ServiceFactory.createProxy(AddBookService.class, new AddBookServiceImpl());
+        addBookCommand = new AddBookCommand(book, authors, addBookService);
     }
 
     public ObservableList<AuthorInputModel> getAuthorInputs() {
