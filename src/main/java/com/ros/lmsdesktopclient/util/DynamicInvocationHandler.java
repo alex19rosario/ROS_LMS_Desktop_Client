@@ -5,6 +5,7 @@ import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -27,12 +28,17 @@ public class DynamicInvocationHandler implements InvocationHandler {
         // Perform pre-checks
         checkNetwork();
         checkServer();
-
         // Invoke the actual method on the target
-        return method.invoke(target, args);
+        try {
+            // Invoke the actual method on the target
+            return method.invoke(target, args);
+        } catch (InvocationTargetException e) {
+            // Unwrap and re-throw the actual exception
+            throw e.getCause();
+        }
     }
 
-    private void checkNetwork(){
+    private void checkNetwork() throws NetworkException{
         try {
             InetAddress address = InetAddress.getByName("8.8.8.8"); // Google's public DNS
             if (!address.isReachable(2000)) { // 2 seconds timeout
@@ -43,7 +49,7 @@ public class DynamicInvocationHandler implements InvocationHandler {
         }
     }
 
-    private void checkServer(){
+    private void checkServer() throws ServerErrorException{
         try {
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(java.time.Duration.ofSeconds(2))

@@ -29,22 +29,8 @@ public class LoginCommand extends Command {
     protected Task<Void> createCommandTask() {
         return new Task<>() {
             @Override
-            protected Void call() {
-                try {
-                    loginService.login(loginModel, HttpClient.newHttpClient());
-                } catch (EmptyFieldsException ex) {
-                    setAlert(Alerts.EMPTY_FIELDS_WARN);
-                    throw new RuntimeException("EMPTY FIELDS ERROR");
-                } catch (AuthenticationException ex) {
-                    setAlert(Alerts.AUTHENTICATION_ERROR);
-                    throw new RuntimeException("AUTHENTICATION ERROR");
-                } catch (ServerErrorException ex) {
-                    setAlert(Alerts.SERVER_ERROR);
-                    throw new RuntimeException("SERVER ERROR");
-                } catch (NetworkException ex) {
-                    setAlert(Alerts.NETWORK_ERROR);
-                    throw new RuntimeException("NETWORK ERROR");
-                }
+            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException {
+                loginService.login(loginModel, HttpClient.newHttpClient());
                 return null;
             }
         };
@@ -57,7 +43,23 @@ public class LoginCommand extends Command {
     }
 
     private void onFailure(){
+        // Get the exception from the command task
+        Throwable exception = getCommandTask().getException();
+
+        // Use a switch expression to determine the alert type
+        Alerts alert = switch (exception) {
+            case EmptyFieldsException e -> Alerts.EMPTY_FIELDS_WARN;
+            case NetworkException e -> Alerts.NETWORK_ERROR;
+            case ServerErrorException e -> Alerts.SERVER_ERROR;
+            case AuthenticationException e -> Alerts.AUTHENTICATION_ERROR;
+            default -> throw new IllegalStateException("Unexpected exception: " + exception);
+        };
+
+        // Set the determined alert and display the modal
+        setAlert(alert);
         getAlert().getModal();
+
+        // Clear the login model
         loginModel.clear();
     }
 }
