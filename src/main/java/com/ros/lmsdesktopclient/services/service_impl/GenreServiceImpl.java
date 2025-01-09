@@ -1,17 +1,58 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.services.service.GenreService;
+import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.Genres;
-import java.util.Arrays;
+import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 public class GenreServiceImpl implements GenreService {
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @Override
-    public Set<String> getAllGenres() {
-        return Arrays.stream(Genres.values())
-                .map(Genres::getStr)
-                .sorted() // Sort the stream alphabetically
-                .collect(Collectors.toCollection(java.util.LinkedHashSet::new)); // Maintain order in a Set
+    public Set<String> getAllGenres(HttpClient client) {
+
+        String token = TokenHandler.getInstance()
+                .getToken()
+                .orElseThrow(() -> new RuntimeException("Token is missing"));
+
+        try {
+            // Create HTTP GET Request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiUrls.GENRES.getUrl()))
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
+
+            // Send Request and Handle Response
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(mapToSet.apply(response.body()));
+            return mapToSet.apply(response.body());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    // Function to deserialize JSON string into a Set<String>
+    private final Function<String, Set<String>> mapToSet = json -> {
+        try {
+            return mapper.readValue(json, new TypeReference<Set<String>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException("Error while mapping JSON to Set<String>", e);
+        }
+    };
 }
