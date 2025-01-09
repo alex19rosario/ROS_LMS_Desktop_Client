@@ -48,7 +48,7 @@ public class AddBookCommand extends Command{
                         .map(author -> new AuthorDTO(author.getFirstName().toUpperCase(), author.getLastName().toUpperCase()))
                         .collect(Collectors.toSet());
 
-                AddBookDTO bookDTO = new AddBookDTO(book.getIsbn(), book.getTitle(), genres, authorDTOS);
+                AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), genres, authorDTOS);
 
                 addBookService.addBook(bookDTO, HttpClient.newHttpClient());
 

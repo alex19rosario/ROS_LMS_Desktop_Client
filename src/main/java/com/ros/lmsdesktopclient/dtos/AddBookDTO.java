@@ -2,7 +2,7 @@ package com.ros.lmsdesktopclient.dtos;
 
 import java.util.Set;
 
-public record AddBookDTO(String ISBN, String title, Set<String> genres, Set<AuthorDTO> authors) {
+public record AddBookDTO(long ISBN, String title, Set<String> genres, Set<AuthorDTO> authors) {
 
     @Override
     public String toString() {

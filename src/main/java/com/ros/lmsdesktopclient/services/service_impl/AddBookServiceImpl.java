@@ -12,7 +12,7 @@ public class AddBookServiceImpl implements AddBookService {
     public void addBook(AddBookDTO book, HttpClient client) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
 
         checkISBN(book);
-        System.out.println("Adding book:\n" + book);
+        //Consume the service here
     }
 
     private void checkISBN(AddBookDTO book) throws InvalidISBNException {
@@ -20,8 +20,9 @@ public class AddBookServiceImpl implements AddBookService {
         String isbnRegex = "^(\\d{10}|\\d{13})$";
 
         // Check if the book's ISBN matches the regex
-        if (book == null || book.ISBN() == null || !book.ISBN().matches(isbnRegex)) {
+        if (book == null || book.ISBN() == 0 || !String.valueOf(book.ISBN()).matches(isbnRegex)) {
             throw new InvalidISBNException("Invalid ISBN: The specified ISBN does not have the correct format.");
         }
     }
+
 }
