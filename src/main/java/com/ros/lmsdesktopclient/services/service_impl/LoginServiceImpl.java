@@ -2,9 +2,11 @@ package com.ros.lmsdesktopclient.services.service_impl;
 
 
 import com.ros.lmsdesktopclient.models.LoginModel;
+import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
 import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
 import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
@@ -19,9 +21,13 @@ import java.net.http.HttpResponse;
 public class LoginServiceImpl implements LoginService {
 
     private final TokenHandler tokenHandler;
+    private final UpFrontDataHandler upFrontDataHandler;
+    private final GenreService genreService;
 
     public LoginServiceImpl(){
         tokenHandler = TokenHandler.getInstance();
+        upFrontDataHandler = UpFrontDataHandler.getInstance();
+        genreService = new GenreServiceImpl();
     }
 
     @Override
@@ -51,6 +57,8 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
+            upFrontDataHandler.saveGenres(genreService.getAllGenres());
+
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("Invalid credentials");

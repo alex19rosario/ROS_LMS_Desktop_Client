@@ -1,20 +1,17 @@
 package com.ros.lmsdesktopclient.models;
 
-import com.ros.lmsdesktopclient.dtos.GetAllGenresDTO;
-import com.ros.lmsdesktopclient.util.Genres;
 import javafx.scene.control.ComboBox;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Set;
 
 public class GenreInputModel {
 
     private ComboBox<String> cbGenres;
-    private final GetAllGenresDTO dto;
+    private final Set<String> genres;
 
-    public GenreInputModel(GetAllGenresDTO dto){
+    public GenreInputModel(Set<String> genres){
         this.cbGenres = new ComboBox<>();
-        this.dto = dto;
+        this.genres = genres;
         populateComboBox();
     }
 
@@ -26,9 +23,9 @@ public class GenreInputModel {
         this.cbGenres = cbGenres;
     }
 
-    // Populate the ComboBox with the enum values
+    // Populate the ComboBox
     private void populateComboBox() {
-        dto.genres().stream()
+        genres.stream()
                 .sorted()
                 .forEach(genre -> cbGenres.getItems().add(genre));
     }
