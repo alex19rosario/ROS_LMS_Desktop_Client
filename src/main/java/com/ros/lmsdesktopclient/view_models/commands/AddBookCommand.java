@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 public class AddBookCommand extends Command{
 
-    private BookModel book;
-    private List<AuthorModel> authors;
-    private AddBookService addBookService;
+    private final BookModel book;
+    private final List<AuthorModel> authors;
+    private final AddBookService addBookService;
 
     public AddBookCommand(BookModel book, List<AuthorModel> authors, AddBookService addBookService){
         this.book = book;
@@ -81,6 +81,13 @@ public class AddBookCommand extends Command{
         };
         setAlert(alert);
         getAlert().getModal();
+
+        if(exception instanceof ExpiredSessionException){
+            //Redirect to log in screen
+            double width = ViewHandler.getInstance().getSceneWidth();
+            double height = ViewHandler.getInstance().getSceneHeight();
+            ViewHandler.switchTo(Views.LOGIN.getView(), width, height);
+        }
     }
 
     private void checkForm(BookModel bookModel, List<AuthorModel> authorModels) throws EmptyFieldsException {
