@@ -1,5 +1,6 @@
 package com.ros.lmsdesktopclient.view_models;
 
+import com.ros.lmsdesktopclient.dtos.GetAllGenresDTO;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
@@ -7,6 +8,7 @@ import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.AddBookService;
 import com.ros.lmsdesktopclient.services.service_impl.AddBookServiceImpl;
+import com.ros.lmsdesktopclient.util.Genres;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.view_models.commands.*;
 import javafx.beans.property.ListProperty;
@@ -15,7 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddBookViewModel {
     private final Command openMainViewCommand;
@@ -40,11 +44,17 @@ public class AddBookViewModel {
         addAuthorCommand = new AddAuthorCommand(authorInputs.get(), authors);
 
         genreInputs = new SimpleListProperty<>(FXCollections.observableArrayList());
-        GenreInputModel genreInputModel = new GenreInputModel();
+        //Consume the getAllGenres service here
+        GetAllGenresDTO getAllGenresDTO = new GetAllGenresDTO(
+                Arrays.stream(Genres.values())
+                        .map(Genres::getStr)
+                        .collect(Collectors.toSet())
+        );
+        GenreInputModel genreInputModel = new GenreInputModel(getAllGenresDTO);
         book = new BookModel();
         genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
         genreInputs.addFirst(genreInputModel);
-        addGenreCommand = new AddGenreCommand(genreInputs.get(), book);
+        addGenreCommand = new AddGenreCommand(genreInputs.get(), book, getAllGenresDTO);
         AddBookService addBookService = ServiceFactory.createProxy(AddBookService.class, new AddBookServiceImpl());
         addBookCommand = new AddBookCommand(book, authors, addBookService);
     }
