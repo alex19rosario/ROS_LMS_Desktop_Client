@@ -1,7 +1,6 @@
 package com.ros.lmsdesktopclient.view_models.commands;
 
 import com.ros.lmsdesktopclient.util.Alerts;
-import com.ros.lmsdesktopclient.util.ViewHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,25 +10,22 @@ import javafx.concurrent.Task;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class Command<T> {
+public abstract class Command {
     private final DoubleProperty progress;
     private final BooleanProperty running;
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
-    private ExecutorService pool;
-    private Task<T> commandTask;
+    private static final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
+    private Task<Void> commandTask;
     private Alerts alert;
-    protected final ViewHandler viewHandler;
 
 
     public Command() {
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
-        this.pool = Executors.newVirtualThreadPerTaskExecutor();
-        this.viewHandler = ViewHandler.getInstance();
     }
 
-    protected abstract Task<T> createCommandTask();
+    protected abstract Task<Void> createCommandTask();
 
     public void setOnCommandSuccess(Runnable onCommandSuccess){
         this.onCommandSuccess = onCommandSuccess;
@@ -47,7 +43,7 @@ public abstract class Command<T> {
         return running;
     }
 
-    public Task<T> getCommandTask() {
+    public Task<Void> getCommandTask() {
         return commandTask;
     }
 

@@ -1,7 +1,9 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.services.service_impl;
 
 
 import com.ros.lmsdesktopclient.models.LoginModel;
+import com.ros.lmsdesktopclient.services.service.LoginService;
+import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
 import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
@@ -16,7 +18,7 @@ import java.net.http.HttpResponse;
 
 public class LoginServiceImpl implements LoginService {
 
-    private TokenHandler tokenHandler;
+    private final TokenHandler tokenHandler;
 
     public LoginServiceImpl(){
         tokenHandler = TokenHandler.getInstance();
@@ -26,8 +28,6 @@ public class LoginServiceImpl implements LoginService {
     public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException {
         try{
             checkForm(loginModel);
-            checkNetwork();
-            checkServer();
             // Create an HTTP client with Basic Authentication
             client = HttpClient.newBuilder()
                     .authenticator(new Authenticator() {
@@ -57,42 +57,9 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
-    private void checkForm(LoginModel loginModel){
+    private void checkForm(LoginModel loginModel) throws EmptyFieldsException {
         if(!loginModel.isComplete()){
-            throw new EmptyFieldsException("There are empty fields");
-        }
-    }
-
-    private void checkNetwork(){
-        try {
-            InetAddress address = InetAddress.getByName("8.8.8.8"); // Google's public DNS
-            if (!address.isReachable(2000)) { // 2 seconds timeout
-                throw new NetworkException("Network is not reachable");
-            }
-        } catch (IOException e) {
-            throw new NetworkException("Failed to check network connectivity " + e);
-        }
-    }
-
-    private void checkServer(){
-        try {
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(java.time.Duration.ofSeconds(2))
-                    .build();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(ApiUrls.LOGIN.getUrl()))
-                    .method("HEAD", HttpRequest.BodyPublishers.noBody())
-                    .build();
-
-            HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
-            int statusCode = response.statusCode();
-
-            if (statusCode != HttpURLConnection.HTTP_OK && statusCode != HttpURLConnection.HTTP_UNAUTHORIZED) {
-                throw new ServerErrorException("Server is not reachable. Response code: " + statusCode);
-            }
-        } catch (IOException | InterruptedException | URISyntaxException e) {
-            throw new ServerErrorException("Failed to check server availability " + e);
+            throw new EmptyFieldsException("Login form: there are empty fields");
         }
     }
 }

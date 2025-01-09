@@ -2,8 +2,6 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.util.Roles;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.view_models.MainMenuViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +22,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void addBook(ActionEvent actionEvent) {
+        mainMenuViewModel.executeOpenAddBookViewCommand();
     }
     @FXML
     private void addMember(ActionEvent actionEvent) {

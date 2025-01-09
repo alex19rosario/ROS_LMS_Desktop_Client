@@ -5,7 +5,7 @@ public enum Roles {
     STAFF("ROLE_STAFF"),
     MEMBER("ROLE_MEMBER");
 
-    private String str;
+    private final String str;
 
     Roles(String str){
         this.str = str;

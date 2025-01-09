@@ -1,7 +1,8 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.util;
 
 public enum ApiUrls {
-    LOGIN("login");
+    LOGIN("login"),
+    BOOKS("books");
 
     private String url;
     private final String BASE_URL = "http://localhost:8080/api/";
@@ -10,7 +11,7 @@ public enum ApiUrls {
         this.url = BASE_URL + url;
     }
 
-    String getUrl(){
+    public String getUrl(){
         return this.url;
     }
 }

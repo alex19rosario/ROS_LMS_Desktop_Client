@@ -6,7 +6,11 @@ public enum Alerts {
     AUTHENTICATION_ERROR("Authentication Failed", "Bad Credentials", "Invalid username or password.", Alert.AlertType.ERROR),
     SERVER_ERROR("Server Error", "Server Error", "Internal error occurred. \nThe server may be off.", Alert.AlertType.ERROR),
     NETWORK_ERROR("Network Error", "Network Error", "Local network is not working.", Alert.AlertType.ERROR),
-    EMPTY_FIELDS_WARN("Empty Fields", "Empty Fields", "Please fill out all required fields.", Alert.AlertType.WARNING);
+    EMPTY_FIELDS_WARN("Empty Fields", "Empty Fields", "Please fill out all required fields.", Alert.AlertType.WARNING),
+    EXPIRED_SESSION_ERROR("Session Expired", "Session Timeout", "Your session has expired. Please log in again to continue.", Alert.AlertType.ERROR),
+    EXISTING_BOOK_ERROR("Book Already Exists", "Book Already Exists", "A book with the specified ISBN already exists", Alert.AlertType.ERROR),
+    INVALID_ISBN_ERROR("Invalid ISBN", "Invalid ISBN", "The provided ISBN format is incorrect.", Alert.AlertType.ERROR),
+    BOOK_ADDED_SUCCESS("Success","Book Added Successfully" ,"The books was added successfully" , Alert.AlertType.INFORMATION);
 
     private final String title;
     private final String header;
