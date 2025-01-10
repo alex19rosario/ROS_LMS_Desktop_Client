@@ -105,7 +105,7 @@ public class TokenHandler {
         }
     }
 
-    private Set<String> getAuthorities(String strAuthorities){
+    private Set<String> getAuthoritiesSet(String strAuthorities){
         return Arrays.stream(strAuthorities.split("\\s+")) // Split by whitespace (one or more spaces)
                 .collect(Collectors.toSet());
     }
@@ -124,7 +124,7 @@ public class TokenHandler {
 
     // Retrieve authorities from Preferences
     public Set<String> getAuthorities() {
-        return getAuthorities(preferences.get(AUTHORITIES_KEY, null));
+        return getAuthoritiesSet(preferences.get(AUTHORITIES_KEY, null));
     }
 
     public String getUsername(){

@@ -2,13 +2,12 @@ package com.ros.lmsdesktopclient.services.service_impl;
 
 
 import com.ros.lmsdesktopclient.models.LoginModel;
+import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
-import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
-import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
-import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
+import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
+import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import java.io.IOException;
 import java.net.*;
@@ -19,13 +18,17 @@ import java.net.http.HttpResponse;
 public class LoginServiceImpl implements LoginService {
 
     private final TokenHandler tokenHandler;
+    private final UpFrontDataHandler upFrontDataHandler;
+    private final GenreService genreService;
 
     public LoginServiceImpl(){
         tokenHandler = TokenHandler.getInstance();
+        upFrontDataHandler = UpFrontDataHandler.getInstance();
+        genreService = new GenreServiceImpl();
     }
 
     @Override
-    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException {
+    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
         try{
             checkForm(loginModel);
             // Create an HTTP client with Basic Authentication
@@ -51,6 +54,8 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
+            upFrontDataHandler.saveGenres(genreService.getAllGenres(HttpClient.newHttpClient()));
+
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("Invalid credentials");

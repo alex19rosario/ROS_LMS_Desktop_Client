@@ -5,6 +5,6 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import java.net.http.HttpClient;
 
-public interface AddBookService {
+public interface BookService {
     void addBook(AddBookDTO book, HttpClient client) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException;
 }

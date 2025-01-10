@@ -7,14 +7,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
+import java.util.Set;
+
 public class AddGenreCommand extends Command{
 
     private final ObservableList<GenreInputModel> genreInputs;
     private final BookModel book;
+    private final Set<String> genres;
 
-    public AddGenreCommand(ObservableList<GenreInputModel> genreInputs, BookModel book){
+    public AddGenreCommand(ObservableList<GenreInputModel> genreInputs, BookModel book, Set<String> genres){
         this.genreInputs = genreInputs;
         this.book = book;
+        this.genres = genres;
     }
 
     @Override
@@ -22,7 +26,7 @@ public class AddGenreCommand extends Command{
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                GenreInputModel genreInputModel = new GenreInputModel();
+                GenreInputModel genreInputModel = new GenreInputModel(genres);
                 book.getGenres().addFirst(new SimpleStringProperty(Genres.SCIENCE.getStr()));
                 genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
                 genreInputs.addFirst(genreInputModel);

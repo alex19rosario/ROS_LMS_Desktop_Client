@@ -5,17 +5,17 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.services.ServiceFactory;
-import com.ros.lmsdesktopclient.services.service.AddBookService;
-import com.ros.lmsdesktopclient.services.service_impl.AddBookServiceImpl;
+import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
+import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.view_models.commands.*;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 public class AddBookViewModel {
     private final Command openMainViewCommand;
@@ -25,6 +25,7 @@ public class AddBookViewModel {
     private final ListProperty<AuthorInputModel> authorInputs;
     private final ListProperty<GenreInputModel> genreInputs;
     private BookModel book;
+    private final Set<String> genres;
 
     public AddBookViewModel(){
         openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);
@@ -40,25 +41,19 @@ public class AddBookViewModel {
         addAuthorCommand = new AddAuthorCommand(authorInputs.get(), authors);
 
         genreInputs = new SimpleListProperty<>(FXCollections.observableArrayList());
-        GenreInputModel genreInputModel = new GenreInputModel();
+        genres = UpFrontDataHandler.getInstance().getGenres();
+
+        GenreInputModel genreInputModel = new GenreInputModel(genres);
         book = new BookModel();
         genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
         genreInputs.addFirst(genreInputModel);
-        addGenreCommand = new AddGenreCommand(genreInputs.get(), book);
-        AddBookService addBookService = ServiceFactory.createProxy(AddBookService.class, new AddBookServiceImpl());
-        addBookCommand = new AddBookCommand(book, authors, addBookService);
-    }
-
-    public ObservableList<AuthorInputModel> getAuthorInputs() {
-        return authorInputs.get();
+        addGenreCommand = new AddGenreCommand(genreInputs.get(), book, genres);
+        BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
+        addBookCommand = new AddBookCommand(book, authors, bookService);
     }
 
     public ListProperty<AuthorInputModel> authorInputsProperty() {
         return authorInputs;
-    }
-
-    public ObservableList<GenreInputModel> getGenreInputs() {
-        return genreInputs.get();
     }
 
     public ListProperty<GenreInputModel> genreInputsProperty() {
@@ -67,10 +62,6 @@ public class AddBookViewModel {
 
     public BookModel getBook() {
         return book;
-    }
-
-    public void setBook(BookModel book) {
-        this.book = book;
     }
 
     public void executeOpenMainViewCommand(){
