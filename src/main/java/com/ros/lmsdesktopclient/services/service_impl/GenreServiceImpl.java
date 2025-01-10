@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
-import com.ros.lmsdesktopclient.util.Genres;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.exceptions.AccessDeniedException;
+import com.ros.lmsdesktopclient.util.exceptions.BookAlreadyExistException;
 import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
+import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
+
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,7 +24,7 @@ public class GenreServiceImpl implements GenreService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Set<String> getAllGenres(HttpClient client) {
+    public Set<String> getAllGenres(HttpClient client) throws AccessDeniedException {
 
         String token = TokenHandler.getInstance()
                 .getToken()
@@ -37,12 +40,12 @@ public class GenreServiceImpl implements GenreService {
 
             // Send Request and Handle Response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(mapToSet.apply(response.body()));
+            if(response.statusCode() == 403){
+                throw new AccessDeniedException("The user does not have access to this resource");
+            }
             return mapToSet.apply(response.body());
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

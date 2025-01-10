@@ -4,14 +4,13 @@ import com.ros.lmsdesktopclient.dtos.AuthorDTO;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
-import com.ros.lmsdesktopclient.services.service.AddBookService;
+import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
 
 import java.net.http.HttpClient;
 import java.util.List;
@@ -22,12 +21,12 @@ public class AddBookCommand extends Command{
 
     private final BookModel book;
     private final List<AuthorModel> authors;
-    private final AddBookService addBookService;
+    private final BookService bookService;
 
-    public AddBookCommand(BookModel book, List<AuthorModel> authors, AddBookService addBookService){
+    public AddBookCommand(BookModel book, List<AuthorModel> authors, BookService bookService){
         this.book = book;
         this.authors = authors;
-        this.addBookService = addBookService;
+        this.bookService = bookService;
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
@@ -50,7 +49,7 @@ public class AddBookCommand extends Command{
 
                 AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), genres, authorDTOS);
 
-                addBookService.addBook(bookDTO, HttpClient.newHttpClient());
+                bookService.addBook(bookDTO, HttpClient.newHttpClient());
 
                 return null;
             }

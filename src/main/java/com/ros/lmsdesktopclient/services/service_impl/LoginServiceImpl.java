@@ -7,10 +7,7 @@ import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
-import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
-import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
-import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
-import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
+import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import java.io.IOException;
 import java.net.*;
@@ -31,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException {
+    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
         try{
             checkForm(loginModel);
             // Create an HTTP client with Basic Authentication

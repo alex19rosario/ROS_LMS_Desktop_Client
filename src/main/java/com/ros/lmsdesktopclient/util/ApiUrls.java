@@ -5,10 +5,10 @@ public enum ApiUrls {
     BOOKS("books"),
     GENRES("genres");
 
-    private String url;
-    private final String BASE_URL = "http://localhost:8080/api/";
+    private final String url;
 
     ApiUrls(String url){
+        String BASE_URL = "http://localhost:8080/api/";
         this.url = BASE_URL + url;
     }
 

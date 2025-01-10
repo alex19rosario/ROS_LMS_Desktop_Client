@@ -5,10 +5,7 @@ import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
-import com.ros.lmsdesktopclient.util.exceptions.AuthenticationException;
-import com.ros.lmsdesktopclient.util.exceptions.EmptyFieldsException;
-import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
-import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
+import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.concurrent.Task;
 
 import java.net.http.HttpClient;
@@ -29,7 +26,7 @@ public class LoginCommand extends Command {
     protected Task<Void> createCommandTask() {
         return new Task<>() {
             @Override
-            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException {
+            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException {
                 loginService.login(loginModel, HttpClient.newHttpClient());
                 return null;
             }
@@ -52,6 +49,7 @@ public class LoginCommand extends Command {
             case NetworkException e -> Alerts.NETWORK_ERROR;
             case ServerErrorException e -> Alerts.SERVER_ERROR;
             case AuthenticationException e -> Alerts.AUTHENTICATION_ERROR;
+            case AccessDeniedException e -> Alerts.ACCESS_DENIED_ERROR;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
 

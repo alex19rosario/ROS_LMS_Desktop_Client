@@ -10,7 +10,8 @@ public enum Alerts {
     EXPIRED_SESSION_ERROR("Session Expired", "Session Timeout", "Your session has expired. Please log in again to continue.", Alert.AlertType.ERROR),
     EXISTING_BOOK_ERROR("Book Already Exists", "Book Already Exists", "A book with the specified ISBN already exists", Alert.AlertType.ERROR),
     INVALID_ISBN_ERROR("Invalid ISBN", "Invalid ISBN", "The provided ISBN format is incorrect.", Alert.AlertType.ERROR),
-    BOOK_ADDED_SUCCESS("Success","Book Added Successfully" ,"The books was added successfully" , Alert.AlertType.INFORMATION);
+    BOOK_ADDED_SUCCESS("Success","Book Added Successfully" ,"The books was added successfully" , Alert.AlertType.INFORMATION),
+    ACCESS_DENIED_ERROR("Access Denied","Access Denied", "The user does not have access to this resource", Alert.AlertType.ERROR);
 
     private final String title;
     private final String header;

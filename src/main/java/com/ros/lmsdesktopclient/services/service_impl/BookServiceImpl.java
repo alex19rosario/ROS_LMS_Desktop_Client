@@ -2,7 +2,7 @@ package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
-import com.ros.lmsdesktopclient.services.service.AddBookService;
+import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -13,7 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class AddBookServiceImpl implements AddBookService {
+public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(AddBookDTO book, HttpClient client) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
