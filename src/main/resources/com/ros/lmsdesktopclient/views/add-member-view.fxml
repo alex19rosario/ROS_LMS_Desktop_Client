@@ -164,7 +164,7 @@
                   </Label>
                </left>
                <center>
-                  <PasswordField maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                  <PasswordField fx:id="tfPassword" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
                      <BorderPane.margin>
                         <Insets right="500.0" />
                      </BorderPane.margin>
@@ -180,7 +180,7 @@
                   </Label>
                </left>
                <center>
-                  <PasswordField maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                  <PasswordField fx:id="tfRepeatedPassword" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
                      <BorderPane.margin>
                         <Insets right="500.0" />
                      </BorderPane.margin>

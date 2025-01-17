@@ -42,18 +42,6 @@ public class LoginServiceImpl implements LoginService {
                 .build()){
 
             checkForm(loginModel);
-            // Create an HTTP client with Basic Authentication
-            /*client = HttpClient.newBuilder()
-                    .authenticator(new Authenticator() {
-                        @Override
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(
-                                    loginModel.getUsername(),
-                                    loginModel.getPassword().toCharArray()
-                            );
-                        }
-                    })
-                    .build();*/
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
@@ -66,7 +54,6 @@ public class LoginServiceImpl implements LoginService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
             upFrontDataHandler.saveGenres(genreService.getAllGenres());
-
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("Invalid credentials");
