@@ -27,7 +27,7 @@ public class LoginCommand extends Command {
         return new Task<>() {
             @Override
             protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException {
-                loginService.login(loginModel, HttpClient.newHttpClient());
+                loginService.login(loginModel);
                 return null;
             }
         };

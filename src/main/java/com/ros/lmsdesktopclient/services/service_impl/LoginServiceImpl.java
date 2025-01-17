@@ -28,11 +28,22 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
-        try{
+    public void login(LoginModel loginModel) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
+        try(HttpClient client = HttpClient.newBuilder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(
+                                loginModel.getUsername(),
+                                loginModel.getPassword().toCharArray()
+                        );
+                    }
+                })
+                .build()){
+
             checkForm(loginModel);
             // Create an HTTP client with Basic Authentication
-            client = HttpClient.newBuilder()
+            /*client = HttpClient.newBuilder()
                     .authenticator(new Authenticator() {
                         @Override
                         protected PasswordAuthentication getPasswordAuthentication() {
@@ -42,7 +53,7 @@ public class LoginServiceImpl implements LoginService {
                             );
                         }
                     })
-                    .build();
+                    .build();*/
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
