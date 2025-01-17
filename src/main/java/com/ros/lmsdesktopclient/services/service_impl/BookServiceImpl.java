@@ -16,13 +16,13 @@ import java.net.http.HttpResponse;
 public class BookServiceImpl implements BookService {
 
     @Override
-    public void addBook(AddBookDTO book, HttpClient client) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
+    public void addBook(AddBookDTO book) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
 
         checkISBN(book);
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try {
+        try (HttpClient client = HttpClient.newHttpClient()) {
             // Serialize AddBookDTO to JSON
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonPayload = objectMapper.writeValueAsString(book);

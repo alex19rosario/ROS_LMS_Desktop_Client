@@ -49,7 +49,7 @@ public class AddBookCommand extends Command{
 
                 AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), genres, authorDTOS);
 
-                bookService.addBook(bookDTO, HttpClient.newHttpClient());
+                bookService.addBook(bookDTO);
 
                 return null;
             }

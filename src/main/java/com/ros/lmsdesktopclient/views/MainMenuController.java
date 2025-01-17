@@ -26,6 +26,7 @@ public class MainMenuController implements Initializable {
     }
     @FXML
     private void addMember(ActionEvent actionEvent) {
+        mainMenuViewModel.executeOpenAddMemberViewCommand();
     }
     @FXML
     private void issueBook(ActionEvent actionEvent) {

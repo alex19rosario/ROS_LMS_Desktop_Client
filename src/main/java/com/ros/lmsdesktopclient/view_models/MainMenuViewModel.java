@@ -6,12 +6,14 @@ import com.ros.lmsdesktopclient.view_models.commands.LogOutCommand;
 import com.ros.lmsdesktopclient.view_models.commands.OpenViewCommand;
 
 public class MainMenuViewModel {
-    private Command logOutCommand;
-    private Command openAddBookViewCommand;
+    private final Command logOutCommand;
+    private final Command openAddBookViewCommand;
+    private final Command openAddMemberViewCommand;
 
     public MainMenuViewModel(){
         logOutCommand = new LogOutCommand();
         openAddBookViewCommand = new OpenViewCommand(Views.ADD_BOOK);
+        openAddMemberViewCommand = new OpenViewCommand(Views.ADD_MEMBER);
     }
 
     public void executeLogOutCommand(){
@@ -20,5 +22,9 @@ public class MainMenuViewModel {
 
     public void executeOpenAddBookViewCommand(){
         openAddBookViewCommand.execute();
+    }
+
+    public void executeOpenAddMemberViewCommand() {
+        openAddMemberViewCommand.execute();
     }
 }
