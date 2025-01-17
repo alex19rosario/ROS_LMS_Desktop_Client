@@ -24,13 +24,13 @@ public class GenreServiceImpl implements GenreService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Set<String> getAllGenres(HttpClient client) throws AccessDeniedException {
+    public Set<String> getAllGenres() throws AccessDeniedException {
 
         String token = TokenHandler.getInstance()
                 .getToken()
                 .orElseThrow(() -> new RuntimeException("Token is missing"));
 
-        try {
+        try (HttpClient client = HttpClient.newHttpClient()) {
             // Create HTTP GET Request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(ApiUrls.GENRES.getUrl()))

@@ -54,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
-            upFrontDataHandler.saveGenres(genreService.getAllGenres(HttpClient.newHttpClient()));
+            upFrontDataHandler.saveGenres(genreService.getAllGenres());
 
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
