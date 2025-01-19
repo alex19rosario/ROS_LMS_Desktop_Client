@@ -24,7 +24,7 @@ public class AddBookViewModel {
     private final Command addBookCommand;
     private final ListProperty<AuthorInputModel> authorInputs;
     private final ListProperty<GenreInputModel> genreInputs;
-    private BookModel book;
+    private BookModel bookModel;
     private final Set<String> genres;
 
     public AddBookViewModel(){
@@ -44,12 +44,12 @@ public class AddBookViewModel {
         genres = UpFrontDataHandler.getInstance().getGenres();
 
         GenreInputModel genreInputModel = new GenreInputModel(genres);
-        book = new BookModel();
-        genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
+        bookModel = new BookModel();
+        genreInputModel.getCbGenres().valueProperty().bindBidirectional(bookModel.getGenres().getFirst());
         genreInputs.addFirst(genreInputModel);
-        addGenreCommand = new AddGenreCommand(genreInputs.get(), book, genres);
+        addGenreCommand = new AddGenreCommand(genreInputs.get(), bookModel, genres);
         BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
-        addBookCommand = new AddBookCommand(book, authors, bookService);
+        addBookCommand = new AddBookCommand(bookModel, authors, bookService);
     }
 
     public ListProperty<AuthorInputModel> authorInputsProperty() {
@@ -60,8 +60,8 @@ public class AddBookViewModel {
         return genreInputs;
     }
 
-    public BookModel getBook() {
-        return book;
+    public BookModel getBookModel() {
+        return bookModel;
     }
 
     public void executeOpenMainViewCommand(){
