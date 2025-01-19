@@ -12,7 +12,7 @@ import com.ros.lmsdesktopclient.view_models.commands.OpenViewCommand;
 public class AddMemberViewModel {
     private final Command openMainViewCommand;
     private final Command addMemberCommand;
-    private MemberModel memberModel;
+    private final MemberModel memberModel;
 
     public AddMemberViewModel(){
         openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);

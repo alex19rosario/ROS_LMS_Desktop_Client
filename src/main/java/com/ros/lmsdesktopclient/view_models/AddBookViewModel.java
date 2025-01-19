@@ -24,8 +24,7 @@ public class AddBookViewModel {
     private final Command addBookCommand;
     private final ListProperty<AuthorInputModel> authorInputs;
     private final ListProperty<GenreInputModel> genreInputs;
-    private BookModel bookModel;
-    private final Set<String> genres;
+    private final BookModel bookModel;
 
     public AddBookViewModel(){
         openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);
@@ -41,7 +40,7 @@ public class AddBookViewModel {
         addAuthorCommand = new AddAuthorCommand(authorInputs.get(), authors);
 
         genreInputs = new SimpleListProperty<>(FXCollections.observableArrayList());
-        genres = UpFrontDataHandler.getInstance().getGenres();
+        Set<String> genres = UpFrontDataHandler.getInstance().getGenres();
 
         GenreInputModel genreInputModel = new GenreInputModel(genres);
         bookModel = new BookModel();
