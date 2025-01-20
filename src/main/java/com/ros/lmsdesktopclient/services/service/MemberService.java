@@ -9,5 +9,6 @@ public interface MemberService {
             ServerErrorException,
             ExpiredSessionException,
             MemberAlreadyExistException,
+            UsernameAlreadyExistException,
             EmailAlreadyExistException;
 }

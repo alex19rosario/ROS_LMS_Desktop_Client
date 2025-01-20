@@ -6,10 +6,6 @@ import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AccessDeniedException;
-import com.ros.lmsdesktopclient.util.exceptions.BookAlreadyExistException;
-import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
-import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
-
 
 import java.io.IOException;
 import java.net.URI;

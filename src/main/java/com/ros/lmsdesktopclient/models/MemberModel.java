@@ -3,7 +3,7 @@ package com.ros.lmsdesktopclient.models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class MemberModel {
+public class MemberModel implements Model {
     private final StringProperty governmentID;
     private final StringProperty firstName;
     private final StringProperty lastName;
@@ -146,5 +146,45 @@ public class MemberModel {
 
     public void setRepeatedPassword(String repeatedPassword) {
         this.repeatedPassword.set(repeatedPassword);
+    }
+
+    /*private final StringProperty governmentID;
+    private final StringProperty firstName;
+    private final StringProperty lastName;
+    private final StringProperty phone;
+    private final StringProperty age;
+    private final StringProperty sex;
+    private final StringProperty email;
+    private final StringProperty username;
+    private final StringProperty password;
+    private final StringProperty repeatedPassword;*/
+
+    @Override
+    public void clear() {
+        this.setGovernmentID("");
+        this.setFirstName("");
+        this.setLastName("");
+        this.setPhone("");
+        this.setAge("");
+        this.setSex("");
+        this.setEmail("");
+        this.setUsername("");
+        this.setPassword("");
+        this.setRepeatedPassword("");
+    }
+
+    @Override
+    public boolean isComplete() {
+
+        return !this.getGovernmentID().isEmpty() && !this.getGovernmentID().contains(" ") &&
+                !this.getFirstName().isEmpty() && !this.getFirstName().contains(" ") &&
+                !this.getLastName().isEmpty() && !this.getLastName().contains(" ") &&
+                !this.getPhone().isEmpty() && !this.getPhone().contains(" ") &&
+                !this.getAge().isEmpty() && !this.getAge().contains(" ") &&
+                !this.getSex().isEmpty() && !this.getSex().contains(" ") &&
+                !this.getEmail().isEmpty() && !this.getEmail().contains(" ") &&
+                !this.getUsername().isEmpty() && !this.getUsername().contains(" ") &&
+                !this.getPassword().isEmpty() && !this.getPassword().contains(" ") &&
+                !this.getRepeatedPassword().isEmpty() && !this.getRepeatedPassword().contains(" ");
     }
 }

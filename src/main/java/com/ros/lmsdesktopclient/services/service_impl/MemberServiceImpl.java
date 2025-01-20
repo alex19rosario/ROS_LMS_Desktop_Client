@@ -6,7 +6,7 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 
 public class MemberServiceImpl implements MemberService {
     @Override
-    public void addMember(AddMemberDTO member) throws NetworkException, ServerErrorException, ExpiredSessionException, MemberAlreadyExistException, EmailAlreadyExistException, PasswordsDoNotMatchException {
+    public void addMember(AddMemberDTO member) throws NetworkException, ServerErrorException, ExpiredSessionException, MemberAlreadyExistException, UsernameAlreadyExistException, EmailAlreadyExistException {
         System.out.println("Adding member: " + member);
     }
 }
