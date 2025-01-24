@@ -1,8 +1,8 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ros.lmsdesktopclient.dtos.AddBookDTO;
-import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
+import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -13,23 +13,21 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class BookServiceImpl implements BookService {
-
+public class MemberServiceImpl implements MemberService {
     @Override
-    public void addBook(AddBookDTO book) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
+    public void addMember(AddMemberDTO member) throws NetworkException, ServerErrorException, ExpiredSessionException, MemberAlreadyExistException, UsernameAlreadyExistException, EmailAlreadyExistException {
 
-        checkISBN(book);
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try (HttpClient client = HttpClient.newHttpClient()){
             // Serialize AddBookDTO to JSON
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonPayload = objectMapper.writeValueAsString(book);
+            String jsonPayload = objectMapper.writeValueAsString(member);
 
             // Create HTTP POST Request
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(ApiUrls.BOOKS.getUrl()))
+                    .uri(URI.create(ApiUrls.MEMBERS.getUrl()))
                     .header("Authorization", "Bearer " + token)
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
@@ -41,7 +39,16 @@ public class BookServiceImpl implements BookService {
             // Check Response Status
             switch (response.statusCode()) {
                 case 200 -> {}
-                case 409 -> throw new BookAlreadyExistException("Book already exists.");
+                case 409 -> {
+                    String responseBody = response.body();
+                    if (responseBody.contains("Username")) {
+                        throw new UsernameAlreadyExistException("Username already exists.");
+                    } else if (responseBody.contains("Email")) {
+                        throw new EmailAlreadyExistException("Email already exists.");
+                    } else if (responseBody.contains("Member")) {
+                        throw new MemberAlreadyExistException("Member already exists.");
+                    }
+                }
                 case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");
                 default -> throw new ServerErrorException("Unexpected response from server: " + response.statusCode());
             }
@@ -51,17 +58,6 @@ public class BookServiceImpl implements BookService {
         } catch (InterruptedException e) {
             throw new NetworkException("Request was interrupted." + e);
         }
-        //Consume the service here
+        System.out.println("Adding member: " + member);
     }
-
-    private void checkISBN(AddBookDTO book) throws InvalidISBNException {
-        // Regex for a valid ISBN-10 or ISBN-13
-        String isbnRegex = "^(\\d{10}|\\d{13})$";
-
-        // Check if the book's ISBN matches the regex
-        if (book == null || !String.valueOf(book.ISBN()).matches(isbnRegex)) {
-            throw new InvalidISBNException("Invalid ISBN: The specified ISBN does not have the correct format.");
-        }
-    }
-
 }

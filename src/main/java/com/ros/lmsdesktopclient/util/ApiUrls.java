@@ -3,7 +3,8 @@ package com.ros.lmsdesktopclient.util;
 public enum ApiUrls {
     LOGIN("login"),
     BOOKS("books"),
-    GENRES("genres");
+    GENRES("genres"),
+    MEMBERS("members");
 
     private final String url;
 

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../styles/addMemberStylesheet.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ros.lmsdesktopclient.views.AddMemberController">
+    <top>
+        <BorderPane fx:id="headerPane" prefHeight="100.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <left>
+                <Label fx:id="lblAddingMember" text="Adding a new member" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets left="50.0" />
+                    </BorderPane.margin>
+                </Label>
+            </left>
+        </BorderPane>
+    </top>
+    <center>
+        <VBox fx:id="bodyPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="562.0" prefWidth="962.0" BorderPane.alignment="CENTER">
+            <children>
+                <BorderPane fx:id="paneGovernmentID" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+                    <left>
+                        <Label fx:id="lblGovernmentID" text="Government ID" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <TextField fx:id="tfGovernmentID" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                            <BorderPane.margin>
+                                <Insets right="500.0" />
+                            </BorderPane.margin>
+                        </TextField>
+                    </center>
+                </BorderPane>
+                <BorderPane fx:id="paneFirstName" prefHeight="125.0" prefWidth="962.0">
+                    <left>
+                        <Label fx:id="lblFirstName" text="First Name" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="50.0" />
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <TextField fx:id="tfFirstName" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                            <BorderPane.margin>
+                                <Insets right="500.0" />
+                            </BorderPane.margin>
+                        </TextField>
+                    </center>
+                </BorderPane>
+            <BorderPane fx:id="paneLastName" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblLastName" text="Last Name" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfLastName" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="panePhone" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblPhone" text="Phone" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfPhone" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="paneAge" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblAge" text="Age" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfAge" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </BorderPane>
+            <BorderPane fx:id="paneSex" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblSex" text="Sex" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <ComboBox fx:id="cbSex" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="250.4" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets right="385.0" />
+                     </BorderPane.margin>
+                  </ComboBox>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="paneEmail" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblEmail" text="Email" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfEmail" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="paneUsername" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblUsername" text="Username" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <TextField fx:id="tfUsername" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="panePassword" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblPassword" text="Password" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <PasswordField fx:id="tfPassword" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </PasswordField>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="paneRepeatedPassword" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="962.0">
+               <left>
+                  <Label fx:id="lblRepeatedPassword" text="Password" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <center>
+                  <PasswordField fx:id="tfRepeatedPassword" maxWidth="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="500.0" />
+                     </BorderPane.margin>
+                  </PasswordField>
+               </center>
+            </BorderPane>
+                <BorderPane fx:id="footerPane" prefHeight="161.0" prefWidth="958.0">
+                    <left>
+                        <Button fx:id="btnGoBack" mnemonicParsing="false" onAction="#goBack" text="Go Back" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets />
+                            </BorderPane.margin>
+                        </Button>
+                    </left>
+                    <right>
+                        <Button fx:id="btnAddMember" mnemonicParsing="false" onAction="#addMember" text="Add Member" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets />
+                            </BorderPane.margin>
+                        </Button>
+                    </right>
+                </BorderPane>
+            </children>
+            <BorderPane.margin>
+                <Insets top="50.0" />
+            </BorderPane.margin>
+        </VBox>
+    </center>
+
+</BorderPane>

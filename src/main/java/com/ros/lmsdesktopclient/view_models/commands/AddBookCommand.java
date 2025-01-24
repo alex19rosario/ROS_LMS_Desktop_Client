@@ -22,11 +22,15 @@ public class AddBookCommand extends Command{
     private final BookModel book;
     private final List<AuthorModel> authors;
     private final BookService bookService;
+    private final Command openAddBookViewCommand;
+    private final Command openLoginViewCommand;
 
     public AddBookCommand(BookModel book, List<AuthorModel> authors, BookService bookService){
         this.book = book;
         this.authors = authors;
         this.bookService = bookService;
+        this.openAddBookViewCommand = new OpenViewCommand(Views.ADD_BOOK);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
@@ -49,7 +53,7 @@ public class AddBookCommand extends Command{
 
                 AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), genres, authorDTOS);
 
-                bookService.addBook(bookDTO, HttpClient.newHttpClient());
+                bookService.addBook(bookDTO);
 
                 return null;
             }
@@ -60,9 +64,7 @@ public class AddBookCommand extends Command{
         setAlert(Alerts.BOOK_ADDED_SUCCESS);
         getAlert().getModal();
         //To reset the screen
-        double width = ViewHandler.getInstance().getSceneWidth();
-        double height = ViewHandler.getInstance().getSceneHeight();
-        ViewHandler.switchTo(Views.ADD_BOOK.getView(), width, height);
+        openAddBookViewCommand.execute();
     }
 
     private void onFailure(){
@@ -82,10 +84,7 @@ public class AddBookCommand extends Command{
         getAlert().getModal();
 
         if(exception instanceof ExpiredSessionException){
-            //Redirect to log in screen
-            double width = ViewHandler.getInstance().getSceneWidth();
-            double height = ViewHandler.getInstance().getSceneHeight();
-            ViewHandler.switchTo(Views.LOGIN.getView(), width, height);
+            openLoginViewCommand.execute();
         }
     }
 

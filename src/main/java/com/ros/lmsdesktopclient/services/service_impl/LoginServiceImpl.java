@@ -28,21 +28,20 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
-        try{
+    public void login(LoginModel loginModel) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
+        try(HttpClient client = HttpClient.newBuilder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(
+                                loginModel.getUsername(),
+                                loginModel.getPassword().toCharArray()
+                        );
+                    }
+                })
+                .build()){
+
             checkForm(loginModel);
-            // Create an HTTP client with Basic Authentication
-            client = HttpClient.newBuilder()
-                    .authenticator(new Authenticator() {
-                        @Override
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(
-                                    loginModel.getUsername(),
-                                    loginModel.getPassword().toCharArray()
-                            );
-                        }
-                    })
-                    .build();
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
@@ -54,8 +53,7 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
-            upFrontDataHandler.saveGenres(genreService.getAllGenres(HttpClient.newHttpClient()));
-
+            upFrontDataHandler.saveGenres(genreService.getAllGenres());
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("Invalid credentials");

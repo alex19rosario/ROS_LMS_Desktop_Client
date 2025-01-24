@@ -6,10 +6,6 @@ import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AccessDeniedException;
-import com.ros.lmsdesktopclient.util.exceptions.BookAlreadyExistException;
-import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
-import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
-
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,13 +20,13 @@ public class GenreServiceImpl implements GenreService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Set<String> getAllGenres(HttpClient client) throws AccessDeniedException {
+    public Set<String> getAllGenres() throws AccessDeniedException {
 
         String token = TokenHandler.getInstance()
                 .getToken()
                 .orElseThrow(() -> new RuntimeException("Token is missing"));
 
-        try {
+        try (HttpClient client = HttpClient.newHttpClient()) {
             // Create HTTP GET Request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(ApiUrls.GENRES.getUrl()))

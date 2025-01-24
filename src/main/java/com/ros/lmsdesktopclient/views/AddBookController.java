@@ -37,8 +37,8 @@ public class AddBookController implements Initializable {
         tableViewAuthor.itemsProperty().bindBidirectional(addBookViewModel.authorInputsProperty());
         columnGenre.setCellValueFactory(new PropertyValueFactory<>("cbGenres"));
         tableViewGenre.itemsProperty().bindBidirectional(addBookViewModel.genreInputsProperty());
-        tfISBN.textProperty().bindBidirectional(addBookViewModel.getBook().isbnProperty());
-        tfTitle.textProperty().bindBidirectional(addBookViewModel.getBook().titleProperty());
+        tfISBN.textProperty().bindBidirectional(addBookViewModel.getBookModel().isbnProperty());
+        tfTitle.textProperty().bindBidirectional(addBookViewModel.getBookModel().titleProperty());
 
         // Set numeric filter for ISBN field
         tfISBN.setTextFormatter(new TextFormatter<>(change -> {

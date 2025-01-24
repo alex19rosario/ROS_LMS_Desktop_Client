@@ -6,5 +6,5 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 import java.net.http.HttpClient;
 
 public interface LoginService {
-    void login(LoginModel loginModel, HttpClient client) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException;
+    void login(LoginModel loginModel) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException;
 }
