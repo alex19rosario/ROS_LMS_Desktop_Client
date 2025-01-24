@@ -148,17 +148,6 @@ public class MemberModel implements Model {
         this.repeatedPassword.set(repeatedPassword);
     }
 
-    /*private final StringProperty governmentID;
-    private final StringProperty firstName;
-    private final StringProperty lastName;
-    private final StringProperty phone;
-    private final StringProperty age;
-    private final StringProperty sex;
-    private final StringProperty email;
-    private final StringProperty username;
-    private final StringProperty password;
-    private final StringProperty repeatedPassword;*/
-
     @Override
     public void clear() {
         this.setGovernmentID("");
@@ -177,8 +166,8 @@ public class MemberModel implements Model {
     public boolean isComplete() {
 
         return !this.getGovernmentID().isEmpty() && !this.getGovernmentID().contains(" ") &&
-                !this.getFirstName().isEmpty() && !this.getFirstName().contains(" ") &&
-                !this.getLastName().isEmpty() && !this.getLastName().contains(" ") &&
+                !this.getFirstName().isEmpty() &&
+                !this.getLastName().isEmpty() &&
                 !this.getPhone().isEmpty() && !this.getPhone().contains(" ") &&
                 !this.getAge().isEmpty() && !this.getAge().contains(" ") &&
                 !this.getSex().isEmpty() && !this.getSex().contains(" ") &&

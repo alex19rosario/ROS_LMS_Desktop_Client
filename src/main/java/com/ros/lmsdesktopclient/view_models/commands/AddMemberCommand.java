@@ -119,7 +119,5 @@ public class AddMemberCommand extends Command{
             memberModel.getSex().charAt(0),
             memberModel.getEmail(),
             memberModel.getUsername(),
-            memberModel.getPassword(),
-            memberModel.getRepeatedPassword());
-
+            memberModel.getPassword());
 }

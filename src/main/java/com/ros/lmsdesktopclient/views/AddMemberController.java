@@ -1,13 +1,14 @@
 package com.ros.lmsdesktopclient.views;
 
+import com.ros.lmsdesktopclient.util.Effects;
 import com.ros.lmsdesktopclient.util.Sex;
 import com.ros.lmsdesktopclient.view_models.AddMemberViewModel;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class AddMemberController implements Initializable {
     @FXML private TextField tfUsername;
     @FXML private PasswordField tfPassword;
     @FXML private PasswordField tfRepeatedPassword;
+    @FXML private Button btnAddMember;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,6 +43,27 @@ public class AddMemberController implements Initializable {
         tfUsername.textProperty().bindBidirectional(addMemberViewModel.getMemberModel().usernameProperty());
         tfPassword.textProperty().bindBidirectional(addMemberViewModel.getMemberModel().passwordProperty());
         tfRepeatedPassword.textProperty().bindBidirectional(addMemberViewModel.getMemberModel().repeatedPasswordProperty());
+
+        // Set numeric filter for ISBN field
+        tfAge.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d{0,3}")) { // Allow only digits
+                return change;
+            }
+            return null; // Reject the change
+        }));
+
+        // Register key pressed event handler for relevant fields
+        tfGovernmentID.setOnKeyPressed(this::handleKeyPressed);
+        tfFirstName.setOnKeyPressed(this::handleKeyPressed);
+        tfLastName.setOnKeyPressed(this::handleKeyPressed);
+        tfPhone.setOnKeyPressed(this::handleKeyPressed);
+        tfAge.setOnKeyPressed(this::handleKeyPressed);
+        cbSex.setOnKeyPressed(this::handleKeyPressed);
+        tfEmail.setOnKeyPressed(this::handleKeyPressed);
+        tfUsername.setOnKeyPressed(this::handleKeyPressed);
+        tfPassword.setOnKeyPressed(this::handleKeyPressed);
+        tfRepeatedPassword.setOnKeyPressed(this::handleKeyPressed);
     }
 
     @FXML
@@ -51,5 +74,12 @@ public class AddMemberController implements Initializable {
     @FXML
     private void addMember(){
         addMemberViewModel.executeAddMemberCommand();
+    }
+
+    private void handleKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            Effects.applyHover(btnAddMember, "-fx-background-color: #005fa3;", 150);
+            addMemberViewModel.executeAddMemberCommand();// Trigger login on Enter key press
+        }
     }
 }
