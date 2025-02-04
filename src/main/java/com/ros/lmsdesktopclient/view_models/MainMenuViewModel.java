@@ -9,11 +9,13 @@ public class MainMenuViewModel {
     private final Command logOutCommand;
     private final Command openAddBookViewCommand;
     private final Command openAddMemberViewCommand;
+    private final Command openIssueBookViewCommand;
 
     public MainMenuViewModel(){
         logOutCommand = new LogOutCommand();
         openAddBookViewCommand = new OpenViewCommand(Views.ADD_BOOK);
         openAddMemberViewCommand = new OpenViewCommand(Views.ADD_MEMBER);
+        openIssueBookViewCommand = new OpenViewCommand(Views.ISSUE_BOOK);
     }
 
     public void executeLogOutCommand(){
@@ -26,5 +28,9 @@ public class MainMenuViewModel {
 
     public void executeOpenAddMemberViewCommand() {
         openAddMemberViewCommand.execute();
+    }
+
+    public void executeOpenIssueBookViewCommand() {
+        openIssueBookViewCommand.execute();
     }
 }

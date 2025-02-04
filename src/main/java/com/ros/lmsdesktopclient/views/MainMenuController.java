@@ -30,6 +30,7 @@ public class MainMenuController implements Initializable {
     }
     @FXML
     private void issueBook(ActionEvent actionEvent) {
+        mainMenuViewModel.executeOpenIssueBookViewCommand();
     }
     @FXML
     private void returnBook(ActionEvent actionEvent) {
