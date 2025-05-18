@@ -44,14 +44,14 @@ public class TokenHandler {
     private RSAPublicKey getPublicKey() {
         try {
             String publicKeyPEM = "-----BEGIN PUBLIC KEY-----\n" +
-                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtqOsQUo9mP1adcnRu0Id\n" +
-                    "nIL3OyP4CsKKV4yVKy6haa+C53Sfsm87F40o/RuotShe7s/yj2dIWjflyxKbYLzP\n" +
-                    "rnIfr+TivuIlQA0DKODNl3oR8tos0raHqOfuJmozBn/EZgZUFcdLXfbR0xhM0qIE\n" +
-                    "JqtEzBgNusf2WXPzAOJeBzeN31jzfU9yZW1yMUFxkzQ7WfVT1+lYikr2ctaqZ89t\n" +
-                    "wgCEVKiXzkSeJPK1w+FosVodI2gO1MymOK/VHiAL3g35nzrlmkUPX9YLeAnnosdY\n" +
-                    "5QYTQdqqKD/Pab0jxE7PM2V/HzK6Fglx65pZoURjnL6KvwTns4g45+5m4MyUjGFe\n" +
-                    "3wIDAQAB\n" +
-                    "-----END PUBLIC KEY-----\n";
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqC+aMyho97ZU0IQYRf+h\n" +
+                    "L9nloKOcjkh8/cICh7J4esOn1m1GYvlGBkKh1/J4jRWHwpE/f1TOaRLCUHXuUA0I\n" +
+                    "/ps7B14ewMFnoNGrgPLVjsDARV6N4NaPNNGJh+TmjiM7WL6GoDzmH7bRzct0p0Vf\n" +
+                    "KyyOejUlOqWRgcvuStg378LJwW7b+TiC88iyPUeqCOvQs55oksaMa03LP6zj+Dst\n" +
+                    "nKukHOS1lPWmAxCq9/20oFRXvYw1cIeI9euJRM2+0eDiW8C57OYGHDPOlZO2XWPT\n" +
+                    "v/nJPxNGvRuqvGrj+jZwTDqx3hRqf2pBmlcrSKxrMXLhQmMoznFjb95q0FLqAeFJ\n" +
+                    "CwIDAQAB\n" +
+                    "-----END PUBLIC KEY-----";
 
             publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "")
                     .replace("-----END PUBLIC KEY-----", "")

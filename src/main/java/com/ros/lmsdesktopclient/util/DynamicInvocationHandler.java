@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -40,12 +37,18 @@ public class DynamicInvocationHandler implements InvocationHandler {
 
     private void checkNetwork() throws NetworkException{
         try {
-            InetAddress address = InetAddress.getByName("8.8.8.8"); // Google's public DNS
-            if (!address.isReachable(2000)) { // 2 seconds timeout
-                throw new NetworkException("Network is not reachable");
-            }
+            // Use HTTP connection to a reliable public endpoint
+            URL url = new URL("https://www.google.com"); // Or another reliable site
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+
+            // Just opening the connection is enough to verify reachability
+            connection.connect();
+            connection.disconnect();
         } catch (IOException e) {
-            throw new NetworkException("Failed to check network connectivity " + e);
+            throw new NetworkException("No internet connection available");
         }
     }
 
@@ -56,14 +59,14 @@ public class DynamicInvocationHandler implements InvocationHandler {
                     .build();
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(ApiUrls.LOGIN.getUrl()))
-                    .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                    .uri(new URI(ApiUrls.HEALTH_CHECK.getUrl()))
+                    .GET()
                     .build();
 
             HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
             int statusCode = response.statusCode();
 
-            if (statusCode != HttpURLConnection.HTTP_OK && statusCode != HttpURLConnection.HTTP_UNAUTHORIZED) {
+            if (statusCode != HttpURLConnection.HTTP_OK) {
                 throw new ServerErrorException("Server is not reachable. Response code: " + statusCode);
             }
         } catch (IOException | InterruptedException | URISyntaxException e) {
