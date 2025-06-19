@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.view_models.commands;
+package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
@@ -24,8 +24,6 @@ public class OpenViewCommand extends Command{
     }
 
     private void onSuccess(){
-        double width = ViewHandler.getInstance().getSceneWidth();
-        double height = ViewHandler.getInstance().getSceneHeight();
-        ViewHandler.switchTo(this.view.getView(), width, height);
+        ViewHandler.switchTo(this.view);
     }
 }

@@ -5,9 +5,9 @@ import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.services.service_impl.MemberServiceImpl;
 import com.ros.lmsdesktopclient.util.Views;
-import com.ros.lmsdesktopclient.view_models.commands.AddMemberCommand;
-import com.ros.lmsdesktopclient.view_models.commands.Command;
-import com.ros.lmsdesktopclient.view_models.commands.OpenViewCommand;
+import com.ros.lmsdesktopclient.commands.AddMemberCommand;
+import com.ros.lmsdesktopclient.commands.Command;
+import com.ros.lmsdesktopclient.commands.OpenViewCommand;
 
 public class AddMemberViewModel {
     private final Command openMainViewCommand;

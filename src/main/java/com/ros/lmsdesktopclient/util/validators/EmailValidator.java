@@ -1,8 +1,5 @@
 package com.ros.lmsdesktopclient.util.validators;
 
-import com.ros.lmsdesktopclient.util.ViewHandler;
-import javafx.stage.Stage;
-
 import java.util.regex.Pattern;
 
 public class EmailValidator {

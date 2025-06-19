@@ -80,3 +80,8 @@ TableColumn {
 #bodyPane Button:hover {
     -fx-background-color: #005fa3; /* Darker blue on hover */
 }
+
+#lblCoverImage {
+    -fx-padding-left: 100px;
+    -fx-font-size: 13px;
+}

@@ -4,8 +4,8 @@ import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.services.service_impl.LoginServiceImpl;
-import com.ros.lmsdesktopclient.view_models.commands.Command;
-import com.ros.lmsdesktopclient.view_models.commands.LoginCommand;
+import com.ros.lmsdesktopclient.commands.Command;
+import com.ros.lmsdesktopclient.commands.LoginCommand;
 
 public class LoginViewModel {
     private final LoginModel loginModel;

@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.view_models.commands;
+package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;

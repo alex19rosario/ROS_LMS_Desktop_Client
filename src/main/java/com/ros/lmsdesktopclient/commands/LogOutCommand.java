@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.view_models.commands;
+package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
@@ -23,8 +23,6 @@ public class LogOutCommand extends Command{
     }
 
     private void onSuccess(){
-        double width = ViewHandler.getInstance().getSceneWidth();
-        double height = ViewHandler.getInstance().getSceneHeight();
-        ViewHandler.switchTo(Views.LOGIN.getView(), width, height);
+        ViewHandler.switchTo(Views.LOGIN);
     }
 }
