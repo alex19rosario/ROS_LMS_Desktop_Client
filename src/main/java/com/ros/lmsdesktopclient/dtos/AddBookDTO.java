@@ -1,16 +1,24 @@
 package com.ros.lmsdesktopclient.dtos;
 
+import java.io.File;
 import java.util.Set;
 
-public record AddBookDTO(long ISBN, String title, Set<String> genres, Set<AuthorDTO> authors) {
+public record AddBookDTO(
+        long ISBN,
+        String title,
+        String authors,
+        String genres,
+        File coverImage
+        ) {
 
     @Override
     public String toString() {
-        return "BookDTO{" +
-                "ISBN='" + ISBN + '\'' +
+        return "AddBookDTO{" +
+                "ISBN=" + ISBN +
                 ", title='" + title + '\'' +
-                ", genres=" + genres +
-                ", authors=" + authors +
+                ", authors='" + authors + '\'' +
+                ", genres='" + genres + '\'' +
+                ", coverImage=" + coverImage +
                 '}';
     }
 }

@@ -8,8 +8,9 @@ import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
-import com.ros.lmsdesktopclient.view_models.commands.*;
+import com.ros.lmsdesktopclient.commands.*;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ public class AddBookViewModel {
     private final Command addAuthorCommand;
     private final Command addGenreCommand;
     private final Command addBookCommand;
+    private final Command selectFileCommand;
     private final ListProperty<AuthorInputModel> authorInputs;
     private final ListProperty<GenreInputModel> genreInputs;
     private final BookModel bookModel;
@@ -49,6 +51,7 @@ public class AddBookViewModel {
         addGenreCommand = new AddGenreCommand(genreInputs.get(), bookModel, genres);
         BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
         addBookCommand = new AddBookCommand(bookModel, authors, bookService);
+        selectFileCommand = new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage());
     }
 
     public ListProperty<AuthorInputModel> authorInputsProperty() {
@@ -77,6 +80,10 @@ public class AddBookViewModel {
 
     public void executeAddBookCommand(){
         this.addBookCommand.execute();
+    }
+
+    public void executeSelectCoverImageCommand() {
+        this.selectFileCommand.execute();
     }
 
 }

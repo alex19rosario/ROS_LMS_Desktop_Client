@@ -24,8 +24,7 @@ public class UpFrontDataHandler {
     }
 
     private final Function<Set<String>, String> getGenresStr = genres ->
-            genres.stream()
-                    .collect(Collectors.joining(" "));
+            String.join(" ", genres);
 
     private final Function<String, Set<String>> getGenresSet = genresStr ->
             Arrays.stream(genresStr.split(" "))

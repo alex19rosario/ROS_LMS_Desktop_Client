@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.view_models.commands;
+package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.dtos.AuthorDTO;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
@@ -6,13 +6,12 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.Alerts;
-import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
-import java.net.http.HttpClient;
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,18 +40,16 @@ public class AddBookCommand extends Command{
             @Override
             protected Void call() throws EmptyFieldsException, InvalidISBNException, BookAlreadyExistException, ServerErrorException, ExpiredSessionException, NetworkException {
                 checkForm(book, authors);
-                Set<String> genres = book.getGenres()
-                        .stream()
+                String authorsString = authors.stream()
+                        .map(author -> author.getFirstName().toUpperCase() + "-" + author.getLastName().toUpperCase())
+                        .collect(Collectors.joining(","));
+
+                String genresString = book.getGenres().stream()
                         .map(StringProperty::get)
                         .map(String::toUpperCase)
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.joining(","));
 
-                Set<AuthorDTO> authorDTOS = authors.stream()
-                        .map(author -> new AuthorDTO(author.getFirstName().toUpperCase(), author.getLastName().toUpperCase()))
-                        .collect(Collectors.toSet());
-
-                AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), genres, authorDTOS);
-
+                AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), authorsString, genresString, book.getCoverImageFile());
                 bookService.addBook(bookDTO);
 
                 return null;

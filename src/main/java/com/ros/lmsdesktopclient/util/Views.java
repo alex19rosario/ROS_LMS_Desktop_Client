@@ -1,18 +1,23 @@
 package com.ros.lmsdesktopclient.util;
 
+import com.ros.lmsdesktopclient.views.*;
+
+import java.util.function.Supplier;
+
 public enum Views {
-    LOGIN("views/login-view.fxml"),
-    MAIN_MENU("views/main-menu-view.fxml"),
-    ADD_BOOK("views/add-book-view.fxml"),
-    ADD_MEMBER("views/add-member-view.fxml");
+    LOGIN(LoginView::new),
+    MAIN_MENU(MainMenuView::new),
+    ADD_BOOK(AddBookView::new),
+    ADD_MEMBER(AddMemberView::new);
 
-    private final String view;
+    private final Supplier<BaseView> viewSupplier;
 
-    Views(String view) {
-        this.view = view;
+    Views(Supplier<BaseView> viewSupplier) {
+        this.viewSupplier = viewSupplier;
     }
 
-    public String getView(){
-        return this.view;
+    public BaseView getViewInstance() {
+        return viewSupplier.get();
     }
+
 }

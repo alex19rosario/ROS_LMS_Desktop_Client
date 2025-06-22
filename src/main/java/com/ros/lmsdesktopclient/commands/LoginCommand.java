@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.view_models.commands;
+package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
@@ -7,8 +7,6 @@ import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.concurrent.Task;
-
-import java.net.http.HttpClient;
 
 public class LoginCommand extends Command {
 
@@ -34,9 +32,7 @@ public class LoginCommand extends Command {
     }
 
     private void onSuccess(){
-        double width = ViewHandler.getInstance().getSceneWidth();
-        double height = ViewHandler.getInstance().getSceneHeight();
-        ViewHandler.switchTo(Views.MAIN_MENU.getView(), width, height);
+        ViewHandler.switchTo(Views.MAIN_MENU);
     }
 
     private void onFailure(){
