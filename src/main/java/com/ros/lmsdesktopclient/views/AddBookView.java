@@ -14,7 +14,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 
-
 public class AddBookView implements BaseView {
 
     private AddBookViewModel addBookViewModel;
@@ -41,10 +40,9 @@ public class AddBookView implements BaseView {
     public void start(Stage stage) {
         addBookViewModel = new AddBookViewModel();
         initComponents();
-        Scene scene = new Scene(createContent(), 900, 900);
+        Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();
         stage.setScene(scene);
-        stage.show();
     }
 
     @SuppressWarnings("unchecked")
@@ -83,7 +81,7 @@ public class AddBookView implements BaseView {
         btnAddGenre.setOnAction(actionEvent -> addBookViewModel.executeAddGenreCommand());
         btnAddBook.setOnAction(actionEvent -> addBookViewModel.executeAddBookCommand());
         btnAttachCoverImage.setOnAction(actionEvent -> addBookViewModel.executeSelectCoverImageCommand());
-
+        btnGoBack.setOnAction(actionEvent -> addBookViewModel.executeOpenMainViewCommand());
     }
 
     private Region createContent() {
@@ -95,7 +93,7 @@ public class AddBookView implements BaseView {
 
     private Node createHeader() {
         HBox hBox = new HBox(lblHeaderTitle);
-        hBox.setPadding(new Insets(50, 50, 50, 50));
+        hBox.setPadding(new Insets(25));
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }
@@ -152,10 +150,7 @@ public class AddBookView implements BaseView {
     private Node createFooter() {
         HBox hBox = new HBox(400, btnGoBack, btnAddBook);
         hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(50, 0, 0, 0));
+        hBox.setPadding(new Insets(25));
         return hBox;
     }
-
-
-
 }

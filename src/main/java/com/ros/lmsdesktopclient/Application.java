@@ -11,11 +11,7 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         stage.setTitle("Ros Library Management System");
         ViewHandler.setStageToInstance(stage);
-        ViewHandler.switchTo(Views.ADD_BOOK);
-
-        //ViewHandler.setInstance(stage);
-        //ViewHandler.switchTo(Views.LOGIN.getView());
-        //ViewHandler.getInstance().start();
+        ViewHandler.switchTo(Views.LOGIN);
     }
 
     public static void main(String[] args) {
