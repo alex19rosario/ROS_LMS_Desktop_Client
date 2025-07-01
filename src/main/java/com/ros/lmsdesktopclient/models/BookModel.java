@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.models;
 import com.ros.lmsdesktopclient.util.Genres;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;

@@ -3,6 +3,7 @@ package com.ros.lmsdesktopclient.views;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
