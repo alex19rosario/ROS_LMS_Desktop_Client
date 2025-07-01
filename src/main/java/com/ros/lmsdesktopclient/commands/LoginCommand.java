@@ -3,6 +3,7 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -38,6 +39,7 @@ public class LoginCommand extends Command {
     private void onFailure(){
         // Get the exception from the command task
         Throwable exception = getCommandTask().getException();
+        TokenHandler.getInstance().removeAll();
 
         // Use a switch expression to determine the alert type
         Alerts alert = switch (exception) {

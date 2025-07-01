@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
@@ -12,31 +11,73 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(AddBookDTO book) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
-
+        // 1. Validate ISBN before doing anything
         checkISBN(book);
+
+        // 2. Retrieve the authentication token
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            // Serialize AddBookDTO to JSON
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonPayload = objectMapper.writeValueAsString(book);
+        // 3. Create a unique boundary string for multipart form separation
+        String boundary = "----JavaFormBoundary" + System.currentTimeMillis();
 
-            // Create HTTP POST Request
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            // 4. Prepare the string part of the multipart body (text fields)
+            StringBuilder sb = new StringBuilder();
+
+            // Add text fields (isbn, title, authors, genres) with correct boundary and format
+            appendFormField(sb, "isbn", String.valueOf(book.ISBN()), boundary);
+            appendFormField(sb, "title", book.title(), boundary);
+            appendFormField(sb, "authors", book.authors(), boundary);
+            appendFormField(sb, "genres", book.genres(), boundary);
+
+            // 5. Read the file bytes from the cover image
+            byte[] fileBytes = Files.readAllBytes(book.coverImage().toPath());
+
+            // 6. Build the header for the file part (note: filename and content-type are required)
+            String filePartHeader = "--" + boundary + "\r\n" +
+                    "Content-Disposition: form-data; name=\"coverImage\"; filename=\"" + book.coverImage().getName() + "\"\r\n" +
+                    "Content-Type: " + Files.probeContentType(book.coverImage().toPath()) + "\r\n\r\n";
+
+            // 7. Convert string parts to bytes
+            byte[] headerBytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+
+            // 8. Add the closing boundary at the end of the request body
+            byte[] footerBytes = ("\r\n--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8);
+
+            // 9. Combine all parts into a single byte array:
+            byte[] requestBody = new byte[
+                    headerBytes.length +
+                    filePartHeader.getBytes(StandardCharsets.UTF_8).length +
+                    fileBytes.length +
+                    footerBytes.length
+            ];
+
+            // 10. Copy parts into the final requestBody array
+            int offset = 0;
+            System.arraycopy(headerBytes, 0, requestBody, offset, headerBytes.length); offset += headerBytes.length;
+            byte[] fileHeaderBytes = filePartHeader.getBytes(StandardCharsets.UTF_8);
+            System.arraycopy(fileHeaderBytes, 0, requestBody, offset, fileHeaderBytes.length); offset += fileHeaderBytes.length;
+            System.arraycopy(fileBytes, 0, requestBody, offset, fileBytes.length); offset += fileBytes.length;
+            System.arraycopy(footerBytes, 0, requestBody, offset, footerBytes.length);
+
+            // 11. Build the HTTP POST request with headers and multipart body
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(ApiUrls.BOOKS.getUrl()))
                     .header("Authorization", "Bearer " + token)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .header("Content-Type", "multipart/form-data; boundary=" + boundary)
+                    .POST(HttpRequest.BodyPublishers.ofByteArray(requestBody))
                     .build();
 
-            // Send Request and Handle Response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // 12. Send the HTTP request
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
             // Check Response Status
             switch (response.statusCode()) {
@@ -51,7 +92,6 @@ public class BookServiceImpl implements BookService {
         } catch (InterruptedException e) {
             throw new NetworkException("Request was interrupted." + e);
         }
-        //Consume the service here
     }
 
     private void checkISBN(AddBookDTO book) throws InvalidISBNException {
@@ -62,6 +102,20 @@ public class BookServiceImpl implements BookService {
         if (book == null || !String.valueOf(book.ISBN()).matches(isbnRegex)) {
             throw new InvalidISBNException("Invalid ISBN: The specified ISBN does not have the correct format.");
         }
+    }
+
+    /**
+     * Appends a form-data text field to the multipart body.
+     *
+     * @param sb        StringBuilder accumulating the multipart content
+     * @param name      the name of the form field
+     * @param value     the value of the form field
+     * @param boundary  the boundary string used to separate parts
+     */
+    private void appendFormField(StringBuilder sb, String name, String value, String boundary) {
+        sb.append("--").append(boundary).append("\r\n");
+        sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"\r\n\r\n");
+        sb.append(value).append("\r\n");
     }
 
 }

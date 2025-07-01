@@ -1,10 +1,10 @@
 module com.example.lmsdesktopclient {
     requires java.net.http;
-    requires com.fasterxml.jackson.databind;
     requires com.auth0.jwt;
     requires javafx.controls;
-    requires java.desktop;
     requires java.prefs;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.databind;
 
     opens com.ros.lmsdesktopclient.models to javafx.base;
 

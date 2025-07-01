@@ -1,14 +1,18 @@
 package com.ros.lmsdesktopclient.models;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.time.LocalDate;
 
 public class MemberModel implements Model {
     private final StringProperty governmentID;
     private final StringProperty firstName;
     private final StringProperty lastName;
     private final StringProperty phone;
-    private final StringProperty age;
+    private final ObjectProperty<LocalDate> dateOfBirth;
     private final StringProperty sex;
     private final StringProperty email;
     private final StringProperty username;
@@ -20,7 +24,7 @@ public class MemberModel implements Model {
         firstName = new SimpleStringProperty("");
         lastName = new SimpleStringProperty("");
         phone = new SimpleStringProperty("");
-        age = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<>(null);
         sex = new SimpleStringProperty("");
         email = new SimpleStringProperty("");
         username = new SimpleStringProperty("");
@@ -76,16 +80,16 @@ public class MemberModel implements Model {
         this.phone.set(phone);
     }
 
-    public String getAge() {
-        return age.get();
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth.get();
     }
 
-    public StringProperty ageProperty() {
-        return age;
+    public ObjectProperty<LocalDate> dateOfBirthProperty() {
+        return dateOfBirth;
     }
 
-    public void setAge(String age) {
-        this.age.set(age);
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth.set(dateOfBirth);
     }
 
     public String getSex() {
@@ -154,7 +158,7 @@ public class MemberModel implements Model {
         this.setFirstName("");
         this.setLastName("");
         this.setPhone("");
-        this.setAge("");
+        this.setDateOfBirth(null);
         this.setSex("");
         this.setEmail("");
         this.setUsername("");
@@ -169,7 +173,7 @@ public class MemberModel implements Model {
                 !this.getFirstName().isEmpty() &&
                 !this.getLastName().isEmpty() &&
                 !this.getPhone().isEmpty() && !this.getPhone().contains(" ") &&
-                !this.getAge().isEmpty() && !this.getAge().contains(" ") &&
+                this.getDateOfBirth() != null &&
                 !this.getSex().isEmpty() && !this.getSex().contains(" ") &&
                 !this.getEmail().isEmpty() && !this.getEmail().contains(" ") &&
                 !this.getUsername().isEmpty() && !this.getUsername().contains(" ") &&

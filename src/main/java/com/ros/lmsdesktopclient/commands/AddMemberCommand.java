@@ -10,6 +10,7 @@ import com.ros.lmsdesktopclient.util.validators.EmailValidator;
 import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
 import javafx.concurrent.Task;
 
+import java.time.LocalDate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -34,7 +35,7 @@ public class AddMemberCommand extends Command{
 
         return new Task<>() {
             @Override
-            protected Void call() throws MemberAlreadyExistException, InvalidGovernmentIDException, InvalidPasswordException, ServerErrorException, ExpiredSessionException, InvalidEmailException, NetworkException, EmailAlreadyExistException, EmptyFieldsException, UsernameAlreadyExistException, InvalidPhoneNumberException {
+            protected Void call() throws MemberAlreadyExistException, InvalidGovernmentIDException, InvalidPasswordException, ServerErrorException, ExpiredSessionException, InvalidEmailException, NetworkException, EmailAlreadyExistException, EmptyFieldsException, UsernameAlreadyExistException, InvalidPhoneNumberException, InvalidDateOfBirthException {
                 checkForm(member);
                 AddMemberDTO memberDTO = mapper.apply(member);
                 memberService.addMember(memberDTO);
@@ -66,6 +67,7 @@ public class AddMemberCommand extends Command{
             case MemberAlreadyExistException e -> Alerts.EXISTING_MEMBER_ERROR;
             case UsernameAlreadyExistException e -> Alerts.EXISTING_USERNAME_ERROR;
             case EmailAlreadyExistException e -> Alerts.EXISTING_EMAIL_ERROR;
+            case InvalidDateOfBirthException e -> Alerts.INVALID_DATE_OF_BIRTH;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
         setAlert(alert);
@@ -76,25 +78,28 @@ public class AddMemberCommand extends Command{
         }
     }
 
-    private void checkForm(MemberModel model) throws EmptyFieldsException, InvalidGovernmentIDException, InvalidPhoneNumberException, InvalidEmailException, InvalidPasswordException, PasswordsDoNotMatchException {
+    private void checkForm(MemberModel model) throws EmptyFieldsException, InvalidGovernmentIDException, InvalidPhoneNumberException, InvalidEmailException, InvalidPasswordException, PasswordsDoNotMatchException, InvalidDateOfBirthException {
 
-        if(!hasNoEmptyFields.test(model)){
+        if(!hasNoEmptyFields.test(model)) {
             throw new EmptyFieldsException("Add Member Form: there are empty fields");
         }
-        else if(!hasValidGovernmentID.test(model)){
+        else if(!hasValidGovernmentID.test(model)) {
             throw new InvalidGovernmentIDException("Add Member Form: Invalid Government ID");
         }
-        else if(!hasValidPhoneNumber.test(model)){
+        else if(!hasValidPhoneNumber.test(model)) {
             throw new InvalidPhoneNumberException("Add Member Form: Invalid Phone Number");
         }
-        else if(!hasValidEmail.test(model)){
+        else if(!hasValidEmail.test(model)) {
             throw new InvalidEmailException("Add Member Form: Invalid Email");
         }
-        else if(!hasValidPassword.test(model)){
+        else if(!hasValidPassword.test(model)) {
             throw new InvalidPasswordException("Add Member Form: Invalid Password");
         }
-        else if(!passwordsDoMatch.test(model)){
+        else if(!passwordsDoMatch.test(model)) {
             throw new PasswordsDoNotMatchException("Add Member Form: Passwords do not match");
+        }
+        else if(!hasValidDateOfBirth.test(model)) {
+            throw new InvalidDateOfBirthException("Add Member Form: Date of Birth cannot be in the future");
         }
     }
 
@@ -110,12 +115,14 @@ public class AddMemberCommand extends Command{
 
     private final Predicate<MemberModel> passwordsDoMatch = member -> member.getPassword().equalsIgnoreCase(member.getRepeatedPassword());
 
+    private final Predicate<MemberModel> hasValidDateOfBirth = member -> member.getDateOfBirth().isBefore(LocalDate.now());
+
     private final Function<MemberModel, AddMemberDTO> mapper = memberModel -> new AddMemberDTO(
             memberModel.getGovernmentID(),
             memberModel.getFirstName(),
             memberModel.getLastName(),
             memberModel.getPhone(),
-            Byte.parseByte(memberModel.getAge()),
+            memberModel.getDateOfBirth(),
             memberModel.getSex().charAt(0),
             memberModel.getEmail(),
             memberModel.getUsername(),
