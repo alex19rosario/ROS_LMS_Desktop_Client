@@ -10,8 +10,7 @@ public enum ApiUrls {
     private final String url;
 
     ApiUrls(String url) {
-        //String BASE_URL = "http://ros-lms-api.us-east-1.elasticbeanstalk.com/";
-        String BASE_URL = "http://localhost:8080/";
+        String BASE_URL = "http://ros-lms-api.us-east-1.elasticbeanstalk.com/";
         this.url = BASE_URL + url;
     }
 
