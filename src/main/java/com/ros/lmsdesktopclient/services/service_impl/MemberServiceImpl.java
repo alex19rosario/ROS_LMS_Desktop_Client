@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
@@ -23,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
         try (HttpClient client = HttpClient.newHttpClient()){
             // Serialize AddBookDTO to JSON
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule()); // This enables LocalDate handling
             String jsonPayload = objectMapper.writeValueAsString(member);
 
             // Create HTTP POST Request
@@ -58,6 +60,5 @@ public class MemberServiceImpl implements MemberService {
         } catch (InterruptedException e) {
             throw new NetworkException("Request was interrupted." + e);
         }
-        System.out.println("Adding member: " + member);
     }
 }
