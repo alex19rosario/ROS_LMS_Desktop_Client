@@ -7,10 +7,11 @@ public record AddMemberDTO(String governmentID,
                            String lastName,
                            String phone,
                            LocalDate dateOfBirth,
-                           char sex,
+                           String sex,
                            String email,
                            String username,
-                           String password){
+                           String password,
+                           String staffUsername){
     @Override
     public String toString() {
         return "AddMemberDTO{" +
@@ -23,6 +24,7 @@ public record AddMemberDTO(String governmentID,
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", staffUsername='" + staffUsername + '\'' +
                 '}';
     }
 }
