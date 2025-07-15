@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import com.ros.lmsdesktopclient.util.validators.EmailValidator;
@@ -123,8 +124,9 @@ public class AddMemberCommand extends Command{
             memberModel.getLastName(),
             memberModel.getPhone(),
             memberModel.getDateOfBirth(),
-            memberModel.getSex().charAt(0),
+            memberModel.getSex(),
             memberModel.getEmail(),
             memberModel.getUsername(),
-            memberModel.getPassword());
+            memberModel.getPassword(),
+            TokenHandler.getInstance().getUsername());
 }
