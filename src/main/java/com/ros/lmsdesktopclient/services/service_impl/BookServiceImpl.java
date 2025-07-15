@@ -36,6 +36,7 @@ public class BookServiceImpl implements BookService {
             appendFormField(sb, "isbn", String.valueOf(book.ISBN()), boundary);
             appendFormField(sb, "title", book.title(), boundary);
             appendFormField(sb, "authors", book.authors(), boundary);
+            appendFormField(sb, "staffUsername", book.staffUsername(), boundary);
             appendFormField(sb, "genres", book.genres(), boundary);
 
             // 5. Read the file bytes from the cover image

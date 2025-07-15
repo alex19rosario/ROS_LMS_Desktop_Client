@@ -1,13 +1,13 @@
 package com.ros.lmsdesktopclient.dtos;
 
 import java.io.File;
-import java.util.Set;
 
 public record AddBookDTO(
-        long ISBN,
+        String ISBN,
         String title,
         String authors,
         String genres,
+        String staffUsername,
         File coverImage
         ) {
 
@@ -18,6 +18,7 @@ public record AddBookDTO(
                 ", title='" + title + '\'' +
                 ", authors='" + authors + '\'' +
                 ", genres='" + genres + '\'' +
+                ", staffUsername='" + staffUsername + '\'' +
                 ", coverImage=" + coverImage +
                 '}';
     }

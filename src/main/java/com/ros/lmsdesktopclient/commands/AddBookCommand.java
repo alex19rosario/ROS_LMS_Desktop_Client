@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.StringProperty;
@@ -49,7 +50,9 @@ public class AddBookCommand extends Command{
                         .map(String::toUpperCase)
                         .collect(Collectors.joining(","));
 
-                AddBookDTO bookDTO = new AddBookDTO(Long.parseLong(book.getIsbn()), book.getTitle(), authorsString, genresString, book.getCoverImageFile());
+                String staffUsername = TokenHandler.getInstance().getUsername();
+
+                AddBookDTO bookDTO = new AddBookDTO(book.getIsbn(), book.getTitle(), authorsString, genresString, staffUsername, book.getCoverImageFile());
                 bookService.addBook(bookDTO);
 
                 return null;
