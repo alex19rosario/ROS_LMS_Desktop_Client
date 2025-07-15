@@ -40,7 +40,14 @@ public enum Alerts {
         alert.setTitle(this.title);
         alert.setHeaderText(this.header);
         alert.setContentText(this.content);
+        alert.showAndWait();
+    }
 
+    public void getModal(String content) {
+        Alert alert = new Alert(this.type);
+        alert.setTitle(this.title);
+        alert.setHeaderText(this.header);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }
