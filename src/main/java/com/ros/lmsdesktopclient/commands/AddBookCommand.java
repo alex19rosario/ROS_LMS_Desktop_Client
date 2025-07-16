@@ -1,10 +1,10 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.dtos.AuthorDTO;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.AlertContents;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.Views;
@@ -12,9 +12,7 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
-import java.io.File;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AddBookCommand extends Command{
@@ -62,7 +60,7 @@ public class AddBookCommand extends Command{
 
     private void onSuccess(){
         setAlert(Alerts.BOOK_ADDED_SUCCESS);
-        getAlert().getModal();
+        getAlert().getModal(AlertContents.BOOK_ADDED_OK.getValue());
         //To reset the screen
         openAddBookViewCommand.execute();
     }
@@ -80,8 +78,9 @@ public class AddBookCommand extends Command{
             case BookAlreadyExistException e -> Alerts.EXISTING_BOOK_ERROR;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
+        String content = exception.getMessage();
         setAlert(alert);
-        getAlert().getModal();
+        getAlert().getModal(content);
 
         if(exception instanceof ExpiredSessionException){
             openLoginViewCommand.execute();

@@ -3,6 +3,7 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
+import com.ros.lmsdesktopclient.util.AlertContents;
 import com.ros.lmsdesktopclient.util.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.Views;
@@ -12,6 +13,8 @@ import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
 import javafx.concurrent.Task;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -36,7 +39,7 @@ public class AddMemberCommand extends Command{
 
         return new Task<>() {
             @Override
-            protected Void call() throws MemberAlreadyExistException, InvalidGovernmentIDException, InvalidPasswordException, ServerErrorException, ExpiredSessionException, InvalidEmailException, NetworkException, EmailAlreadyExistException, EmptyFieldsException, UsernameAlreadyExistException, InvalidPhoneNumberException, InvalidDateOfBirthException {
+            protected Void call() throws Exception {
                 checkForm(member);
                 AddMemberDTO memberDTO = mapper.apply(member);
                 memberService.addMember(memberDTO);
@@ -47,7 +50,7 @@ public class AddMemberCommand extends Command{
 
     private void onSuccess(){
         setAlert(Alerts.MEMBER_ADDED_SUCCESS);
-        getAlert().getModal();
+        getAlert().getModal(AlertContents.MEMBER_ADDED_OK.getValue());
         //reset screen
         openAddMemberViewCommand.execute();
     }
@@ -71,36 +74,30 @@ public class AddMemberCommand extends Command{
             case InvalidDateOfBirthException e -> Alerts.INVALID_DATE_OF_BIRTH;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
+        String content = exception.getMessage();
         setAlert(alert);
-        getAlert().getModal();
+        getAlert().getModal(content);
 
         if(exception instanceof ExpiredSessionException){
             openLoginViewCommand.execute();
         }
     }
 
-    private void checkForm(MemberModel model) throws EmptyFieldsException, InvalidGovernmentIDException, InvalidPhoneNumberException, InvalidEmailException, InvalidPasswordException, PasswordsDoNotMatchException, InvalidDateOfBirthException {
+    private void checkForm(MemberModel model) throws Exception {
 
-        if(!hasNoEmptyFields.test(model)) {
-            throw new EmptyFieldsException("Add Member Form: there are empty fields");
-        }
-        else if(!hasValidGovernmentID.test(model)) {
-            throw new InvalidGovernmentIDException("Add Member Form: Invalid Government ID");
-        }
-        else if(!hasValidPhoneNumber.test(model)) {
-            throw new InvalidPhoneNumberException("Add Member Form: Invalid Phone Number");
-        }
-        else if(!hasValidEmail.test(model)) {
-            throw new InvalidEmailException("Add Member Form: Invalid Email");
-        }
-        else if(!hasValidPassword.test(model)) {
-            throw new InvalidPasswordException("Add Member Form: Invalid Password");
-        }
-        else if(!passwordsDoMatch.test(model)) {
-            throw new PasswordsDoNotMatchException("Add Member Form: Passwords do not match");
-        }
-        else if(!hasValidDateOfBirth.test(model)) {
-            throw new InvalidDateOfBirthException("Add Member Form: Date of Birth cannot be in the future");
+        Map<Predicate<MemberModel>, Exception> validations = new LinkedHashMap<>();
+        validations.put(hasNoEmptyFields, new EmptyFieldsException("Add Member Form: there are empty fields"));
+        validations.put(hasValidGovernmentID, new InvalidGovernmentIDException("Add Member Form: Invalid Government ID"));
+        validations.put(hasValidPhoneNumber, new InvalidPhoneNumberException("Add Member Form: Invalid Phone Number"));
+        validations.put(hasValidEmail, new InvalidEmailException("Add Member Form: Invalid Email"));
+        validations.put(hasValidPassword, new InvalidPasswordException("Add Member Form: Invalid Password"));
+        validations.put(passwordsDoMatch, new PasswordsDoNotMatchException("Add Member Form: Passwords do not match"));
+        validations.put(hasValidDateOfBirth, new InvalidDateOfBirthException("Add Member Form: Date of Birth cannot be in the future"));
+
+        for (Map.Entry<Predicate<MemberModel>, Exception> entry : validations.entrySet()) {
+            if (!entry.getKey().test(model)) {
+                throw entry.getValue();
+            }
         }
     }
 

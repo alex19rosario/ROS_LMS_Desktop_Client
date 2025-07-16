@@ -56,7 +56,7 @@ public class LoginServiceImpl implements LoginService {
             upFrontDataHandler.saveGenres(genreService.getAllGenres());
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
-            throw new AuthenticationException("Invalid credentials");
+            throw new AuthenticationException("The username or password are incorrect.");
         }
     }
 
