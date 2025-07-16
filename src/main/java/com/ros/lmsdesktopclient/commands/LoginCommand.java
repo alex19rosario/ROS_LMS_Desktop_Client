@@ -52,8 +52,9 @@ public class LoginCommand extends Command {
         };
 
         // Set the determined alert and display the modal
+        String content = exception.getMessage();
         setAlert(alert);
-        getAlert().getModal();
+        getAlert().getModal(content);
 
         // Clear the login model
         loginModel.clear();
