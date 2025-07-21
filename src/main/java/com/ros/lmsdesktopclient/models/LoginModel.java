@@ -5,7 +5,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Arrays;
 
-public class LoginModel implements Model {
+public class LoginModel implements Clearable, Completable {
     private StringProperty username;
     private StringProperty password;
 

@@ -2,7 +2,7 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.util.Genres;
+import com.ros.lmsdesktopclient.util.GenreType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -27,7 +27,7 @@ public class AddGenreCommand extends Command{
             @Override
             protected Void call() throws Exception {
                 GenreInputModel genreInputModel = new GenreInputModel(genres);
-                book.getGenres().addFirst(new SimpleStringProperty(Genres.SCIENCE.getStr()));
+                book.getGenres().addFirst(new SimpleStringProperty(GenreType.SCIENCE.getStr()));
                 genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
                 genreInputs.addFirst(genreInputModel);
                 return null;

@@ -7,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
 
-public class MemberModel implements Model {
+public class MemberModel implements Clearable, Completable {
     private final StringProperty governmentID;
     private final StringProperty firstName;
     private final StringProperty lastName;

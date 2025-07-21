@@ -1,11 +1,6 @@
 package com.ros.lmsdesktopclient.util;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-
-public enum Genres {
+public enum GenreType {
     MYSTERY("MYSTERY"),
     SCIENCE_FICTION("SCIENCE FICTION"),
     ROMANCE("ROMANCE"),
@@ -38,7 +33,7 @@ public enum Genres {
 
     private final String str;
 
-    Genres(String str){
+    GenreType(String str){
         this.str = str;
     }
 

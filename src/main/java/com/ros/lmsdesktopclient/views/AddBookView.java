@@ -3,7 +3,6 @@ package com.ros.lmsdesktopclient.views;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,7 +19,7 @@ public class AddBookView implements BaseView {
     private AddBookViewModel addBookViewModel;
 
     private Label lblHeaderTitle;
-    private Label lblISBN;
+    private Label lblIsbn;
     private TextField tfIsbn;
     private Label lblTitle;
     private TextField tfTitle;
@@ -49,7 +48,7 @@ public class AddBookView implements BaseView {
     @SuppressWarnings("unchecked")
     private void initComponents() {
         lblHeaderTitle = new Label("Adding a new book");
-        lblISBN = new Label("ISBN");
+        lblIsbn = new Label("ISBN");
         tfIsbn = new TextField();
         lblTitle = new Label("Title");
         tfTitle = new TextField();
@@ -107,7 +106,7 @@ public class AddBookView implements BaseView {
 
     private Node createFirstSection() {
         GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblISBN, 1, 0 );
+        gridPane.add(lblIsbn, 1, 0 );
         gridPane.add(tfIsbn, 2, 0);
         gridPane.add(lblTitle, 3, 0);
         gridPane.add(tfTitle, 4, 0);
