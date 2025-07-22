@@ -126,6 +126,7 @@ public class IssueBookView implements BaseView {
         cbStatus.valueProperty().bindBidirectional(issueBookViewModel.getSearchBookModel().statusProperty());
 
         btnClear.setOnAction(actionEvent -> issueBookViewModel.executeClearFilterCommand());
+        btnSearch.setOnAction(actionEvent -> issueBookViewModel.executeSearchBooksCommand());
 
         // Disable ISBN whenever ANY of the other fields is non‑empty --
         BooleanBinding disableIsbn =
@@ -145,7 +146,8 @@ public class IssueBookView implements BaseView {
         cbGenre.disableProperty().bind(disableOthers);
         cbStatus.disableProperty().bind(disableOthers);
 
-        
+        // Bind tableView
+        tableViewBook.itemsProperty().bindBidirectional(issueBookViewModel.booksProperty());
 
     }
 

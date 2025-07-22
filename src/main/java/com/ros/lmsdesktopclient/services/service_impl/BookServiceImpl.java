@@ -1,6 +1,10 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
+import com.ros.lmsdesktopclient.dtos.BookDTO;
+import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -8,11 +12,14 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookServiceImpl implements BookService {
 
@@ -95,6 +102,60 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    @Override
+    public List<BookDTO> searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException {
+
+        String token = TokenHandler.getInstance().getToken()
+                .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
+
+        try {
+            // Build URL with query params
+            StringBuilder urlBuilder = new StringBuilder(ApiUrls.BOOKS.getUrl());
+            urlBuilder.append("?page=").append(filter.page());
+            urlBuilder.append("&size=").append(filter.size());
+
+            if (filter.title() != null && !filter.title().isBlank())
+                urlBuilder.append("&title=").append(encode(filter.title()));
+            if (filter.genre() != null)
+                urlBuilder.append("&genre=").append(encode(filter.genre().getStr()));
+            if (filter.authorFirstName() != null && !filter.authorFirstName().isBlank())
+                urlBuilder.append("&authorFirstName=").append(encode(filter.authorFirstName()));
+            if (filter.authorLastName() != null && !filter.authorLastName().isBlank())
+                urlBuilder.append("&authorLastName=").append(encode(filter.authorLastName()));
+            if (filter.isAvailable() != null)
+                urlBuilder.append("&isAvailable=").append(filter.isAvailable());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlBuilder.toString()))
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            switch (response.statusCode()) {
+                case 200 -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode root = mapper.readTree(response.body());
+
+                    List<BookDTO> books = new ArrayList<>();
+                    for (JsonNode bookNode : root.get("_embedded").get("bookDTOList")) {
+                        BookDTO book = mapper.treeToValue(bookNode, BookDTO.class);
+                        books.add(book);
+                    }
+
+                    return books;
+                }
+                case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");
+                default -> throw new ServerErrorException("Server returned status: " + response.statusCode());
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
+            throw new NetworkException("Failed to communicate with the server." + e.getMessage());
+        }
+    }
+
     private void checkISBN(AddBookDTO book) throws InvalidISBNException {
         // Regex for a valid ISBN-10 or ISBN-13
         String isbnRegex = "^(\\d{10}|\\d{13})$";
@@ -117,6 +178,10 @@ public class BookServiceImpl implements BookService {
         sb.append("--").append(boundary).append("\r\n");
         sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"\r\n\r\n");
         sb.append(value).append("\r\n");
+    }
+
+    private String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
 }

@@ -7,6 +7,7 @@ module com.example.lmsdesktopclient {
     requires com.fasterxml.jackson.databind;
 
     opens com.ros.lmsdesktopclient.models to javafx.base;
+    opens com.ros.lmsdesktopclient.util to com.fasterxml.jackson.databind;
 
     exports com.ros.lmsdesktopclient;
     exports com.ros.lmsdesktopclient.models to com.fasterxml.jackson.databind;

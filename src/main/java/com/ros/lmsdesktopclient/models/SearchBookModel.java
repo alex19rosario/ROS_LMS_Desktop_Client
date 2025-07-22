@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class SearchBookModel implements Clearable{
+public class SearchBookModel implements Clearable, Completable{
 
     private final IntegerProperty page;
     private final IntegerProperty size;
@@ -14,6 +14,7 @@ public class SearchBookModel implements Clearable{
     private final StringProperty authorLastName;
     private final StringProperty genre;
     private final StringProperty status;
+    private final static int PAGE_SIZE = 10;
 
     public SearchBookModel() {
         this.page = new SimpleIntegerProperty();
@@ -23,6 +24,8 @@ public class SearchBookModel implements Clearable{
         this.authorLastName = new SimpleStringProperty();
         this.genre = new SimpleStringProperty();
         this.status = new SimpleStringProperty();
+
+        this.size.set(PAGE_SIZE);
     }
 
     public int getPage() {
@@ -129,5 +132,18 @@ public class SearchBookModel implements Clearable{
         authorLastName.setValue("");
         genre.setValue(null);
         status.setValue(null);
+    }
+
+    @Override
+    public boolean isComplete() {
+        return isNotEmpty(title.get()) ||
+                isNotEmpty(authorFirstName.get()) ||
+                isNotEmpty(authorLastName.get()) ||
+                isNotEmpty(genre.get()) ||
+                isNotEmpty(status.get());
+    }
+
+    private boolean isNotEmpty(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 }
