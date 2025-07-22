@@ -21,7 +21,9 @@ public enum Alerts {
     EXISTING_EMAIL_ERROR("Email Already Exists", "Email Already Exists", Alert.AlertType.ERROR),
     EXISTING_USERNAME_ERROR("Username Already Exists", "Username Already Exists", Alert.AlertType.ERROR),
     INVALID_PHONE_ERROR("Invalid Phone Number", "Invalid Phone Number", Alert.AlertType.ERROR),
-    INVALID_DATE_OF_BIRTH("Invalid Date of Birth", "Invalid Date of Birth", Alert.AlertType.ERROR);
+    INVALID_DATE_OF_BIRTH("Invalid Date of Birth", "Invalid Date of Birth", Alert.AlertType.ERROR),
+    BOOK_NOT_FOUND("Book Not Found", "Book Not Found", Alert.AlertType.ERROR),
+    ALREADY_CLEARED_ERROR("Already Cleared", "Fields Already Cleared", Alert.AlertType.ERROR);
 
     private final String title;
     private final String header;

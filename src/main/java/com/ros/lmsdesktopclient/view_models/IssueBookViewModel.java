@@ -2,6 +2,7 @@ package com.ros.lmsdesktopclient.view_models;
 
 import com.ros.lmsdesktopclient.commands.ClearFilterCommand;
 import com.ros.lmsdesktopclient.commands.Command;
+import com.ros.lmsdesktopclient.commands.LoadBooksCommand;
 import com.ros.lmsdesktopclient.commands.SearchBooksCommand;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
@@ -26,6 +27,7 @@ public class IssueBookViewModel {
 
     private final Command searchBooksCommand;
     private final Command clearFilterCommand;
+    private final Command loadBooksCommand;
 //    private final Command openMainViewCommand;
 //    private final Command issueBookCommand;
 
@@ -37,8 +39,10 @@ public class IssueBookViewModel {
         books = new SimpleListProperty<>(FXCollections.observableArrayList());
         selectedBookModel = new SelectedBookModel();
         memberUsername = new SimpleStringProperty();
-        searchBooksCommand = new SearchBooksCommand(searchBookModel, books, bookService);
-        clearFilterCommand = new ClearFilterCommand(searchBookModel, isbn);
+        searchBooksCommand = new SearchBooksCommand(isbn, searchBookModel, books, bookService);
+        clearFilterCommand = new ClearFilterCommand(isbn, searchBookModel);
+        loadBooksCommand = new LoadBooksCommand(searchBookModel, books, bookService);
+        loadBooksCommand.execute();
     }
 
     public String getIsbn() {
@@ -78,7 +82,11 @@ public class IssueBookViewModel {
     }
 
     public void executeClearFilterCommand() {
-        this.clearFilterCommand.execute();
+        clearFilterCommand.execute();
+
+        clearFilterCommand.getCommandTask().setOnSucceeded(event -> {
+            loadBooksCommand.execute();
+        });
     }
 
 

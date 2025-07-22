@@ -103,7 +103,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException {
+    public List<BookDTO> searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException {
 
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
@@ -138,10 +138,19 @@ public class BookServiceImpl implements BookService {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode root = mapper.readTree(response.body());
 
+                    JsonNode embeddedNode = root.get("_embedded");
+                    if (embeddedNode == null || !embeddedNode.has("bookDTOList")) {
+                        throw new BookNotFoundException("No books found matching the criteria.");
+                    }
+
                     List<BookDTO> books = new ArrayList<>();
                     for (JsonNode bookNode : root.get("_embedded").get("bookDTOList")) {
                         BookDTO book = mapper.treeToValue(bookNode, BookDTO.class);
                         books.add(book);
+                    }
+
+                    if (books.isEmpty()) {
+                        throw new BookNotFoundException("No books found matching the criteria.");
                     }
 
                     return books;
@@ -153,6 +162,38 @@ public class BookServiceImpl implements BookService {
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
             throw new NetworkException("Failed to communicate with the server." + e.getMessage());
+        }
+    }
+
+    @Override
+    public BookDTO searchBookByIsbn(String isbn) throws BookNotFoundException, NetworkException, ServerErrorException, ExpiredSessionException {
+        String token = TokenHandler.getInstance().getToken()
+                .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
+
+        try {
+            String url = ApiUrls.BOOKS.getUrl() + "/" + encode(isbn);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            switch (response.statusCode()) {
+                case 200 -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    return mapper.readValue(response.body(), BookDTO.class);
+                }
+                case 404 -> throw new BookNotFoundException("Book with ISBN '" + isbn + "' was not found.");
+                case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");
+                default -> throw new ServerErrorException("Server returned status: " + response.statusCode());
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
+            throw new NetworkException("Failed to communicate with the server. " + e.getMessage());
         }
     }
 

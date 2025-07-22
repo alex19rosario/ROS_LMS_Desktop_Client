@@ -31,7 +31,7 @@ public class LoginView implements BaseView {
         loginViewModel = new LoginViewModel(new LoginModel());
         initComponents();
         Scene scene = stage.getScene() == null ?
-                new Scene(createContent(), 800, 600) :
+                new Scene(createContent(), 1200, 900) :
                 new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();
         stage.setScene(scene);

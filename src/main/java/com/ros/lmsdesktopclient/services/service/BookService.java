@@ -7,6 +7,7 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import java.net.http.HttpClient;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookService {
     void addBook(AddBookDTO book) throws
@@ -17,6 +18,13 @@ public interface BookService {
             BookAlreadyExistException;
 
     List<BookDTO> searchBooks(SearchBookDTO filter) throws
+            NetworkException,
+            ServerErrorException,
+            ExpiredSessionException,
+            BookNotFoundException;
+
+    BookDTO searchBookByIsbn(String isbn) throws
+            BookNotFoundException,
             NetworkException,
             ServerErrorException,
             ExpiredSessionException;
