@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.dtos.BookDTO;
+import com.ros.lmsdesktopclient.dtos.PaginatedBooksDTO;
 import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
@@ -8,6 +9,7 @@ import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.BookStatus;
 import com.ros.lmsdesktopclient.util.GenreType;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.concurrent.Task;
 
@@ -16,11 +18,13 @@ import java.util.function.Function;
 
 public class LoadBooksCommand extends Command{
 
+    private final IntegerProperty totalPages;
     private final SearchBookModel searchBookModel;
     private final ListProperty<BookDisplayModel> books;
     private final BookService bookService;
 
-    public LoadBooksCommand(SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
+    public LoadBooksCommand(IntegerProperty totalPages, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
+        this.totalPages = totalPages;
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
@@ -33,7 +37,9 @@ public class LoadBooksCommand extends Command{
             protected Void call() throws Exception {
                 SearchBookDTO searchBookDTO = mapToSearchBookDTO.apply(searchBookModel);
 
-                List<BookDTO> bookDTOList = bookService.searchBooks(searchBookDTO);
+                PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(searchBookDTO);
+
+                List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
 
                 List<BookDisplayModel> bookDisplayModelList = bookDTOList.stream()
                         .map(LoadBooksCommand.this::mapToDisplayModel)
@@ -41,6 +47,8 @@ public class LoadBooksCommand extends Command{
 
                 Platform.runLater(() -> {
                     books.setAll(bookDisplayModelList);
+                    totalPages.set(paginatedBooksDTO.totalPages());
+                    searchBookModel.setSize(paginatedBooksDTO.size());
                 });
 
                 return null;

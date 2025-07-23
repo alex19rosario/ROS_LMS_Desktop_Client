@@ -43,6 +43,7 @@ public class IssueBookView implements BaseView {
     private TableColumn<BookDisplayModel, String> columnAuthor;
     private TableColumn<BookDisplayModel, String> columnGenre;
     private TableColumn<BookDisplayModel, String> columnStatus;
+    private Pagination pagination;
     private ImageView imageSelectedBookCover;
     private Label lblSelectedBookIsbn;
     private Label lblSelectedBookTitle;
@@ -93,6 +94,7 @@ public class IssueBookView implements BaseView {
         columnStatus = new TableColumn<>("Status");
         columnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         tableViewBook.getColumns().addAll(columnIsbn, columnTitle, columnAuthor, columnGenre, columnStatus);
+        pagination = new Pagination();
         imageSelectedBookCover = new ImageView();
         lblSelectedBookIsbn = new Label("");
         lblSelectedBookTitle = new Label("");
@@ -114,6 +116,11 @@ public class IssueBookView implements BaseView {
                         Arrays.stream(BookStatus.values())
                                 .map(BookStatus::toString)
                                 .toList()));
+
+        pagination.setPageFactory(pageIndex -> {
+            issueBookViewModel.executeLoadPageCommand();
+            return new Region(); // dummy node, never shown
+        });
     }
 
     private void bindComponents() {
@@ -148,7 +155,8 @@ public class IssueBookView implements BaseView {
 
         // Bind tableView
         tableViewBook.itemsProperty().bindBidirectional(issueBookViewModel.booksProperty());
-
+        pagination.pageCountProperty().bindBidirectional(issueBookViewModel.totalPagesProperty());
+        pagination.currentPageIndexProperty().bindBidirectional(issueBookViewModel.getSearchBookModel().pageProperty());
     }
 
     private Region createContent() {
@@ -200,6 +208,7 @@ public class IssueBookView implements BaseView {
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(25));
         borderPane.setCenter(tableViewBook);
+        borderPane.setBottom(pagination);
         return borderPane;
     }
 

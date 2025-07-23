@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
 import com.ros.lmsdesktopclient.dtos.BookDTO;
+import com.ros.lmsdesktopclient.dtos.PaginatedBooksDTO;
 import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
@@ -103,7 +104,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException {
+    public PaginatedBooksDTO searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException {
 
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
@@ -153,7 +154,11 @@ public class BookServiceImpl implements BookService {
                         throw new BookNotFoundException("No books found matching the criteria.");
                     }
 
-                    return books;
+                    JsonNode pageNode = root.get("page");
+                    int totalPages = pageNode != null && pageNode.has("totalPages") ? pageNode.get("totalPages").asInt() : 1;
+                    int size = pageNode != null && pageNode.has("size") ? pageNode.get("size").asInt() : 10;
+
+                    return new PaginatedBooksDTO(books, totalPages, size);
                 }
                 case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");
                 default -> throw new ServerErrorException("Server returned status: " + response.statusCode());

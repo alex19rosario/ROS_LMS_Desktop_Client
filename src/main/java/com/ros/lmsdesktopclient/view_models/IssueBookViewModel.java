@@ -10,10 +10,8 @@ import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.application.Platform;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -24,6 +22,7 @@ public class IssueBookViewModel {
     private final ListProperty<BookDisplayModel> books;
     private final SelectedBookModel selectedBookModel;
     private final StringProperty memberUsername;
+    private final IntegerProperty totalPages;
 
     private final Command searchBooksCommand;
     private final Command clearFilterCommand;
@@ -39,9 +38,11 @@ public class IssueBookViewModel {
         books = new SimpleListProperty<>(FXCollections.observableArrayList());
         selectedBookModel = new SelectedBookModel();
         memberUsername = new SimpleStringProperty();
-        searchBooksCommand = new SearchBooksCommand(isbn, searchBookModel, books, bookService);
+        totalPages = new SimpleIntegerProperty();
+
+        searchBooksCommand = new SearchBooksCommand(isbn, totalPages, searchBookModel, books, bookService);
         clearFilterCommand = new ClearFilterCommand(isbn, searchBookModel);
-        loadBooksCommand = new LoadBooksCommand(searchBookModel, books, bookService);
+        loadBooksCommand = new LoadBooksCommand(totalPages, searchBookModel, books, bookService);
         loadBooksCommand.execute();
     }
 
@@ -77,7 +78,23 @@ public class IssueBookViewModel {
         return memberUsername;
     }
 
+    public int getTotalPages() {
+        return totalPages.get();
+    }
+
+    public IntegerProperty totalPagesProperty() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages.set(totalPages);
+    }
+
     public void executeSearchBooksCommand() {
+        // Reset pagination to the first page before executing a new search.
+        // This ensures the results always start from the beginning when search criteria changes.
+        Platform.runLater(() -> searchBookModel.setPage(0));
+        
         this.searchBooksCommand.execute();
     }
 
@@ -89,5 +106,8 @@ public class IssueBookViewModel {
         });
     }
 
+    public void executeLoadPageCommand() {
+        loadBooksCommand.execute();
+    }
 
 }
