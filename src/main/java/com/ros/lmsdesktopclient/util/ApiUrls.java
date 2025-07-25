@@ -5,7 +5,9 @@ public enum ApiUrls {
     BOOKS("api/books"),
     GENRES("api/genres"),
     MEMBERS("api/members"),
-    HEALTH_CHECK("actuator/health");
+    HEALTH_CHECK("actuator/health"),
+    IMAGES("api/images/"),
+    LOANS("api/loans");
 
     private final String url;
 

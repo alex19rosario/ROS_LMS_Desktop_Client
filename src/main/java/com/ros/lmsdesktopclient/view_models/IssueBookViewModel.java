@@ -1,15 +1,18 @@
 package com.ros.lmsdesktopclient.view_models;
 
-import com.ros.lmsdesktopclient.commands.ClearFilterCommand;
-import com.ros.lmsdesktopclient.commands.Command;
-import com.ros.lmsdesktopclient.commands.LoadBooksCommand;
-import com.ros.lmsdesktopclient.commands.SearchBooksCommand;
+import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.services.service.LoanService;
+import com.ros.lmsdesktopclient.services.service.StorageService;
 import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
+import com.ros.lmsdesktopclient.services.service_impl.LoanServiceImpl;
+import com.ros.lmsdesktopclient.services.service_impl.StorageServiceImpl;
+import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.Views;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -20,30 +23,38 @@ public class IssueBookViewModel {
     private final StringProperty isbn;
     private final SearchBookModel searchBookModel;
     private final ListProperty<BookDisplayModel> books;
-    private final SelectedBookModel selectedBookModel;
-    private final StringProperty memberUsername;
     private final IntegerProperty totalPages;
+    private final SelectedBookModel selectedBookModel;
+    private final ObjectProperty<BookDisplayModel> selectedRowModel;
+    private final StringProperty memberUsername;
 
     private final Command searchBooksCommand;
     private final Command clearFilterCommand;
     private final Command loadBooksCommand;
-//    private final Command openMainViewCommand;
-//    private final Command issueBookCommand;
+    private final Command selectBookCommand;
+    private final Command openMainViewCommand;
+    private final Command issueBookCommand;
+    private final static int FIRST_PAGE = 0;
 
     public IssueBookViewModel() {
         BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
+        StorageService storageService = ServiceFactory.createProxy(StorageService.class, new StorageServiceImpl());
+        LoanService loanService = ServiceFactory.createProxy(LoanService.class, new LoanServiceImpl());
 
         isbn = new SimpleStringProperty();
         searchBookModel = new SearchBookModel();
         books = new SimpleListProperty<>(FXCollections.observableArrayList());
-        selectedBookModel = new SelectedBookModel();
-        memberUsername = new SimpleStringProperty();
         totalPages = new SimpleIntegerProperty();
+        selectedBookModel = new SelectedBookModel();
+        selectedRowModel = new SimpleObjectProperty<>();
+        memberUsername = new SimpleStringProperty();
 
         searchBooksCommand = new SearchBooksCommand(isbn, totalPages, searchBookModel, books, bookService);
         clearFilterCommand = new ClearFilterCommand(isbn, searchBookModel);
         loadBooksCommand = new LoadBooksCommand(totalPages, searchBookModel, books, bookService);
-        loadBooksCommand.execute();
+        selectBookCommand = new SelectBookCommand(selectedBookModel, selectedRowModel, storageService);
+        openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);
+        issueBookCommand = new IssueBookCommand(selectedRowModel, memberUsername, loanService);
     }
 
     public String getIsbn() {
@@ -90,11 +101,23 @@ public class IssueBookViewModel {
         this.totalPages.set(totalPages);
     }
 
+    public BookDisplayModel getSelectedRowModel() {
+        return selectedRowModel.get();
+    }
+
+    public ObjectProperty<BookDisplayModel> selectedRowModelProperty() {
+        return selectedRowModel;
+    }
+
+    public void setSelectedRowModel(BookDisplayModel selectedRowModel) {
+        this.selectedRowModel.set(selectedRowModel);
+    }
+
     public void executeSearchBooksCommand() {
         // Reset pagination to the first page before executing a new search.
         // This ensures the results always start from the beginning when search criteria changes.
-        Platform.runLater(() -> searchBookModel.setPage(0));
-        
+        Platform.runLater(() -> searchBookModel.setPage(FIRST_PAGE));
+
         this.searchBooksCommand.execute();
     }
 
@@ -108,6 +131,18 @@ public class IssueBookViewModel {
 
     public void executeLoadPageCommand() {
         loadBooksCommand.execute();
+    }
+
+    public void executeSelectBookCommand() {
+        selectBookCommand.execute();
+    }
+
+    public void executeOpenMainViewCommand(){
+        this.openMainViewCommand.execute();
+    }
+
+    public void executeIssueBookCommand() {
+        this.issueBookCommand.execute();
     }
 
 }

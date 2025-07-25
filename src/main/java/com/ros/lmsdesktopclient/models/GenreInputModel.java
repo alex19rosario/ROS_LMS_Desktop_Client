@@ -25,8 +25,6 @@ public class GenreInputModel {
 
     // Populate the ComboBox
     private void populateComboBox() {
-        genres.stream()
-                .sorted()
-                .forEach(genre -> cbGenres.getItems().add(genre));
+        genres.forEach(genre -> cbGenres.getItems().add(genre));
     }
 }

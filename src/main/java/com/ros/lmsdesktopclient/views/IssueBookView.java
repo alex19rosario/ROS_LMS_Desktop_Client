@@ -153,10 +153,29 @@ public class IssueBookView implements BaseView {
         cbGenre.disableProperty().bind(disableOthers);
         cbStatus.disableProperty().bind(disableOthers);
 
-        // Bind tableView
+        // Table Section
         tableViewBook.itemsProperty().bindBidirectional(issueBookViewModel.booksProperty());
         pagination.pageCountProperty().bindBidirectional(issueBookViewModel.totalPagesProperty());
         pagination.currentPageIndexProperty().bindBidirectional(issueBookViewModel.getSearchBookModel().pageProperty());
+        tableViewBook.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+            if (selected != null) {
+                issueBookViewModel.setSelectedRowModel(selected);
+                issueBookViewModel.executeSelectBookCommand();
+            }
+        });
+
+        // Selected Book Section
+        imageSelectedBookCover.imageProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().coverImageProperty());
+        lblSelectedBookIsbn.textProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().isbnProperty());
+        lblSelectedBookTitle.textProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().titleProperty());
+        lblSelectedBookAuthors.textProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().authorsProperty());
+        lblSelectedBookGenres.textProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().genresProperty());
+        lblSelectedBookStatus.textProperty().bindBidirectional(issueBookViewModel.getSelectedBookModel().statusProperty());
+
+        // Selected Member Section
+        tfMemberUsername.textProperty().bindBidirectional(issueBookViewModel.memberUsernameProperty());
+        btnGoBack.setOnAction(actionEvent -> issueBookViewModel.executeOpenMainViewCommand());
+        btnIssueBook.setOnAction(actionEvent -> issueBookViewModel.executeIssueBookCommand());
     }
 
     private Region createContent() {
@@ -217,6 +236,11 @@ public class IssueBookView implements BaseView {
     }
 
     private Node createSelectedBookSection() {
+        imageSelectedBookCover.setFitWidth(200);
+        imageSelectedBookCover.setPreserveRatio(true);
+        imageSelectedBookCover.setSmooth(true);
+        imageSelectedBookCover.setCache(true);
+
         VBox vBox = new VBox(
                 15,
                 lblSelectedBookIsbn,
@@ -225,7 +249,9 @@ public class IssueBookView implements BaseView {
                 lblSelectedBookGenres,
                 lblSelectedBookStatus
         );
-        return new HBox(25, imageSelectedBookCover, vBox);
+        HBox hBox = new HBox(25, imageSelectedBookCover, vBox);
+        hBox.setPadding(new Insets(25));
+        return hBox;
     }
 
     private Node createMemberSection() {

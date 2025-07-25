@@ -197,7 +197,6 @@ public class BookServiceImpl implements BookService {
             }
 
         } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
             throw new NetworkException("Failed to communicate with the server. " + e.getMessage());
         }
     }

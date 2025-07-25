@@ -2,7 +2,8 @@ package com.ros.lmsdesktopclient.util;
 
 public enum AlertContents {
     MEMBER_ADDED_OK("The member was added successfully"),
-    BOOK_ADDED_OK("The book was added successfully");
+    BOOK_ADDED_OK("The book was added successfully"),
+    BOOK_ISSUED_OK("The book was issued successfully");
 
     private final String value;
 
