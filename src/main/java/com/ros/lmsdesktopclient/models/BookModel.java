@@ -1,7 +1,6 @@
 package com.ros.lmsdesktopclient.models;
-import com.ros.lmsdesktopclient.util.Genres;
+import com.ros.lmsdesktopclient.util.GenreType;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -9,7 +8,7 @@ import javafx.scene.image.Image;
 import java.io.File;
 import java.util.Objects;
 
-public class BookModel implements Model {
+public class BookModel implements Clearable, Completable{
     private final StringProperty isbn;
     private final StringProperty title;
     private final ListProperty<StringProperty> genres;
@@ -20,7 +19,7 @@ public class BookModel implements Model {
         this.isbn = new SimpleStringProperty("");
         this.title = new SimpleStringProperty("");
         this.genres = new SimpleListProperty<>(FXCollections.observableArrayList());
-        this.genres.addFirst(new SimpleStringProperty(Genres.SCIENCE.getStr()));
+        this.genres.addFirst(new SimpleStringProperty(GenreType.SCIENCE.getStr()));
         this.coverImage = new SimpleObjectProperty<>();
         Image defaultImage = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
         this.coverImage.set(defaultImage);
@@ -90,7 +89,7 @@ public class BookModel implements Model {
         this.setIsbn("");
         this.setTitle("");
         this.getGenres().clear();
-        this.setGenres(FXCollections.observableArrayList(new SimpleStringProperty(Genres.SCIENCE.getStr())));
+        this.setGenres(FXCollections.observableArrayList(new SimpleStringProperty(GenreType.SCIENCE.getStr())));
         this.coverImage.set(null);
         this.coverImageFile.set(null);
     }

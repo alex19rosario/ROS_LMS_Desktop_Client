@@ -3,12 +3,10 @@ package com.ros.lmsdesktopclient.models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.Arrays;
+public class AuthorModel implements Clearable, Completable {
 
-public class AuthorModel implements Model {
-
-    private StringProperty firstName;
-    private StringProperty lastName;
+    private final StringProperty firstName;
+    private final StringProperty lastName;
 
     public AuthorModel(){
         this.firstName = new SimpleStringProperty("");
@@ -49,9 +47,7 @@ public class AuthorModel implements Model {
     public boolean isComplete() {
         if(this.getFirstName().isEmpty() || this.getFirstName().isBlank())
             return false;
-        if(this.getLastName().isEmpty() || this.getLastName().isBlank())
-            return false;
-        return true;
+        return !this.getLastName().isEmpty() && !this.getLastName().isBlank();
     }
 
     @Override

@@ -1,0 +1,46 @@
+package com.ros.lmsdesktopclient.util;
+
+public enum GenreType {
+    ADVENTURE("ADVENTURE"),
+    ART("ART"),
+    AUTOBIOGRAPHY("AUTOBIOGRAPHY"),
+    BIOGRAPHY("BIOGRAPHY"),
+    CHILDREN_LITERATURE("CHILDREN'S LITERATURE"),
+    COOKING("COOKING"),
+    CRIME("CRIME"),
+    DRAMA("DRAMA"),
+    DYSTOPIAN("DYSTOPIAN"),
+    ESSAYS("ESSAYS"),
+    FANTASY("FANTASY"),
+    FICTION("FICTION"),
+    GRAPHIC_NOVEL("GRAPHIC NOVEL"),
+    HISTORICAL_FICTION("HISTORICAL FICTION"),
+    HISTORY("HISTORY"),
+    HORROR("HORROR"),
+    LANGUAGE("LANGUAGE"),
+    MAGAZINE("MAGAZINE"),
+    MYSTERY("MYSTERY"),
+    NON_FICTION("NON-FICTION"),
+    PHILOSOPHY("PHILOSOPHY"),
+    POETRY("POETRY"),
+    POLITICAL_FICTION("POLITICAL FICTION"),
+    RELIGION("RELIGION"),
+    ROMANCE("ROMANCE"),
+    SCIENCE("SCIENCE"),
+    SCIENCE_FICTION("SCIENCE FICTION"),
+    SELF_HELP("SELF-HELP"),
+    SPORTS("SPORTS"),
+    TECHNOLOGY("TECHNOLOGY"),
+    THRILLER("THRILLER"),
+    TRAVEL("TRAVEL");
+
+    private final String str;
+
+    GenreType(String str){
+        this.str = str;
+    }
+
+    public String getStr() {
+        return str;
+    }
+}

@@ -8,7 +8,8 @@ public enum Views {
     LOGIN(LoginView::new),
     MAIN_MENU(MainMenuView::new),
     ADD_BOOK(AddBookView::new),
-    ADD_MEMBER(AddMemberView::new);
+    ADD_MEMBER(AddMemberView::new),
+    ISSUE_BOOK(IssueBookView::new);
 
     private final Supplier<BaseView> viewSupplier;
 

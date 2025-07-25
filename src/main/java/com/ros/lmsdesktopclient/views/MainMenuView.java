@@ -66,6 +66,7 @@ public class MainMenuView implements BaseView{
         menuItemLogOut.setOnAction(actionEvent -> mainMenuViewModel.executeLogOutCommand());
         btnAddBook.setOnAction(actionEvent -> mainMenuViewModel.executeOpenAddBookViewCommand());
         btnAddMember.setOnAction(actionEvent -> mainMenuViewModel.executeOpenAddMemberViewCommand());
+        btnIssueBook.setOnAction(actionEvent -> mainMenuViewModel.executeOpenIssueBookViewCommand());
     }
 
     private Region createContent() {
