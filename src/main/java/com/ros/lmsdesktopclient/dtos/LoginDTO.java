@@ -1,0 +1,4 @@
+package com.ros.lmsdesktopclient.dtos;
+
+public record LoginDTO(String username, String password) {
+}

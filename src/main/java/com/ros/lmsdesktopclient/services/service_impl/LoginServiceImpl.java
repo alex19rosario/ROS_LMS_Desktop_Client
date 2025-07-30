@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 
-import com.ros.lmsdesktopclient.models.LoginModel;
+import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.ApiUrls;
@@ -28,20 +28,20 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void login(LoginModel loginModel) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
+    public void login(LoginDTO loginDTO) throws NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
         try(HttpClient client = HttpClient.newBuilder()
                 .authenticator(new Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(
-                                loginModel.getUsername(),
-                                loginModel.getPassword().toCharArray()
+                                loginDTO.username(),
+                                loginDTO.password().toCharArray()
                         );
                     }
                 })
                 .build()){
 
-            checkForm(loginModel);
+            //checkForm(loginModel);
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
@@ -60,9 +60,5 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
-    private void checkForm(LoginModel loginModel) throws EmptyFieldsException {
-        if(!loginModel.isComplete()){
-            throw new EmptyFieldsException("Login form: there are empty fields");
-        }
-    }
+
 }
