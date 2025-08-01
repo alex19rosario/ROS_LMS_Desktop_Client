@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
+import javax.inject.Singleton;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
+@Singleton
 public class TokenHandler {
 
     private static final String TOKEN_KEY = "token";

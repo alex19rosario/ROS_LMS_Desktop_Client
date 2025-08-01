@@ -5,11 +5,14 @@ module com.example.lmsdesktopclient {
     requires java.prefs;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
+    requires dagger;
+    requires javax.inject;
 
     opens com.ros.lmsdesktopclient.models to javafx.base;
     opens com.ros.lmsdesktopclient.util to com.fasterxml.jackson.databind;
 
     exports com.ros.lmsdesktopclient;
+    exports com.ros.lmsdesktopclient.views;
     exports com.ros.lmsdesktopclient.models to com.fasterxml.jackson.databind;
     exports com.ros.lmsdesktopclient.util to com.auth0.jwt;
     exports com.ros.lmsdesktopclient.dtos to com.fasterxml.jackson.databind;

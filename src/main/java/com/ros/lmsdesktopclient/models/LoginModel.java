@@ -3,20 +3,19 @@ package com.ros.lmsdesktopclient.models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Arrays;
 
+@Singleton
 public class LoginModel implements Clearable, Completable {
     private StringProperty username;
     private StringProperty password;
 
+    @Inject
     public LoginModel() {
         this.username = new SimpleStringProperty("");
         this.password = new SimpleStringProperty("");
-    }
-
-    public LoginModel(String username, String password){
-        this.username = new SimpleStringProperty(username);
-        this.password = new SimpleStringProperty(password);
     }
 
     public String getUsername() {

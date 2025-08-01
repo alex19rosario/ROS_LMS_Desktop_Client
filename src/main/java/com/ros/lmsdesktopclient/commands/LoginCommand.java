@@ -10,11 +10,14 @@ import com.ros.lmsdesktopclient.util.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.concurrent.Task;
 
-public class LoginCommand extends Command {
+import javax.inject.Inject;
+
+public final class LoginCommand extends Command {
 
     private final LoginModel loginModel;
     private final LoginService loginService;
 
+    @Inject
     public LoginCommand(LoginModel loginModel, LoginService loginService){
         this.loginModel = loginModel;
         this.loginService = loginService;
