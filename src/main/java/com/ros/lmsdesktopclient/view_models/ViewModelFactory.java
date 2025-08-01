@@ -11,4 +11,5 @@ import javax.inject.Singleton;
 @Component(modules = {CommandModule.class, ServiceModule.class, NetworkModule.class} )
 public interface ViewModelFactory {
     LoginViewModel loginViewModel();
+    MainMenuViewModel mainMenuViewModel();
 }

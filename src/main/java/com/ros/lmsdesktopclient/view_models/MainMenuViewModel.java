@@ -1,9 +1,10 @@
 package com.ros.lmsdesktopclient.view_models;
 
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.CommandType;
 import com.ros.lmsdesktopclient.commands.Command;
-import com.ros.lmsdesktopclient.commands.LogOutCommand;
-import com.ros.lmsdesktopclient.commands.OpenViewCommand;
+
+import javax.inject.Inject;
+import java.util.Map;
 
 public class MainMenuViewModel {
     private final Command logOutCommand;
@@ -11,11 +12,12 @@ public class MainMenuViewModel {
     private final Command openAddMemberViewCommand;
     private final Command openIssueBookViewCommand;
 
-    public MainMenuViewModel(){
-        logOutCommand = new LogOutCommand();
-        openAddBookViewCommand = new OpenViewCommand(Views.ADD_BOOK);
-        openAddMemberViewCommand = new OpenViewCommand(Views.ADD_MEMBER);
-        openIssueBookViewCommand = new OpenViewCommand(Views.ISSUE_BOOK);
+    @Inject
+    public MainMenuViewModel(Map<CommandType, Command> commands){
+        logOutCommand = commands.get(CommandType.LOGOUT);
+        openAddBookViewCommand = commands.get(CommandType.OPEN_VIEW_ADD_BOOK);
+        openAddMemberViewCommand = commands.get(CommandType.OPEN_VIEW_ADD_MEMBER);
+        openIssueBookViewCommand = commands.get(CommandType.OPEN_VIEW_ISSUE_BOOK);
     }
 
     public void executeLogOutCommand(){

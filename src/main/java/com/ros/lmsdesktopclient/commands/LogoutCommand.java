@@ -5,9 +5,12 @@ import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import javafx.concurrent.Task;
 
-public class LogOutCommand extends Command{
+import javax.inject.Inject;
 
-    public LogOutCommand(){
+public class LogoutCommand extends Command{
+
+    @Inject
+    public LogoutCommand(){
         setOnCommandSuccess(this::onSuccess);
     }
 

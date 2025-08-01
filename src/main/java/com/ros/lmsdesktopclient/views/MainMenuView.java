@@ -2,7 +2,9 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.util.Roles;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
 import com.ros.lmsdesktopclient.view_models.MainMenuViewModel;
+import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -32,7 +34,8 @@ public class MainMenuView implements BaseView{
 
     @Override
     public void start(Stage stage) {
-        mainMenuViewModel = new MainMenuViewModel();
+        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        mainMenuViewModel = viewModelFactory.mainMenuViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getWidth());
         bindComponents();
