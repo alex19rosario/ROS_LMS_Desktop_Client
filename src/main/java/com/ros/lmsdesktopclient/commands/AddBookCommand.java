@@ -12,6 +12,7 @@ import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class AddBookCommand extends Command{
     private final Command openAddBookViewCommand;
     private final Command openLoginViewCommand;
 
+    @Inject
     public AddBookCommand(BookModel book, List<AuthorModel> authors, BookService bookService){
         this.book = book;
         this.authors = authors;

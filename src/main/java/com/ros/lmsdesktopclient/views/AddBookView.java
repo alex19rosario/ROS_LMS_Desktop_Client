@@ -3,6 +3,8 @@ package com.ros.lmsdesktopclient.views;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
+import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
+import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -38,7 +40,8 @@ public class AddBookView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-        addBookViewModel = new AddBookViewModel();
+        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        addBookViewModel = viewModelFactory.addBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

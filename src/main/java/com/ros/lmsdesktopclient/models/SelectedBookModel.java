@@ -8,6 +8,20 @@ import javafx.scene.image.Image;
 
 import java.util.Objects;
 
+/**
+ * A model class representing a selected book with properties for its attributes.
+ * This class implements the {@link Clearable} interface to support clearing its data.
+ * <p>
+ * Fields:
+ * <ul>
+ *     <li><b>coverImage</b>: The cover image of the book, stored as an {@link Image} object.</li>
+ *     <li><b>isbn</b>: The International Standard Book Number (ISBN) of the book.</li>
+ *     <li><b>title</b>: The title of the book.</li>
+ *     <li><b>authors</b>: The author(s) of the book.</li>
+ *     <li><b>genres</b>: The genre(s) of the book.</li>
+ *     <li><b>status</b>: The status of the book.</li>
+ * </ul>
+ */
 public class SelectedBookModel implements Clearable{
 
     private final ObjectProperty<Image> coverImage;

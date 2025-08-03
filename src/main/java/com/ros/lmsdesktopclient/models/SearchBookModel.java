@@ -5,6 +5,20 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Model class used for searching books with pagination and filter criteria in the LMS desktop application.
+ * <p>
+ * Fields:
+ * <ul>
+ *   <li><b>page</b> - The current page number for pagination.</li>
+ *   <li><b>size</b> - The number of results per page (default 10).</li>
+ *   <li><b>title</b> - The book title filter.</li>
+ *   <li><b>authorFirstName</b> - The first name of the author filter.</li>
+ *   <li><b>authorLastName</b> - The last name of the author filter.</li>
+ *   <li><b>genre</b> - The genre filter.</li>
+ *   <li><b>status</b> - The book status filter (e.g., available, loaned).</li>
+ * </ul>
+ */
 public class SearchBookModel implements Clearable, Completable{
 
     private final IntegerProperty page;

@@ -5,9 +5,27 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * Holds JavaFX properties representing a book within the LMS desktop application.
+ *
+ * <p>This model is used in JavaFX desktop applications to manage book-related data
+ * such as ISBN, title, genres, and cover image information.</p>
+ *
+ * Fields:
+ * <ul>
+ *   <li><b>isbn</b>: A JavaFX StringProperty representing the book's ISBN number.</li>
+ *   <li><b>title</b>: A JavaFX StringProperty representing the book's title.</li>
+ *   <li><b>genres</b>: A JavaFX ListProperty containing observable StringProperties for each genre associated with the book.</li>
+ *   <li><b>coverImage</b>: A JavaFX ObjectProperty holding the JavaFX Image used as the book's cover.</li>
+ *   <li><b>coverImageFile</b>: A JavaFX ObjectProperty referring to the File used for the uploaded book cover image.</li>
+ * </ul>
+ */
+@Singleton
 public class BookModel implements Clearable, Completable{
     private final StringProperty isbn;
     private final StringProperty title;
@@ -15,6 +33,7 @@ public class BookModel implements Clearable, Completable{
     private final ObjectProperty<Image> coverImage;
     private final ObjectProperty<File> coverImageFile;
 
+    @Inject
     public  BookModel(){
         this.isbn = new SimpleStringProperty("");
         this.title = new SimpleStringProperty("");

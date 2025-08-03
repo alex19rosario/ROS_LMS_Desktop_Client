@@ -4,19 +4,12 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.services.ServiceFactory;
-import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
-import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
-import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.*;
 import com.ros.lmsdesktopclient.commands.*;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 
+import javax.inject.Inject;
 import java.util.*;
-
 
 public class AddBookViewModel {
     private final Command openMainViewCommand;
@@ -28,30 +21,44 @@ public class AddBookViewModel {
     private final ListProperty<GenreInputModel> genreInputs;
     private final BookModel bookModel;
 
-    public AddBookViewModel(){
-        openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);
+    @Inject
+    public AddBookViewModel(
+            Map<CommandType, Command> commands,
+            ListProperty<AuthorInputModel> authorInputs,
+            ListProperty<GenreInputModel> genreInputs,
+            BookModel bookModel,
+            List<AuthorModel> authors,
+            Set<GenreType> genres
+    ){
+        openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
 
-        authorInputs = new SimpleListProperty<>(FXCollections.observableArrayList());
-        List<AuthorModel> authors = new ArrayList<>();
+        this.authorInputs = authorInputs;
+
+        //Inserting the first empty author to display the text-fields in table-view
         AuthorInputModel authorInputModel = new AuthorInputModel();
         AuthorModel author = new AuthorModel();
         authorInputModel.getTfFirstName().textProperty().bindBidirectional(author.firstNameProperty());
         authorInputModel.getTfLastName().textProperty().bindBidirectional(author.lastNameProperty());
         authorInputs.addFirst(authorInputModel);
         authors.addFirst(author);
-        addAuthorCommand = new AddAuthorCommand(authorInputs.get(), authors);
 
-        genreInputs = new SimpleListProperty<>(FXCollections.observableArrayList());
-        Set<String> genres = UpFrontDataHandler.getInstance().getGenres();
+        addAuthorCommand = commands.get(CommandType.ADD_AUTHOR);
 
+        this.genreInputs = genreInputs;
+
+        this.bookModel = bookModel;
+
+        //Inserting the first empty genre to display the combo-box in the table-view
         GenreInputModel genreInputModel = new GenreInputModel(genres);
-        bookModel = new BookModel();
         genreInputModel.getCbGenres().valueProperty().bindBidirectional(bookModel.getGenres().getFirst());
-        genreInputs.addFirst(genreInputModel);
-        addGenreCommand = new AddGenreCommand(genreInputs.get(), bookModel, genres);
-        BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
-        addBookCommand = new AddBookCommand(bookModel, authors, bookService);
-        selectFileCommand = new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage());
+        this.genreInputs.addFirst(genreInputModel);
+
+        addGenreCommand = commands.get(CommandType.ADD_GENRE);
+
+        //BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
+        this.addBookCommand = commands.get(CommandType.ADD_BOOK);
+
+        this.selectFileCommand = commands.get(CommandType.SELECT_FILE);
     }
 
     public ListProperty<AuthorInputModel> authorInputsProperty() {

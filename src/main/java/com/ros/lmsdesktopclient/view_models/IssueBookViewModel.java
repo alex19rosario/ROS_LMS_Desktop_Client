@@ -18,6 +18,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.net.http.HttpClient;
+
 public class IssueBookViewModel {
 
     private final StringProperty isbn;
@@ -37,7 +39,7 @@ public class IssueBookViewModel {
     private final static int FIRST_PAGE = 0;
 
     public IssueBookViewModel() {
-        BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl());
+        BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl(HttpClient.newHttpClient()));
         StorageService storageService = ServiceFactory.createProxy(StorageService.class, new StorageServiceImpl());
         LoanService loanService = ServiceFactory.createProxy(LoanService.class, new LoanServiceImpl());
 
