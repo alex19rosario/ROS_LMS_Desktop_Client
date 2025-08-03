@@ -3,6 +3,8 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.util.Sex;
 import com.ros.lmsdesktopclient.view_models.AddMemberViewModel;
+import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
+import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,7 +52,8 @@ public class AddMemberView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-        addMemberViewModel = new AddMemberViewModel();
+        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        addMemberViewModel = viewModelFactory.addMemberViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

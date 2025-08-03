@@ -1,6 +1,8 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
+import com.ros.lmsdesktopclient.models.MemberModel;
+import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.CommandType;
 import com.ros.lmsdesktopclient.util.CommandTypeKey;
 import com.ros.lmsdesktopclient.util.ViewHandler;
@@ -71,5 +73,12 @@ public abstract class CommandModule {
     @CommandTypeKey(CommandType.SELECT_FILE)
     static Command selectFileCommand(BookModel bookModel) {
         return new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage());
+    }
+
+    @Provides
+    @IntoMap
+    @CommandTypeKey(CommandType.ADD_MEMBER)
+    static Command addMemberCommand(MemberModel memberModel, MemberService memberService) {
+        return new AddMemberCommand(memberModel, memberService);
     }
 }

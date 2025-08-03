@@ -3,9 +3,11 @@ package com.ros.lmsdesktopclient.services;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
+import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
 import com.ros.lmsdesktopclient.services.service_impl.GenreServiceImpl;
 import com.ros.lmsdesktopclient.services.service_impl.LoginServiceImpl;
+import com.ros.lmsdesktopclient.services.service_impl.MemberServiceImpl;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -28,5 +30,11 @@ public abstract class ServiceModule {
     static BookService bookService(HttpClient client) {
         BookService bookService = new BookServiceImpl(client);
         return ServiceFactory.createProxy(BookService.class, bookService);
+    }
+
+    @Provides
+    static MemberService memberService(HttpClient client) {
+        MemberService memberService = new MemberServiceImpl(client);
+        return ServiceFactory.createProxy(MemberService.class, memberService);
     }
 }

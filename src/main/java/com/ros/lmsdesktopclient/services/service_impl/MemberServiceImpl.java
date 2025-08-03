@@ -15,13 +15,20 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class MemberServiceImpl implements MemberService {
+
+    private final HttpClient client;
+
+    public MemberServiceImpl(HttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void addMember(AddMemberDTO member) throws NetworkException, ServerErrorException, ExpiredSessionException, MemberAlreadyExistException, UsernameAlreadyExistException, EmailAlreadyExistException {
 
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try (HttpClient client = HttpClient.newHttpClient()){
+        try {
             // Serialize AddBookDTO to JSON
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule()); // This enables LocalDate handling

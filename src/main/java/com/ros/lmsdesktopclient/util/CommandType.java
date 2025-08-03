@@ -10,5 +10,6 @@ public enum CommandType {
     ADD_AUTHOR,
     ADD_GENRE,
     ADD_BOOK,
-    SELECT_FILE;
+    SELECT_FILE,
+    ADD_MEMBER;
 }

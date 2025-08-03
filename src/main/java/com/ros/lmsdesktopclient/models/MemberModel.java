@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.time.LocalDate;
 
 /**
@@ -24,6 +26,7 @@ import java.time.LocalDate;
  *   <li><b>repeatedPassword</b> - The repeated password for confirmation.</li>
  * </ul>
  */
+@Singleton
 public class MemberModel implements Clearable, Completable {
     private final StringProperty governmentID;
     private final StringProperty firstName;
@@ -36,6 +39,7 @@ public class MemberModel implements Clearable, Completable {
     private final StringProperty password;
     private final StringProperty repeatedPassword;
 
+    @Inject
     public MemberModel(){
         governmentID = new SimpleStringProperty("");
         firstName = new SimpleStringProperty("");
