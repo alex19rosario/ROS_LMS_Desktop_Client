@@ -8,12 +8,16 @@ import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.BookStatus;
 import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.PropertyType;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.Property;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class LoadBooksCommand extends Command{
@@ -23,8 +27,9 @@ public class LoadBooksCommand extends Command{
     private final ListProperty<BookDisplayModel> books;
     private final BookService bookService;
 
-    public LoadBooksCommand(IntegerProperty totalPages, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
-        this.totalPages = totalPages;
+    @Inject
+    public LoadBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
+        this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;

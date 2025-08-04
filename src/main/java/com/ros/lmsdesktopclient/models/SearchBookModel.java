@@ -5,6 +5,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Model class used for searching books with pagination and filter criteria in the LMS desktop application.
  * <p>
@@ -19,6 +22,7 @@ import javafx.beans.property.StringProperty;
  *   <li><b>status</b> - The book status filter (e.g., available, loaned).</li>
  * </ul>
  */
+@Singleton
 public class SearchBookModel implements Clearable, Completable{
 
     private final IntegerProperty page;
@@ -30,6 +34,7 @@ public class SearchBookModel implements Clearable, Completable{
     private final StringProperty status;
     private final static int PAGE_SIZE = 10;
 
+    @Inject
     public SearchBookModel() {
         this.page = new SimpleIntegerProperty();
         this.size = new SimpleIntegerProperty();

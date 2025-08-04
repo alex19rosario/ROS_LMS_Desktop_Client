@@ -11,6 +11,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class SelectBookCommand extends Command{
     private final StorageService storageService;
     private final Command openLoginViewCommand;
 
+    @Inject
     public SelectBookCommand(SelectedBookModel selectedBookModel, ObjectProperty<BookDisplayModel> selectedRowModel, StorageService storageService) {
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;

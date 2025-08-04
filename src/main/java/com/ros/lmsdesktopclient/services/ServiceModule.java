@@ -1,13 +1,7 @@
 package com.ros.lmsdesktopclient.services;
 
-import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.services.service.GenreService;
-import com.ros.lmsdesktopclient.services.service.LoginService;
-import com.ros.lmsdesktopclient.services.service.MemberService;
-import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
-import com.ros.lmsdesktopclient.services.service_impl.GenreServiceImpl;
-import com.ros.lmsdesktopclient.services.service_impl.LoginServiceImpl;
-import com.ros.lmsdesktopclient.services.service_impl.MemberServiceImpl;
+import com.ros.lmsdesktopclient.services.service.*;
+import com.ros.lmsdesktopclient.services.service_impl.*;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -36,5 +30,17 @@ public abstract class ServiceModule {
     static MemberService memberService(HttpClient client) {
         MemberService memberService = new MemberServiceImpl(client);
         return ServiceFactory.createProxy(MemberService.class, memberService);
+    }
+
+    @Provides
+    static StorageService storageService(HttpClient client) {
+        StorageService storageService = new StorageServiceImpl(client);
+        return ServiceFactory.createProxy(StorageService.class, storageService);
+    }
+
+    @Provides
+    static LoanService loanService(HttpClient client) {
+        LoanService loanService = new LoanServiceImpl(client);
+        return ServiceFactory.createProxy(LoanService.class, loanService);
     }
 }

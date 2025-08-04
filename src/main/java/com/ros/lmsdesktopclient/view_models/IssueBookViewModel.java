@@ -11,6 +11,8 @@ import com.ros.lmsdesktopclient.services.service.StorageService;
 import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
 import com.ros.lmsdesktopclient.services.service_impl.LoanServiceImpl;
 import com.ros.lmsdesktopclient.services.service_impl.StorageServiceImpl;
+import com.ros.lmsdesktopclient.util.CommandType;
+import com.ros.lmsdesktopclient.util.PropertyType;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.Views;
 import javafx.application.Platform;
@@ -18,7 +20,9 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javax.inject.Inject;
 import java.net.http.HttpClient;
+import java.util.Map;
 
 public class IssueBookViewModel {
 
@@ -38,25 +42,29 @@ public class IssueBookViewModel {
     private final Command issueBookCommand;
     private final static int FIRST_PAGE = 0;
 
-    public IssueBookViewModel() {
-        BookService bookService = ServiceFactory.createProxy(BookService.class, new BookServiceImpl(HttpClient.newHttpClient()));
-        StorageService storageService = ServiceFactory.createProxy(StorageService.class, new StorageServiceImpl());
-        LoanService loanService = ServiceFactory.createProxy(LoanService.class, new LoanServiceImpl());
+    @Inject
+    public IssueBookViewModel(
+            Map<PropertyType, Property> properties,
+            SearchBookModel searchBookModel,
+            ListProperty<BookDisplayModel> books,
+            SelectedBookModel selectedBookModel,
+            ObjectProperty<BookDisplayModel> selectedRowModel,
+            Map<CommandType, Command> commands
+    ) {
+        this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
+        this.searchBookModel = searchBookModel;
+        this.books = books;
+        this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
+        this.selectedBookModel = selectedBookModel;
+        this.selectedRowModel = selectedRowModel;
+        this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
 
-        isbn = new SimpleStringProperty();
-        searchBookModel = new SearchBookModel();
-        books = new SimpleListProperty<>(FXCollections.observableArrayList());
-        totalPages = new SimpleIntegerProperty();
-        selectedBookModel = new SelectedBookModel();
-        selectedRowModel = new SimpleObjectProperty<>();
-        memberUsername = new SimpleStringProperty();
-
-        searchBooksCommand = new SearchBooksCommand(isbn, totalPages, searchBookModel, books, bookService);
-        clearFilterCommand = new ClearFilterCommand(isbn, searchBookModel);
-        loadBooksCommand = new LoadBooksCommand(totalPages, searchBookModel, books, bookService);
-        selectBookCommand = new SelectBookCommand(selectedBookModel, selectedRowModel, storageService);
-        openMainViewCommand = new OpenViewCommand(Views.MAIN_MENU);
-        issueBookCommand = new IssueBookCommand(selectedRowModel, memberUsername, loanService);
+        this.searchBooksCommand = commands.get(CommandType.SEARCH_BOOKS);
+        this.clearFilterCommand = commands.get(CommandType.CLEAR_FILTER);
+        this.loadBooksCommand = commands.get(CommandType.LOAD_BOOKS);
+        this.selectBookCommand = commands.get(CommandType.SELECT_BOOK);
+        this.openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
+        this.issueBookCommand = commands.get(CommandType.ISSUE_BOOK);
     }
 
     public String getIsbn() {

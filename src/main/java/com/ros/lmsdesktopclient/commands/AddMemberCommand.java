@@ -12,6 +12,7 @@ import com.ros.lmsdesktopclient.util.validators.EmailValidator;
 import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class AddMemberCommand extends Command{
     private final Command openAddMemberViewCommand;
     private final Command openLoginViewCommand;
 
+    @Inject
     public AddMemberCommand(MemberModel member, MemberService memberService){
         this.member = member;
         this.memberService = memberService;

@@ -6,18 +6,18 @@ import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.util.Alerts;
-import com.ros.lmsdesktopclient.util.BookStatus;
-import com.ros.lmsdesktopclient.util.GenreType;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.*;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class SearchBooksCommand extends Command{
@@ -29,9 +29,10 @@ public class SearchBooksCommand extends Command{
     private final BookService bookService;
     private final Command openLoginViewCommand;
 
-    public SearchBooksCommand(StringProperty isbn, IntegerProperty totalPages, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService) {
-        this.isbn = isbn;
-        this.totalPages = totalPages;
+    @Inject
+    public SearchBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService) {
+        this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
+        this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;

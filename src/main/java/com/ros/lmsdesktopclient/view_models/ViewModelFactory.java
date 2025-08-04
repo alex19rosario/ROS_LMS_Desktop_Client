@@ -15,4 +15,5 @@ public interface ViewModelFactory {
     MainMenuViewModel mainMenuViewModel();
     AddBookViewModel addBookViewModel();
     AddMemberViewModel addMemberViewModel();
+    IssueBookViewModel issueBookViewModel();
 }

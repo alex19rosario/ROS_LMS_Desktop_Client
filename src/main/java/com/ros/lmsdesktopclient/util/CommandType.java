@@ -11,5 +11,10 @@ public enum CommandType {
     ADD_GENRE,
     ADD_BOOK,
     SELECT_FILE,
-    ADD_MEMBER;
+    ADD_MEMBER,
+    SEARCH_BOOKS,
+    CLEAR_FILTER,
+    LOAD_BOOKS,
+    SELECT_BOOK,
+    ISSUE_BOOK;
 }

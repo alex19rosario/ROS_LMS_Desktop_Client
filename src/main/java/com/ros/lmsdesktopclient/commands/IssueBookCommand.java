@@ -9,6 +9,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
+
 public class IssueBookCommand extends Command {
 
     private final ObjectProperty<BookDisplayModel> selectedRowModel;
@@ -17,6 +19,7 @@ public class IssueBookCommand extends Command {
     private final Command openIssueBookViewCommand;
     private final Command openLoginViewCommand;
 
+    @Inject
     public IssueBookCommand(ObjectProperty<BookDisplayModel> selectedRowModel, StringProperty memberUsername, LoanService loanService) {
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = memberUsername;

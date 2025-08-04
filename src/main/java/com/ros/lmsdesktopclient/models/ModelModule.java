@@ -1,11 +1,13 @@
 package com.ros.lmsdesktopclient.models;
 
 import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.PropertyType;
+import com.ros.lmsdesktopclient.util.PropertyTypeKey;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import dagger.Module;
 import dagger.Provides;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
+import dagger.multibindings.IntoMap;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
 import javax.inject.Singleton;
@@ -49,5 +51,41 @@ public abstract class ModelModule {
                 })
                 .map(GenreType::valueOf)
                 .collect(Collectors.toSet());
+    }
+
+    @Provides
+    @Singleton
+    @IntoMap
+    @PropertyTypeKey(PropertyType.ISBN)
+    static Property provideIsbnProperty() {
+        return new SimpleStringProperty();
+    }
+
+    @Provides
+    @Singleton
+    @IntoMap
+    @PropertyTypeKey(PropertyType.TOTAL_PAGES)
+    static Property provideTotalPagesProperty() {
+        return new SimpleIntegerProperty();
+    }
+
+    @Provides
+    @Singleton
+    @IntoMap
+    @PropertyTypeKey(PropertyType.MEMBER_USERNAME)
+    static Property provideMemberUsernameProperty() {
+        return new SimpleStringProperty();
+    }
+
+    @Provides
+    @Singleton
+    static ListProperty<BookDisplayModel> bookDisplayModels() {
+        return new SimpleListProperty<>(FXCollections.observableArrayList());
+    }
+
+    @Provides
+    @Singleton
+    static ObjectProperty<BookDisplayModel> selectedRowModel() {
+        return new SimpleObjectProperty<>();
     }
 }

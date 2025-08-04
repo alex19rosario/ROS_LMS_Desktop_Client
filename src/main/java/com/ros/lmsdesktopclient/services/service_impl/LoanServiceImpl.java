@@ -16,12 +16,18 @@ import java.net.http.HttpResponse;
 
 public class LoanServiceImpl implements LoanService {
 
+    private final HttpClient client;
+
+    public LoanServiceImpl(HttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void issueBook(AddLoanDTO addLoanDTO) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException, BookNotAvailableException, MemberNotFoundException, MemberHasActiveLoanException, MemberHasOverdueLoanException {
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
 

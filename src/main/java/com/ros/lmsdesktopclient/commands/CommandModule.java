@@ -1,8 +1,6 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
-import com.ros.lmsdesktopclient.models.MemberModel;
-import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.CommandType;
 import com.ros.lmsdesktopclient.util.CommandTypeKey;
 import com.ros.lmsdesktopclient.util.ViewHandler;
@@ -11,6 +9,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
+
 
 @Module
 public abstract class CommandModule {
@@ -75,10 +74,28 @@ public abstract class CommandModule {
         return new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage());
     }
 
-    @Provides
+    @Binds
     @IntoMap
     @CommandTypeKey(CommandType.ADD_MEMBER)
-    static Command addMemberCommand(MemberModel memberModel, MemberService memberService) {
-        return new AddMemberCommand(memberModel, memberService);
-    }
+    abstract Command addMemberCommand(AddMemberCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.SEARCH_BOOKS)
+    abstract Command searchBooksCommand(SearchBooksCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.CLEAR_FILTER)
+    abstract Command clearFilterCommand(ClearFilterCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.SELECT_BOOK)
+    abstract Command selectBookCommand(SelectBookCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.LOAD_BOOKS)
+    abstract Command loadBooksCommand(LoadBooksCommand command);
 }

@@ -3,7 +3,9 @@ package com.ros.lmsdesktopclient.views;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.util.BookStatus;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
+import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
 import com.ros.lmsdesktopclient.view_models.IssueBookViewModel;
+import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -58,7 +60,8 @@ public class IssueBookView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-        issueBookViewModel = new IssueBookViewModel();
+        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        issueBookViewModel = viewModelFactory.issueBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

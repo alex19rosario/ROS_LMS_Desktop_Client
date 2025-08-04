@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
 import java.io.File;
 
 public class SelectFileCommand extends Command{
@@ -13,6 +14,7 @@ public class SelectFileCommand extends Command{
     private final BookModel book;
     private final Stage stage;
 
+    @Inject
     public SelectFileCommand(BookModel book, Stage stage){
         this.book = book;
         this.stage = stage;
