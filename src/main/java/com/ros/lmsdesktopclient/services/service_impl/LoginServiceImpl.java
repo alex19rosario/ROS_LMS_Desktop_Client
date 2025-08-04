@@ -1,14 +1,16 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 
-import com.ros.lmsdesktopclient.models.LoginModel;
+import com.ros.lmsdesktopclient.dtos.LoginDTO;
+import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.*;
 import java.net.http.HttpClient;
@@ -20,28 +22,20 @@ public class LoginServiceImpl implements LoginService {
     private final TokenHandler tokenHandler;
     private final UpFrontDataHandler upFrontDataHandler;
     private final GenreService genreService;
+    private final AuthenticatedHttpClientFactory clientFactory;
 
-    public LoginServiceImpl(){
+    @Inject
+    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory, GenreService genreService){
         tokenHandler = TokenHandler.getInstance();
         upFrontDataHandler = UpFrontDataHandler.getInstance();
-        genreService = new GenreServiceImpl();
+        this.genreService = genreService;
+        this.clientFactory = clientFactory;
     }
 
     @Override
-    public void login(LoginModel loginModel) throws EmptyFieldsException, NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
-        try(HttpClient client = HttpClient.newBuilder()
-                .authenticator(new Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(
-                                loginModel.getUsername(),
-                                loginModel.getPassword().toCharArray()
-                        );
-                    }
-                })
-                .build()){
-
-            checkForm(loginModel);
+    public void login(LoginDTO loginDTO) throws NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
+        try{
+            HttpClient client = clientFactory.create(loginDTO.username(), loginDTO.password());
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
@@ -53,6 +47,10 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
+
+            if (tokenHandler.getToken().isEmpty())
+                throw new RuntimeException("Token was not saved properly!");
+            
             upFrontDataHandler.saveGenres(genreService.getAllGenres());
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
@@ -60,9 +58,5 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
-    private void checkForm(LoginModel loginModel) throws EmptyFieldsException {
-        if(!loginModel.isComplete()){
-            throw new EmptyFieldsException("Login form: there are empty fields");
-        }
-    }
+
 }

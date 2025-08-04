@@ -5,8 +5,28 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.time.LocalDate;
 
+/**
+ * Represents a member's data in the LMS desktop application.
+ * <p>
+ * Fields:
+ * <ul>
+ *   <li><b>governmentID</b> - The member's government-issued identification number.</li>
+ *   <li><b>firstName</b> - The member's first name.</li>
+ *   <li><b>lastName</b> - The member's last name.</li>
+ *   <li><b>phone</b> - The member's phone number.</li>
+ *   <li><b>dateOfBirth</b> - The member's date of birth.</li>
+ *   <li><b>sex</b> - The member's gender/sex.</li>
+ *   <li><b>email</b> - The member's email address.</li>
+ *   <li><b>username</b> - The username for member login.</li>
+ *   <li><b>password</b> - The member's password.</li>
+ *   <li><b>repeatedPassword</b> - The repeated password for confirmation.</li>
+ * </ul>
+ */
+@Singleton
 public class MemberModel implements Clearable, Completable {
     private final StringProperty governmentID;
     private final StringProperty firstName;
@@ -19,6 +39,7 @@ public class MemberModel implements Clearable, Completable {
     private final StringProperty password;
     private final StringProperty repeatedPassword;
 
+    @Inject
     public MemberModel(){
         governmentID = new SimpleStringProperty("");
         firstName = new SimpleStringProperty("");

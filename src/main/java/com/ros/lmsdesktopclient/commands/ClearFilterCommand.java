@@ -1,11 +1,16 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.SearchBookModel;
-import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
+import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
+import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+
+import javax.inject.Inject;
+import java.util.Map;
 
 
 public class ClearFilterCommand extends Command{
@@ -13,8 +18,9 @@ public class ClearFilterCommand extends Command{
     private final StringProperty isbn;
     private final SearchBookModel searchBookModel;
 
-    public ClearFilterCommand(StringProperty isbn, SearchBookModel searchBookModel) {
-        this.isbn = isbn;
+    @Inject
+    public ClearFilterCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel) {
+        this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.searchBookModel = searchBookModel;
         this.setOnCommandFailure(this::onFailure);
     }

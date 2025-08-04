@@ -6,8 +6,25 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Objects;
 
+/**
+ * A model class representing a selected book with properties for its attributes.
+ * This class implements the {@link Clearable} interface to support clearing its data.
+ * <p>
+ * Fields:
+ * <ul>
+ *     <li><b>coverImage</b>: The cover image of the book, stored as an {@link Image} object.</li>
+ *     <li><b>isbn</b>: The International Standard Book Number (ISBN) of the book.</li>
+ *     <li><b>title</b>: The title of the book.</li>
+ *     <li><b>authors</b>: The author(s) of the book.</li>
+ *     <li><b>genres</b>: The genre(s) of the book.</li>
+ *     <li><b>status</b>: The status of the book.</li>
+ * </ul>
+ */
+@Singleton
 public class SelectedBookModel implements Clearable{
 
     private final ObjectProperty<Image> coverImage;
@@ -17,6 +34,7 @@ public class SelectedBookModel implements Clearable{
     private final StringProperty genres;
     private final StringProperty status;
 
+    @Inject
     public SelectedBookModel() {
         coverImage = new SimpleObjectProperty<>();
         Image defaultImage = new Image(Objects.requireNonNull(getClass().getResource("/images/selected_book_placeholder.png")).toExternalForm());

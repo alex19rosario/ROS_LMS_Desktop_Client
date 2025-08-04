@@ -1,28 +1,47 @@
 package com.ros.lmsdesktopclient.models;
-import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * Holds JavaFX properties representing a book within the LMS desktop application.
+ *
+ * <p>This model is used in JavaFX desktop applications to manage book-related data
+ * such as ISBN, title, genres, and cover image information.</p>
+ *
+ * Fields:
+ * <ul>
+ *   <li><b>isbn</b>: A JavaFX StringProperty representing the book's ISBN number.</li>
+ *   <li><b>title</b>: A JavaFX StringProperty representing the book's title.</li>
+ *   <li><b>genres</b>: A JavaFX ListProperty containing observable StringProperties for each genre associated with the book.</li>
+ *   <li><b>coverImage</b>: A JavaFX ObjectProperty holding the JavaFX Image used as the book's cover.</li>
+ *   <li><b>coverImageFile</b>: A JavaFX ObjectProperty referring to the File used for the uploaded book cover image.</li>
+ * </ul>
+ */
+@Singleton
 public class BookModel implements Clearable, Completable{
     private final StringProperty isbn;
     private final StringProperty title;
     private final ListProperty<StringProperty> genres;
     private final ObjectProperty<Image> coverImage;
     private final ObjectProperty<File> coverImageFile;
+    private final Image DEFAULT_IMAGE = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
 
+    @Inject
     public  BookModel(){
         this.isbn = new SimpleStringProperty("");
         this.title = new SimpleStringProperty("");
         this.genres = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.genres.addFirst(new SimpleStringProperty(GenreType.SCIENCE.getStr()));
         this.coverImage = new SimpleObjectProperty<>();
-        Image defaultImage = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
-        this.coverImage.set(defaultImage);
+        this.coverImage.set(DEFAULT_IMAGE);
         this.coverImageFile = new SimpleObjectProperty<>();
     }
 
@@ -90,7 +109,7 @@ public class BookModel implements Clearable, Completable{
         this.setTitle("");
         this.getGenres().clear();
         this.setGenres(FXCollections.observableArrayList(new SimpleStringProperty(GenreType.SCIENCE.getStr())));
-        this.coverImage.set(null);
+        this.coverImage.set(DEFAULT_IMAGE);
         this.coverImageFile.set(null);
     }
 
@@ -104,11 +123,8 @@ public class BookModel implements Clearable, Completable{
             return false;
         }
         // Check if all genres are non-empty and do not contain spaces
-        if (this.genres.isEmpty() || this.genres.stream().anyMatch(genre -> genre.get().trim().isEmpty())) {
-            return false;
-        }
+        return !this.genres.isEmpty() && this.genres.stream().noneMatch(genre -> genre.get().trim().isEmpty());
         // All checks passed
-        return true;
     }
 
     @Override

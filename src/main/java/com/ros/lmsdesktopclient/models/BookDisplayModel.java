@@ -5,9 +5,20 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
 /**
- * A model class representing the data of a book that is to be displayed in a table view
- * in the LMS Desktop Client application.
+ * Represents a book entry to be displayed in the UI table.
+ * <p>
+ * Fields:
+ * <ul>
+ *   <li><b>id</b> - The unique identifier of the book.</li>
+ *   <li><b>isbn</b> - The ISBN code of the book.</li>
+ *   <li><b>title</b> - The title of the book.</li>
+ *   <li><b>authors</b> - A concatenated string of authors.</li>
+ *   <li><b>genres</b> - A concatenated string of genres.</li>
+ *   <li><b>status</b> - The availability or loan status of the book.</li>
+ *   <li><b>imagePath</b> - The relative or absolute path to the book's cover image.</li>
+ * </ul>
  */
 public class BookDisplayModel {
 

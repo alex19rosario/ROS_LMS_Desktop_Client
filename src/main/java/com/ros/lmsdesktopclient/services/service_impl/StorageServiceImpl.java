@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.ros.lmsdesktopclient.services.service.StorageService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
 import com.ros.lmsdesktopclient.util.exceptions.ImageNotFoundException;
@@ -9,6 +9,7 @@ import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
 import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -17,6 +18,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class StorageServiceImpl implements StorageService {
+
+    private final HttpClient client;
+
+    @Inject
+    public StorageServiceImpl(HttpClient client) {
+        this.client = client;
+    }
 
     @Override
     public Image getCoverImage(String filename) throws NetworkException, ServerErrorException, ExpiredSessionException, ImageNotFoundException, IOException {
@@ -33,8 +41,7 @@ public class StorageServiceImpl implements StorageService {
                     .GET()
                     .build();
 
-            HttpResponse<byte[]> response = HttpClient.newHttpClient()
-                    .send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
             return switch (response.statusCode()) {
                 case 200 -> new Image(new ByteArrayInputStream(response.body()));

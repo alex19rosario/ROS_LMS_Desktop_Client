@@ -13,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
+
 
 public class AddBookView implements BaseView {
 
@@ -36,9 +38,15 @@ public class AddBookView implements BaseView {
     private Button btnGoBack;
     private Button btnAttachCoverImage;
 
+    @Inject
+    public AddBookView(AddBookViewModel addBookViewModel) {
+        this.addBookViewModel = addBookViewModel;
+    }
+
     @Override
     public void start(Stage stage) {
-        addBookViewModel = new AddBookViewModel();
+        //ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        //addBookViewModel = viewModelFactory.addBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

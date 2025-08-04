@@ -4,24 +4,32 @@ import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.services.service.LoanService;
 import com.ros.lmsdesktopclient.util.*;
+import com.ros.lmsdesktopclient.util.enums.*;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+
+import javax.inject.Inject;
+import java.util.Map;
 
 public class IssueBookCommand extends Command {
 
     private final ObjectProperty<BookDisplayModel> selectedRowModel;
     private final StringProperty memberUsername;
     private final LoanService loanService;
-    private final Command openIssueBookViewCommand;
     private final Command openLoginViewCommand;
 
-    public IssueBookCommand(ObjectProperty<BookDisplayModel> selectedRowModel, StringProperty memberUsername, LoanService loanService) {
+    @Inject
+    public IssueBookCommand(
+            ObjectProperty<BookDisplayModel> selectedRowModel,
+            Map<PropertyType, Property> properties,
+            LoanService loanService
+    ) {
         this.selectedRowModel = selectedRowModel;
-        this.memberUsername = memberUsername;
+        this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
-        this.openIssueBookViewCommand = new OpenViewCommand(Views.ISSUE_BOOK);
         this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
@@ -46,22 +54,23 @@ public class IssueBookCommand extends Command {
         setAlert(Alerts.BOOK_ISSUED_SUCCESS);
         getAlert().getModal(AlertContents.BOOK_ISSUED_OK.getValue());
         //To reset the screen
-        openIssueBookViewCommand.execute();
+        memberUsername.setValue("");
+
     }
 
     private void onFailure() {
         Throwable exception = getCommandTask().getException();
 
         Alerts alert = switch (exception){
-            case EmptyFieldsException e -> Alerts.EMPTY_FIELDS_WARN;
-            case NetworkException e -> Alerts.NETWORK_ERROR;
-            case ServerErrorException e -> Alerts.SERVER_ERROR;
-            case ExpiredSessionException e -> Alerts.EXPIRED_SESSION_ERROR;
-            case BookNotFoundException e -> Alerts.BOOK_NOT_FOUND;
-            case BookNotAvailableException e -> Alerts.BOOK_NOT_AVAILABLE;
-            case MemberNotFoundException e -> Alerts.MEMBER_NOT_FOUND;
-            case MemberHasActiveLoanException e -> Alerts.MEMBER_ACTIVE_LOAN;
-            case MemberHasOverdueLoanException e -> Alerts.MEMBER_OVERDUE_LOAN;
+            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+            case NetworkException ignored -> Alerts.NETWORK_ERROR;
+            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+            case BookNotFoundException ignored -> Alerts.BOOK_NOT_FOUND;
+            case BookNotAvailableException ignored -> Alerts.BOOK_NOT_AVAILABLE;
+            case MemberNotFoundException ignored -> Alerts.MEMBER_NOT_FOUND;
+            case MemberHasActiveLoanException ignored -> Alerts.MEMBER_ACTIVE_LOAN;
+            case MemberHasOverdueLoanException ignored -> Alerts.MEMBER_OVERDUE_LOAN;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
         String content = exception.getMessage();

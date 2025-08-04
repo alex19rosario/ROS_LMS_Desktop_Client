@@ -3,10 +3,11 @@ package com.ros.lmsdesktopclient.services.service_impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.services.service.GenreService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AccessDeniedException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,7 +18,13 @@ import java.util.function.Function;
 
 public class GenreServiceImpl implements GenreService {
 
+    private final HttpClient client;
     private final ObjectMapper mapper = new ObjectMapper();
+
+    @Inject
+    public GenreServiceImpl(HttpClient client) {
+        this.client = client;
+    }
 
     @Override
     public Set<String> getAllGenres() throws AccessDeniedException {
@@ -26,7 +33,7 @@ public class GenreServiceImpl implements GenreService {
                 .getToken()
                 .orElseThrow(() -> new RuntimeException("Token is missing"));
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try {
             // Create HTTP GET Request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(ApiUrls.GENRES.getUrl()))
@@ -36,6 +43,7 @@ public class GenreServiceImpl implements GenreService {
 
             // Send Request and Handle Response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             if(response.statusCode() == 403){
                 throw new AccessDeniedException("The user does not have access to this resource");
             }

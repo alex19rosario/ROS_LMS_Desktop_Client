@@ -1,6 +1,6 @@
 package com.ros.lmsdesktopclient.views;
 
-import com.ros.lmsdesktopclient.util.Roles;
+import com.ros.lmsdesktopclient.util.enums.Roles;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.view_models.MainMenuViewModel;
 import javafx.geometry.Insets;
@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+
+import javax.inject.Inject;
 
 public class MainMenuView implements BaseView{
 
@@ -30,9 +32,15 @@ public class MainMenuView implements BaseView{
     private Button btnManageAccounts;
     private Button btnAddStaff;
 
+    @Inject
+    public MainMenuView(MainMenuViewModel mainMenuViewModel) {
+        this.mainMenuViewModel = mainMenuViewModel;
+    }
+
     @Override
     public void start(Stage stage) {
-        mainMenuViewModel = new MainMenuViewModel();
+//        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+//        mainMenuViewModel = viewModelFactory.mainMenuViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getWidth());
         bindComponents();

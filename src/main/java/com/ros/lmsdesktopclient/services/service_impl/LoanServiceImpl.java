@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
 import com.ros.lmsdesktopclient.services.service.LoanService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 
@@ -16,12 +16,18 @@ import java.net.http.HttpResponse;
 
 public class LoanServiceImpl implements LoanService {
 
+    private final HttpClient client;
+
+    public LoanServiceImpl(HttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void issueBook(AddLoanDTO addLoanDTO) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException, BookNotAvailableException, MemberNotFoundException, MemberHasActiveLoanException, MemberHasOverdueLoanException {
         String token = TokenHandler.getInstance().getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
 

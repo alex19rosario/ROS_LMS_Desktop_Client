@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.util;
+package com.ros.lmsdesktopclient.util.enums;
 
 public enum AlertContents {
     MEMBER_ADDED_OK("The member was added successfully"),

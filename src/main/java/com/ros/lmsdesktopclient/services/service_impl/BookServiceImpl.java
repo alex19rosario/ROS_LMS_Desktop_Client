@@ -7,10 +7,11 @@ import com.ros.lmsdesktopclient.dtos.BookDTO;
 import com.ros.lmsdesktopclient.dtos.PaginatedBooksDTO;
 import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -24,6 +25,13 @@ import java.util.List;
 
 public class BookServiceImpl implements BookService {
 
+    private final HttpClient client;
+
+    @Inject
+    public BookServiceImpl(HttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public void addBook(AddBookDTO book) throws InvalidISBNException, NetworkException, ServerErrorException, ExpiredSessionException, BookAlreadyExistException {
         // 1. Validate ISBN before doing anything
@@ -36,7 +44,7 @@ public class BookServiceImpl implements BookService {
         // 3. Create a unique boundary string for multipart form separation
         String boundary = "----JavaFormBoundary" + System.currentTimeMillis();
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        try {
             // 4. Prepare the string part of the multipart body (text fields)
             StringBuilder sb = new StringBuilder();
 
@@ -86,7 +94,7 @@ public class BookServiceImpl implements BookService {
                     .build();
 
             // 12. Send the HTTP request
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             // Check Response Status
             switch (response.statusCode()) {
@@ -132,7 +140,7 @@ public class BookServiceImpl implements BookService {
                     .GET()
                     .build();
 
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             switch (response.statusCode()) {
                 case 200 -> {
@@ -184,7 +192,7 @@ public class BookServiceImpl implements BookService {
                     .GET()
                     .build();
 
-            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             switch (response.statusCode()) {
                 case 200 -> {

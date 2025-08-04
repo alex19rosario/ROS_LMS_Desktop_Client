@@ -3,14 +3,15 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.service.StorageService;
-import com.ros.lmsdesktopclient.util.Alerts;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
+import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class SelectBookCommand extends Command{
     private final StorageService storageService;
     private final Command openLoginViewCommand;
 
+    @Inject
     public SelectBookCommand(SelectedBookModel selectedBookModel, ObjectProperty<BookDisplayModel> selectedRowModel, StorageService storageService) {
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;

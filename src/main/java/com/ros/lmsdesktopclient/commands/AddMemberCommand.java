@@ -3,15 +3,16 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
-import com.ros.lmsdesktopclient.util.AlertContents;
-import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.enums.AlertContents;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import com.ros.lmsdesktopclient.util.validators.EmailValidator;
 import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
 import javafx.concurrent.Task;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,13 +23,12 @@ public class AddMemberCommand extends Command{
 
     private final MemberModel member;
     private final MemberService memberService;
-    private final Command openAddMemberViewCommand;
     private final Command openLoginViewCommand;
 
+    @Inject
     public AddMemberCommand(MemberModel member, MemberService memberService){
         this.member = member;
         this.memberService = memberService;
-        this.openAddMemberViewCommand = new OpenViewCommand(Views.ADD_MEMBER);
         this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
         setOnCommandSuccess(this::onSuccess);
         setOnCommandFailure(this::onFailure);
@@ -52,26 +52,26 @@ public class AddMemberCommand extends Command{
         setAlert(Alerts.MEMBER_ADDED_SUCCESS);
         getAlert().getModal(AlertContents.MEMBER_ADDED_OK.getValue());
         //reset screen
-        openAddMemberViewCommand.execute();
+        member.clear();
     }
 
     private void onFailure(){
         Throwable exception = getCommandTask().getException();
 
         Alerts alert = switch (exception){
-            case EmptyFieldsException e -> Alerts.EMPTY_FIELDS_WARN;
-            case InvalidGovernmentIDException e -> Alerts.INVALID_ID_ERROR;
-            case InvalidPhoneNumberException e -> Alerts.INVALID_PHONE_ERROR;
-            case InvalidEmailException e -> Alerts.INVALID_EMAIL_ERROR;
-            case InvalidPasswordException e -> Alerts.INVALID_PASSWORD_ERROR;
-            case PasswordsDoNotMatchException e -> Alerts.UNMATCHED_PASSWORDS_ERROR;
-            case NetworkException e -> Alerts.NETWORK_ERROR;
-            case ServerErrorException e -> Alerts.SERVER_ERROR;
-            case ExpiredSessionException e -> Alerts.EXPIRED_SESSION_ERROR;
-            case MemberAlreadyExistException e -> Alerts.EXISTING_MEMBER_ERROR;
-            case UsernameAlreadyExistException e -> Alerts.EXISTING_USERNAME_ERROR;
-            case EmailAlreadyExistException e -> Alerts.EXISTING_EMAIL_ERROR;
-            case InvalidDateOfBirthException e -> Alerts.INVALID_DATE_OF_BIRTH;
+            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+            case InvalidGovernmentIDException ignored -> Alerts.INVALID_ID_ERROR;
+            case InvalidPhoneNumberException ignored -> Alerts.INVALID_PHONE_ERROR;
+            case InvalidEmailException ignored -> Alerts.INVALID_EMAIL_ERROR;
+            case InvalidPasswordException ignored -> Alerts.INVALID_PASSWORD_ERROR;
+            case PasswordsDoNotMatchException ignored -> Alerts.UNMATCHED_PASSWORDS_ERROR;
+            case NetworkException ignored -> Alerts.NETWORK_ERROR;
+            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+            case MemberAlreadyExistException ignored -> Alerts.EXISTING_MEMBER_ERROR;
+            case UsernameAlreadyExistException ignored -> Alerts.EXISTING_USERNAME_ERROR;
+            case EmailAlreadyExistException ignored -> Alerts.EXISTING_EMAIL_ERROR;
+            case InvalidDateOfBirthException ignored -> Alerts.INVALID_DATE_OF_BIRTH;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
         String content = exception.getMessage();
