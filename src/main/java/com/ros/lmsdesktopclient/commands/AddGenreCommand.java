@@ -2,8 +2,7 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.util.CommandType;
-import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;

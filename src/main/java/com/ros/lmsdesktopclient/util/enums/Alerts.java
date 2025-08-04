@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.util;
+package com.ros.lmsdesktopclient.util.enums;
 
 import javafx.scene.control.Alert;
 

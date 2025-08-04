@@ -1,5 +1,7 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.di.modules;
 
+import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
+import com.ros.lmsdesktopclient.di.factories.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.*;
 import com.ros.lmsdesktopclient.services.service_impl.*;
 import dagger.Binds;

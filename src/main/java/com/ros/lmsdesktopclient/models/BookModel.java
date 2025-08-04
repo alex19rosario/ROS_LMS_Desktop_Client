@@ -1,5 +1,5 @@
 package com.ros.lmsdesktopclient.models;
-import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +32,7 @@ public class BookModel implements Clearable, Completable{
     private final ListProperty<StringProperty> genres;
     private final ObjectProperty<Image> coverImage;
     private final ObjectProperty<File> coverImageFile;
+    private final Image DEFAULT_IMAGE = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
 
     @Inject
     public  BookModel(){
@@ -40,8 +41,7 @@ public class BookModel implements Clearable, Completable{
         this.genres = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.genres.addFirst(new SimpleStringProperty(GenreType.SCIENCE.getStr()));
         this.coverImage = new SimpleObjectProperty<>();
-        Image defaultImage = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
-        this.coverImage.set(defaultImage);
+        this.coverImage.set(DEFAULT_IMAGE);
         this.coverImageFile = new SimpleObjectProperty<>();
     }
 
@@ -109,7 +109,7 @@ public class BookModel implements Clearable, Completable{
         this.setTitle("");
         this.getGenres().clear();
         this.setGenres(FXCollections.observableArrayList(new SimpleStringProperty(GenreType.SCIENCE.getStr())));
-        this.coverImage.set(null);
+        this.coverImage.set(DEFAULT_IMAGE);
         this.coverImageFile.set(null);
     }
 
@@ -123,11 +123,8 @@ public class BookModel implements Clearable, Completable{
             return false;
         }
         // Check if all genres are non-empty and do not contain spaces
-        if (this.genres.isEmpty() || this.genres.stream().anyMatch(genre -> genre.get().trim().isEmpty())) {
-            return false;
-        }
+        return !this.genres.isEmpty() && this.genres.stream().noneMatch(genre -> genre.get().trim().isEmpty());
         // All checks passed
-        return true;
     }
 
     @Override

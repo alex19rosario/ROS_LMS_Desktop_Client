@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.di.factories;
 
 import java.net.http.HttpClient;
 

@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.util;
+package com.ros.lmsdesktopclient.util.enums;
 
 public enum GenreType {
     ADVENTURE("ADVENTURE"),

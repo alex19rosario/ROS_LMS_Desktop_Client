@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.view_models;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.commands.Command;
-import com.ros.lmsdesktopclient.util.CommandType;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -18,10 +18,6 @@ public final class LoginViewModel {
 
     public LoginModel getLoginModel() {
         return loginModel;
-    }
-
-    public Command getLoginCommand(){
-        return loginCommand;
     }
 
     public void executeLoginCommand(){

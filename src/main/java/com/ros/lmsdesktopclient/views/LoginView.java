@@ -1,8 +1,6 @@
 package com.ros.lmsdesktopclient.views;
 
-import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
 import com.ros.lmsdesktopclient.view_models.LoginViewModel;
-import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,10 +12,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
+
 
 public class LoginView implements BaseView {
 
-    private LoginViewModel loginViewModel;
+    private final LoginViewModel loginViewModel;
 
     private Label lblHeaderTitle;
     private Label lblUsername;
@@ -26,10 +26,13 @@ public class LoginView implements BaseView {
     private PasswordField tfPassword;
     private Button btnLogin;
 
+    @Inject
+    public LoginView(LoginViewModel loginViewModel) {
+        this.loginViewModel = loginViewModel;
+    }
+
     @Override
     public void start(Stage stage) {
-        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-        loginViewModel = viewModelFactory.loginViewModel();
         initComponents();
         Scene scene = stage.getScene() == null ?
                 new Scene(createContent(), 1200, 900) :

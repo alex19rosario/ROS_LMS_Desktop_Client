@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.ros.lmsdesktopclient.services.service.StorageService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
 import com.ros.lmsdesktopclient.util.exceptions.ImageNotFoundException;

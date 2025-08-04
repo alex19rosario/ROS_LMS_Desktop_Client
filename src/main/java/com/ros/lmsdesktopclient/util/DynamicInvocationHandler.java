@@ -1,5 +1,6 @@
 package com.ros.lmsdesktopclient.util;
 
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.exceptions.NetworkException;
 import com.ros.lmsdesktopclient.util.exceptions.ServerErrorException;
 

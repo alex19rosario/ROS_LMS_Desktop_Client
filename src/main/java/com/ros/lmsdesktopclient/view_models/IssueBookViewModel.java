@@ -4,24 +4,13 @@ import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
-import com.ros.lmsdesktopclient.services.ServiceFactory;
-import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.services.service.LoanService;
-import com.ros.lmsdesktopclient.services.service.StorageService;
-import com.ros.lmsdesktopclient.services.service_impl.BookServiceImpl;
-import com.ros.lmsdesktopclient.services.service_impl.LoanServiceImpl;
-import com.ros.lmsdesktopclient.services.service_impl.StorageServiceImpl;
-import com.ros.lmsdesktopclient.util.CommandType;
-import com.ros.lmsdesktopclient.util.PropertyType;
-import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
+import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
-import java.net.http.HttpClient;
 import java.util.Map;
 
 public class IssueBookViewModel {
@@ -91,24 +80,12 @@ public class IssueBookViewModel {
         return selectedBookModel;
     }
 
-    public String getMemberUsername() {
-        return memberUsername.get();
-    }
-
     public StringProperty memberUsernameProperty() {
         return memberUsername;
     }
 
-    public int getTotalPages() {
-        return totalPages.get();
-    }
-
     public IntegerProperty totalPagesProperty() {
         return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages.set(totalPages);
     }
 
     public BookDisplayModel getSelectedRowModel() {
@@ -148,11 +125,11 @@ public class IssueBookViewModel {
     }
 
     public void executeOpenMainViewCommand(){
-        this.openMainViewCommand.execute();
+        openMainViewCommand.execute();
     }
 
     public void executeIssueBookCommand() {
-        this.issueBookCommand.execute();
+        issueBookCommand.execute();
     }
 
 }

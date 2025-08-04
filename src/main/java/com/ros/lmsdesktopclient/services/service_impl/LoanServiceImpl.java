@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
 import com.ros.lmsdesktopclient.services.service.LoanService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 

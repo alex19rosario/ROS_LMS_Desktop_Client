@@ -1,10 +1,9 @@
 package com.ros.lmsdesktopclient.models;
 
-import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.scene.control.ComboBox;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 import java.util.stream.Collectors;
 

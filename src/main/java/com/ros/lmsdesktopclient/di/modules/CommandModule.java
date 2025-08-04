@@ -1,10 +1,11 @@
-package com.ros.lmsdesktopclient.commands;
+package com.ros.lmsdesktopclient.di.modules;
 
+import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookModel;
-import com.ros.lmsdesktopclient.util.CommandType;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.CommandTypeKey;
 import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.Views;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -98,4 +99,9 @@ public abstract class CommandModule {
     @IntoMap
     @CommandTypeKey(CommandType.LOAD_BOOKS)
     abstract Command loadBooksCommand(LoadBooksCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.ISSUE_BOOK)
+    abstract Command issueBookCommand(IssueBookCommand command);
 }

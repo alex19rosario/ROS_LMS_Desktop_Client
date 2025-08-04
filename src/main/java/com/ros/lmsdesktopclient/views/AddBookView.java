@@ -3,8 +3,6 @@ package com.ros.lmsdesktopclient.views;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
-import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
-import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,6 +12,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
+import javax.inject.Inject;
 
 
 public class AddBookView implements BaseView {
@@ -38,10 +38,15 @@ public class AddBookView implements BaseView {
     private Button btnGoBack;
     private Button btnAttachCoverImage;
 
+    @Inject
+    public AddBookView(AddBookViewModel addBookViewModel) {
+        this.addBookViewModel = addBookViewModel;
+    }
+
     @Override
     public void start(Stage stage) {
-        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-        addBookViewModel = viewModelFactory.addBookViewModel();
+        //ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+        //addBookViewModel = viewModelFactory.addBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

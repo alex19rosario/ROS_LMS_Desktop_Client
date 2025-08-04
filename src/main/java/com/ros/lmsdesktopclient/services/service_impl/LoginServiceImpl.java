@@ -2,10 +2,10 @@ package com.ros.lmsdesktopclient.services.service_impl;
 
 
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
-import com.ros.lmsdesktopclient.services.AuthenticatedHttpClientFactory;
+import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;

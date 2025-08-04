@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.view_models;
 
 import com.ros.lmsdesktopclient.models.MemberModel;
-import com.ros.lmsdesktopclient.util.CommandType;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.commands.Command;
 
 
@@ -15,9 +15,9 @@ public class AddMemberViewModel {
 
     @Inject
     public AddMemberViewModel(Map<CommandType, Command> commands, MemberModel memberModel){
-        openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
+        this.openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
         this.memberModel = memberModel;
-        addMemberCommand = commands.get(CommandType.ADD_MEMBER);
+        this.addMemberCommand = commands.get(CommandType.ADD_MEMBER);
     }
 
     public void executeOpenMainViewCommand(){

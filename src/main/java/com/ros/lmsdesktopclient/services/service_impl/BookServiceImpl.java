@@ -7,7 +7,7 @@ import com.ros.lmsdesktopclient.dtos.BookDTO;
 import com.ros.lmsdesktopclient.dtos.PaginatedBooksDTO;
 import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.services.service.BookService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 

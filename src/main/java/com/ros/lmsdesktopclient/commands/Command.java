@@ -1,6 +1,6 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;

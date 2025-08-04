@@ -3,10 +3,10 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
-import com.ros.lmsdesktopclient.util.Alerts;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.concurrent.Task;
 
@@ -40,6 +40,7 @@ public final class LoginCommand extends Command {
 
     private void onSuccess(){
         ViewHandler.switchTo(Views.MAIN_MENU);
+        loginModel.clear();
     }
 
     private void onFailure(){
@@ -49,11 +50,11 @@ public final class LoginCommand extends Command {
 
         // Use a switch expression to determine the alert type
         Alerts alert = switch (exception) {
-            case EmptyFieldsException e -> Alerts.EMPTY_FIELDS_WARN;
-            case NetworkException e -> Alerts.NETWORK_ERROR;
-            case ServerErrorException e -> Alerts.SERVER_ERROR;
-            case AuthenticationException e -> Alerts.AUTHENTICATION_ERROR;
-            case AccessDeniedException e -> Alerts.ACCESS_DENIED_ERROR;
+            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+            case NetworkException ignored -> Alerts.NETWORK_ERROR;
+            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+            case AuthenticationException ignored -> Alerts.AUTHENTICATION_ERROR;
+            case AccessDeniedException ignored -> Alerts.ACCESS_DENIED_ERROR;
             default -> throw new IllegalStateException("Unexpected exception: " + exception);
         };
 

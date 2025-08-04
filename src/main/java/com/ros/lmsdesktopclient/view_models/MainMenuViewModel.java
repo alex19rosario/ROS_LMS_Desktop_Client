@@ -1,6 +1,6 @@
 package com.ros.lmsdesktopclient.view_models;
 
-import com.ros.lmsdesktopclient.util.CommandType;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.commands.Command;
 
 import javax.inject.Inject;

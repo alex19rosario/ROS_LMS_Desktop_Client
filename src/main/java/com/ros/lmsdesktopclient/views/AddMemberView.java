@@ -1,10 +1,8 @@
 package com.ros.lmsdesktopclient.views;
 
 
-import com.ros.lmsdesktopclient.util.Sex;
+import com.ros.lmsdesktopclient.util.enums.Sex;
 import com.ros.lmsdesktopclient.view_models.AddMemberViewModel;
-import com.ros.lmsdesktopclient.view_models.DaggerViewModelFactory;
-import com.ros.lmsdesktopclient.view_models.ViewModelFactory;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 public class AddMemberView implements BaseView {
@@ -48,12 +47,15 @@ public class AddMemberView implements BaseView {
     private Label lblGovernmentIdSectionTitle;
     private Label lblAccountCredentialSectionTitle;
 
-
+    @Inject
+    public AddMemberView(AddMemberViewModel addMemberViewModel) {
+        this.addMemberViewModel = addMemberViewModel;
+    }
 
     @Override
     public void start(Stage stage) {
-        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-        addMemberViewModel = viewModelFactory.addMemberViewModel();
+//        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
+//        addMemberViewModel = viewModelFactory.addMemberViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

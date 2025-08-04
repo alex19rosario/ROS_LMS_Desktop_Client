@@ -1,6 +1,6 @@
 package com.ros.lmsdesktopclient.dtos;
 
-import com.ros.lmsdesktopclient.util.GenreType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 
 import java.util.Set;
 

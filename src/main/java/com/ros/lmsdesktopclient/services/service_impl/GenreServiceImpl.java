@@ -3,7 +3,7 @@ package com.ros.lmsdesktopclient.services.service_impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ros.lmsdesktopclient.services.service.GenreService;
-import com.ros.lmsdesktopclient.util.ApiUrls;
+import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.AccessDeniedException;
 

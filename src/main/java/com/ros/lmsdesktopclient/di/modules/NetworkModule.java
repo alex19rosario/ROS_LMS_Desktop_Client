@@ -1,5 +1,6 @@
-package com.ros.lmsdesktopclient.services;
+package com.ros.lmsdesktopclient.di.modules;
 
+import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import dagger.Module;
 import dagger.Provides;
 

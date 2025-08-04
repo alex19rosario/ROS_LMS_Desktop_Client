@@ -1,8 +1,8 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.SearchBookModel;
-import com.ros.lmsdesktopclient.util.Alerts;
-import com.ros.lmsdesktopclient.util.PropertyType;
+import com.ros.lmsdesktopclient.util.enums.Alerts;
+import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
 import javafx.beans.property.Property;

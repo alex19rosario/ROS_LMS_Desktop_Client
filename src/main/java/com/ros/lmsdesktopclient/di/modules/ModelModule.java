@@ -1,7 +1,11 @@
-package com.ros.lmsdesktopclient.models;
+package com.ros.lmsdesktopclient.di.modules;
 
-import com.ros.lmsdesktopclient.util.GenreType;
-import com.ros.lmsdesktopclient.util.PropertyType;
+import com.ros.lmsdesktopclient.models.AuthorInputModel;
+import com.ros.lmsdesktopclient.models.AuthorModel;
+import com.ros.lmsdesktopclient.models.BookDisplayModel;
+import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
+import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.util.PropertyTypeKey;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import dagger.Module;

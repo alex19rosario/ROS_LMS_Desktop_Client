@@ -1,10 +1,17 @@
 package com.ros.lmsdesktopclient.util;
 
+import com.ros.lmsdesktopclient.di.factories.DaggerViewFactory;
+import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.views.BaseView;
+import com.ros.lmsdesktopclient.di.factories.ViewFactory;
 import javafx.stage.Stage;
 
 public class ViewHandler {
 
     private Stage stage;
+
+    private static final ViewFactory factory = DaggerViewFactory.create();
+
 
     private static class SingletonHelper {
         private static final ViewHandler INSTANCE = new ViewHandler();
@@ -27,6 +34,7 @@ public class ViewHandler {
     }
 
     public static void switchTo(Views view) {
-        view.getViewInstance().start(getInstance().getStage());
+        BaseView baseView = view.getViewInstance(factory); // pass factory here
+        baseView.start(getInstance().getStage());
     }
 }

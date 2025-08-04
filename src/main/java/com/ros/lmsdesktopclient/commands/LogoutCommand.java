@@ -2,7 +2,7 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.Views;
+import com.ros.lmsdesktopclient.util.enums.Views;
 import javafx.concurrent.Task;
 
 import javax.inject.Inject;

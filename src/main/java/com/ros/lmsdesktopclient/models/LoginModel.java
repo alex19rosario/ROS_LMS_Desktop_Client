@@ -8,23 +8,26 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 
 /**
- * LoginModel represents the user's login credentials in the LMS desktop application.
+ * <p>
+ * <strong>LoginModel</strong> represents the user's login credentials in the LMS desktop application.<br>
  * It uses JavaFX properties to enable data binding with the UI components.
+ * </p>
  *
- * Fields:
- * - username: A StringProperty representing the user's login name.
- * - password: A StringProperty representing the user's password.
+ * <h3>Fields:</h3>
+ * <ul>
+ *   <li><code>username</code>: A {@link javafx.beans.property.StringProperty} representing the user's login name.</li>
+ *   <li><code>password</code>: A {@link javafx.beans.property.StringProperty} representing the user's password.</li>
+ * </ul>
  *
- * Implements:
- * - Clearable: Allows the password field to be cleared.
- * - Completable: Provides validation logic to check if all required fields are completed.
- *
- * This class is annotated with @Singleton and designed for use with dependency injection.
+ * <p>
+ * This class is annotated with <code>@Singleton</code> and is designed for use with dependency injection.
+ * </p>
  */
+
 @Singleton
 public class LoginModel implements Clearable, Completable {
-    private StringProperty username;
-    private StringProperty password;
+    private final StringProperty username;
+    private final StringProperty password;
 
     @Inject
     public LoginModel() {
@@ -58,6 +61,7 @@ public class LoginModel implements Clearable, Completable {
 
     @Override
     public void clear() {
+        this.setUsername("");
         this.setPassword("");
     }
 

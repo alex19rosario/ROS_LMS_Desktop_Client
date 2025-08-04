@@ -4,8 +4,9 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.util.*;
 import com.ros.lmsdesktopclient.commands.*;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
+import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.beans.property.ListProperty;
 
 import javax.inject.Inject;
