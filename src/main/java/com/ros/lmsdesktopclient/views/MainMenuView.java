@@ -39,8 +39,6 @@ public class MainMenuView implements BaseView{
 
     @Override
     public void start(Stage stage) {
-//        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-//        mainMenuViewModel = viewModelFactory.mainMenuViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getWidth());
         bindComponents();

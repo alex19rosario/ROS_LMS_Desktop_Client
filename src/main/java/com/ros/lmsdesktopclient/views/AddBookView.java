@@ -47,8 +47,6 @@ public class AddBookView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-        //ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-        //addBookViewModel = viewModelFactory.addBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();

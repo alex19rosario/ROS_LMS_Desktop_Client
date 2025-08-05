@@ -66,8 +66,6 @@ public class IssueBookView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-//        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-//        issueBookViewModel = viewModelFactory.issueBookViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();
