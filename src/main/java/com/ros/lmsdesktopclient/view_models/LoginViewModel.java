@@ -20,6 +20,10 @@ public final class LoginViewModel {
         return loginModel;
     }
 
+    public Command getLoginCommand() {
+        return loginCommand;
+    }
+
     public void executeLoginCommand(){
         this.loginCommand.execute();
     }
