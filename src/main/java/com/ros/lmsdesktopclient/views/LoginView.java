@@ -49,7 +49,7 @@ public class LoginView implements BaseView {
         tfPassword = new PasswordField();
         btnLogin = new Button("Log in");
         progressIndicator = new ProgressIndicator();
-        progressIndicator.setVisible(false);    // Starts hidden
+        progressIndicator.setVisible(false);
     }
 
     private void bindComponents() {
