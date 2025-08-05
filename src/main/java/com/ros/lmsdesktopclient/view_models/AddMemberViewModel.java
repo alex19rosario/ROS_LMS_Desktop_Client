@@ -20,6 +20,9 @@ public class AddMemberViewModel {
         this.addMemberCommand = commands.get(CommandType.ADD_MEMBER);
     }
 
+    public Command getAddMemberCommand() {
+        return addMemberCommand;
+    }
     public void executeOpenMainViewCommand(){
         this.openMainViewCommand.execute();
     }

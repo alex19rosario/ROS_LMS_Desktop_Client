@@ -2,6 +2,7 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,6 +38,7 @@ public class AddBookView implements BaseView {
     private Button btnAddBook;
     private Button btnGoBack;
     private Button btnAttachCoverImage;
+    private ProgressIndicator progressIndicator;
 
     @Inject
     public AddBookView(AddBookViewModel addBookViewModel) {
@@ -76,6 +78,8 @@ public class AddBookView implements BaseView {
         btnAddGenre = new Button("+");
         btnAddBook = new Button("Add Book");
         btnGoBack = new Button("Go Back");
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
     }
 
     private void bindComponents() {
@@ -90,13 +94,17 @@ public class AddBookView implements BaseView {
         btnAddBook.setOnAction(actionEvent -> addBookViewModel.executeAddBookCommand());
         btnAttachCoverImage.setOnAction(actionEvent -> addBookViewModel.executeSelectCoverImageCommand());
         btnGoBack.setOnAction(actionEvent -> addBookViewModel.executeOpenMainViewCommand());
+
+        // Bind progress indicator visibility and progress
+        progressIndicator.visibleProperty().bind(addBookViewModel.getAddBookCommand().runningProperty());
+        progressIndicator.progressProperty().bind(addBookViewModel.getAddBookCommand().progressProperty());
     }
 
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setCenter(createForm());
-        return borderPane;
+        return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {

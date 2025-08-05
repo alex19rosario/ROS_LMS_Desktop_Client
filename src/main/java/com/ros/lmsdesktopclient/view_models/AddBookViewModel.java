@@ -74,6 +74,10 @@ public class AddBookViewModel {
         return bookModel;
     }
 
+    public Command getAddBookCommand() {
+        return addBookCommand;
+    }
+
     public void executeOpenMainViewCommand(){
         this.openMainViewCommand.execute();
     }

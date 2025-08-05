@@ -1,14 +1,12 @@
 package com.ros.lmsdesktopclient.views;
 
+import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.view_models.LoginViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -25,6 +23,7 @@ public class LoginView implements BaseView {
     private Label lblPassword;
     private PasswordField tfPassword;
     private Button btnLogin;
+    private ProgressIndicator progressIndicator;
 
     @Inject
     public LoginView(LoginViewModel loginViewModel) {
@@ -49,6 +48,8 @@ public class LoginView implements BaseView {
         lblPassword = new Label("Password");
         tfPassword = new PasswordField();
         btnLogin = new Button("Log in");
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
     }
 
     private void bindComponents() {
@@ -56,13 +57,18 @@ public class LoginView implements BaseView {
         tfPassword.textProperty().bindBidirectional(loginViewModel.getLoginModel().passwordProperty());
 
         btnLogin.setOnAction(actionEvent -> loginViewModel.executeLoginCommand());
+
+        // Bind progress indicator visibility and progress
+        progressIndicator.visibleProperty().bind(loginViewModel.getLoginCommand().runningProperty());
+        progressIndicator.progressProperty().bind(loginViewModel.getLoginCommand().progressProperty());
     }
 
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setCenter(createForm());
-        return borderPane;
+        // Wrap content in overlay
+        return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {

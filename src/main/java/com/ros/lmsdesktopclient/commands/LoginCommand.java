@@ -29,7 +29,8 @@ public final class LoginCommand extends Command {
     protected Task<Void> createCommandTask() {
         return new Task<>() {
             @Override
-            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException {
+            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException, InterruptedException {
+                Thread.sleep(3000);
                 checkForm(loginModel);
                 LoginDTO loginDTO = new LoginDTO(loginModel.getUsername(), loginModel.getPassword());
                 loginService.login(loginDTO);
