@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.views;
 
 
+import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.util.enums.Sex;
 import com.ros.lmsdesktopclient.view_models.AddMemberViewModel;
 import javafx.collections.FXCollections;
@@ -46,6 +47,7 @@ public class AddMemberView implements BaseView {
     private Label lblContactInfoSectionTitle;
     private Label lblGovernmentIdSectionTitle;
     private Label lblAccountCredentialSectionTitle;
+    private ProgressIndicator progressIndicator;
 
     @Inject
     public AddMemberView(AddMemberViewModel addMemberViewModel) {
@@ -54,8 +56,6 @@ public class AddMemberView implements BaseView {
 
     @Override
     public void start(Stage stage) {
-//        ViewModelFactory viewModelFactory = DaggerViewModelFactory.create();
-//        addMemberViewModel = viewModelFactory.addMemberViewModel();
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
         bindComponents();
@@ -90,6 +90,8 @@ public class AddMemberView implements BaseView {
         lblContactInfoSectionTitle = new Label("Contact Information");
         lblGovernmentIdSectionTitle = new Label("Government Identification");
         lblAccountCredentialSectionTitle = new Label("Account Credentials");
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
 
         //This is to enter the values of the enum into the comboBox
         cbSex.setItems(FXCollections
@@ -115,13 +117,17 @@ public class AddMemberView implements BaseView {
 
         btnAddMember.setOnAction(actionEvent -> addMemberViewModel.executeAddMemberCommand());
         btnGoBack.setOnAction(actionEvent -> addMemberViewModel.executeOpenMainViewCommand());
+
+        // Bind progress indicator visibility and progress
+        progressIndicator.visibleProperty().bind(addMemberViewModel.getAddMemberCommand().runningProperty());
+        progressIndicator.progressProperty().bind(addMemberViewModel.getAddMemberCommand().progressProperty());
     }
 
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setCenter(createForm());
-        return borderPane;
+        return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {

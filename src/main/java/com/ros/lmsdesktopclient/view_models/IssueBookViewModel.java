@@ -116,6 +116,18 @@ public class IssueBookViewModel {
         });
     }
 
+    public Command getSearchBooksCommand() {
+        return searchBooksCommand;
+    }
+
+    public Command getIssueBookCommand() {
+        return issueBookCommand;
+    }
+
+    public Command getLoadBooksCommand() {
+        return loadBooksCommand;
+    }
+
     public void executeLoadPageCommand() {
         loadBooksCommand.execute();
     }

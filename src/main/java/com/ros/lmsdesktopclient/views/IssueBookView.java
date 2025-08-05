@@ -1,9 +1,11 @@
 package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
+import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.util.enums.BookStatus;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.view_models.IssueBookViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -55,6 +57,7 @@ public class IssueBookView implements BaseView {
     private TextField tfMemberUsername;
     private Button btnGoBack;
     private Button btnIssueBook;
+    private ProgressIndicator progressIndicator;
 
     @Inject
     public IssueBookView(IssueBookViewModel issueBookViewModel) {
@@ -111,6 +114,8 @@ public class IssueBookView implements BaseView {
         tfMemberUsername = new TextField();
         btnGoBack = new Button("Go Back");
         btnIssueBook = new Button("Issue Book");
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setVisible(false);
 
         // Loading data to comboBoxes
         cbGenre.setItems(FXCollections
@@ -182,13 +187,39 @@ public class IssueBookView implements BaseView {
         tfMemberUsername.textProperty().bindBidirectional(issueBookViewModel.memberUsernameProperty());
         btnGoBack.setOnAction(actionEvent -> issueBookViewModel.executeOpenMainViewCommand());
         btnIssueBook.setOnAction(actionEvent -> issueBookViewModel.executeIssueBookCommand());
+
+        // Bind progress indicator visibility and progress
+        // Boolean binding for visibility: show if ANY command is running
+        progressIndicator.visibleProperty().bind(
+                Bindings.or(
+                        issueBookViewModel.getSearchBooksCommand().runningProperty(),
+                        Bindings.or(
+                                issueBookViewModel.getIssueBookCommand().runningProperty(),
+                                issueBookViewModel.getLoadBooksCommand().runningProperty()
+                        )
+                )
+        );
+        // Double binding for progress: show average progress of both commands
+        progressIndicator.progressProperty().bind(
+            Bindings.when(issueBookViewModel.getSearchBooksCommand().runningProperty())
+                .then(issueBookViewModel.getSearchBooksCommand().progressProperty())
+                .otherwise(
+                    Bindings.when(issueBookViewModel.getIssueBookCommand().runningProperty())
+                        .then(issueBookViewModel.getIssueBookCommand().progressProperty())
+                        .otherwise(
+                                Bindings.when(issueBookViewModel.getLoadBooksCommand().runningProperty())
+                                        .then(issueBookViewModel.getLoadBooksCommand().progressProperty())
+                                        .otherwise(0.0)
+                        )
+                )
+        );
     }
 
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setCenter(createForm());
-        return borderPane;
+        return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {
