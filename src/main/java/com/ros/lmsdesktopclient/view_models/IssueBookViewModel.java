@@ -128,6 +128,10 @@ public class IssueBookViewModel {
         return loadBooksCommand;
     }
 
+    public Command getSelectBookCommand() {
+        return selectBookCommand;
+    }
+
     public void executeLoadPageCommand() {
         loadBooksCommand.execute();
     }

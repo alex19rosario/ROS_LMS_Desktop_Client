@@ -193,7 +193,10 @@ public class IssueBookView implements BaseView {
                         issueBookViewModel.getSearchBooksCommand().runningProperty(),
                         Bindings.or(
                                 issueBookViewModel.getIssueBookCommand().runningProperty(),
-                                issueBookViewModel.getLoadBooksCommand().runningProperty()
+                                Bindings.or(
+                                        issueBookViewModel.getLoadBooksCommand().runningProperty(),
+                                        issueBookViewModel.getSelectBookCommand().runningProperty()
+                                )
                         )
                 )
         );
@@ -207,7 +210,11 @@ public class IssueBookView implements BaseView {
                         .otherwise(
                                 Bindings.when(issueBookViewModel.getLoadBooksCommand().runningProperty())
                                         .then(issueBookViewModel.getLoadBooksCommand().progressProperty())
-                                        .otherwise(0.0)
+                                        .otherwise(
+                                                Bindings.when(issueBookViewModel.getSelectBookCommand().runningProperty())
+                                                        .then(issueBookViewModel.getSelectBookCommand().progressProperty())
+                                                        .otherwise(0.0)
+                                        )
                         )
                 )
         );
