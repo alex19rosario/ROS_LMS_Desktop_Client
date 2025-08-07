@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 public final class LoginViewModel {
+
     private final LoginModel loginModel;
     private final Command loginCommand;
 
