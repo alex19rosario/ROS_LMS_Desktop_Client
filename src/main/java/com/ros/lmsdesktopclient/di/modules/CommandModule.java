@@ -60,11 +60,6 @@ public abstract class CommandModule {
 
     @Binds
     @IntoMap
-    @CommandTypeKey(CommandType.ADD_GENRE)
-    abstract Command addGenreCommand(AddGenreCommand command);
-
-    @Binds
-    @IntoMap
     @CommandTypeKey(CommandType.ADD_BOOK)
     abstract Command addBookCommand(AddBookCommand command);
 

@@ -4,13 +4,11 @@ import com.ros.lmsdesktopclient.dtos.AddBookDTO;
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
-import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.enums.GenreType;
 import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.ListProperty;
@@ -19,7 +17,6 @@ import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AddBookCommand extends Command{
@@ -27,7 +24,6 @@ public class AddBookCommand extends Command{
     private final BookModel book;
     private final List<AuthorModel> authors;
     private final ListProperty<AuthorInputModel> authorInputs;
-    private final ListProperty<GenreInputModel> genreInputs;
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private final ObservableList<GenreModel> genreModelObservableList;
@@ -37,14 +33,12 @@ public class AddBookCommand extends Command{
             BookModel book,
             List<AuthorModel> authors,
             ListProperty<AuthorInputModel> authorInputs,
-            ListProperty<GenreInputModel> genreInputs,
             BookService bookService,
             ObservableList<GenreModel> genreModelObservableList
     ){
         this.book = book;
         this.authors = authors;
         this.authorInputs = authorInputs;
-        this.genreInputs = genreInputs;
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
         this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
@@ -61,11 +55,6 @@ public class AddBookCommand extends Command{
                 String authorsString = authors.stream()
                         .map(author -> author.getFirstName().toUpperCase() + "-" + author.getLastName().toUpperCase())
                         .collect(Collectors.joining(","));
-
-//                String genresString = book.getGenres().stream()
-//                        .map(StringProperty::get)
-//                        .map(String::toUpperCase)
-//                        .collect(Collectors.joining(","));
 
                 String genresString = genreModelObservableList.stream()
                         .filter(GenreModel::isSelected)
@@ -88,7 +77,6 @@ public class AddBookCommand extends Command{
         //To reset the screen
         book.clear();
         authorInputs.clear();
-        genreInputs.clear();
 
         //Inserting the first empty author to display the text-fields in table-view
         AuthorInputModel authorInputModel = new AuthorInputModel();
@@ -98,11 +86,8 @@ public class AddBookCommand extends Command{
         authorInputs.addFirst(authorInputModel);
         authors.addFirst(author);
 
-        //Inserting the first empty genre to display the combo-box in the table-view
-//        GenreInputModel genreInputModel = new GenreInputModel(genres);
-//        genreInputModel.getCbGenres().valueProperty().bindBidirectional(book.getGenres().getFirst());
-//        genreInputs.addFirst(genreInputModel);
-        genreModelObservableList.clear();
+        genreModelObservableList.forEach(genre -> genre.setSelected(false));
+
     }
 
     private void onFailure(){

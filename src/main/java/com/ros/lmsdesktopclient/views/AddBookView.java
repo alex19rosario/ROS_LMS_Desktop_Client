@@ -1,11 +1,9 @@
 package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
-import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
-import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,10 +34,7 @@ public class AddBookView implements BaseView {
     private Button btnAddAuthor;
     private Label lblCoverImage;
     private ImageView coverImageView;
-    //private TableView<GenreInputModel> tableViewGenre;
-    //private TableColumn<GenreInputModel, ComboBox<String>> columnGenre;
     private ListView<GenreModel> genreModelListView;
-    private Button btnAddGenre;
     private Button btnAddBook;
     private Button btnGoBack;
     private Button btnAttachCoverImage;
@@ -74,12 +69,7 @@ public class AddBookView implements BaseView {
         btnAddAuthor = new Button("+");
         lblCoverImage = new Label("Cover Image");
         coverImageView = new ImageView();
-//        tableViewGenre = new TableView<>();
-//        columnGenre = new TableColumn<>("Genres");
-//        columnGenre.setCellValueFactory(new PropertyValueFactory<>("cbGenres"));
-//        tableViewGenre.getColumns().add(columnGenre);
         genreModelListView = new ListView<>();
-        btnAddGenre = new Button("+");
         btnAddBook = new Button("Add Book");
         btnGoBack = new Button("Go Back");
         progressIndicator = new ProgressIndicator();
@@ -110,7 +100,6 @@ public class AddBookView implements BaseView {
         ));
 
         btnAddAuthor.setOnAction(actionEvent -> addBookViewModel.executeAddAuthorCommand());
-        btnAddGenre.setOnAction(actionEvent -> addBookViewModel.executeAddGenreCommand());
         btnAddBook.setOnAction(actionEvent -> addBookViewModel.executeAddBookCommand());
         btnAttachCoverImage.setOnAction(actionEvent -> addBookViewModel.executeSelectCoverImageCommand());
         btnGoBack.setOnAction(actionEvent -> addBookViewModel.executeOpenMainViewCommand());
@@ -146,8 +135,7 @@ public class AddBookView implements BaseView {
         gridPane.add(tfIsbn, 2, 0);
         gridPane.add(lblTitle, 3, 0);
         gridPane.add(tfTitle, 4, 0);
-        gridPane.add(btnAddGenre, 1, 1);
-        gridPane.add(createTableViewGenre(), 2, 1);
+        gridPane.add(createListViewGenre(), 2, 1);
         gridPane.add(lblCoverImage, 3, 1);
         gridPane.add(createAttachFileButton(), 4, 1);
         gridPane.setAlignment(Pos.TOP_CENTER);
@@ -164,7 +152,7 @@ public class AddBookView implements BaseView {
         return hBox;
     }
 
-    private Node createTableViewGenre() {
+    private Node createListViewGenre() {
         HBox hBox = new HBox(genreModelListView);
         hBox.setPrefHeight(180);
         hBox.setPrefWidth(200);
