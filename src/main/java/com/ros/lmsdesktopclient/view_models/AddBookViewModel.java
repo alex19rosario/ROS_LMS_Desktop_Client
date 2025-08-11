@@ -5,9 +5,12 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
 import com.ros.lmsdesktopclient.commands.*;
+import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.GenreType;
 import javafx.beans.property.ListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -22,6 +25,8 @@ public class AddBookViewModel {
     private final ListProperty<GenreInputModel> genreInputs;
     private final BookModel bookModel;
 
+    private final ObservableList<GenreModel> genreModelObservableList;
+
     @Inject
     public AddBookViewModel(
             Map<CommandType, Command> commands,
@@ -29,7 +34,8 @@ public class AddBookViewModel {
             ListProperty<GenreInputModel> genreInputs,
             BookModel bookModel,
             List<AuthorModel> authors,
-            Set<GenreType> genres
+            Set<GenreType> genres,
+            ObservableList<GenreModel> genreModelObservableList
     ){
         openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
 
@@ -60,6 +66,8 @@ public class AddBookViewModel {
         this.addBookCommand = commands.get(CommandType.ADD_BOOK);
 
         this.selectFileCommand = commands.get(CommandType.SELECT_FILE);
+
+        this.genreModelObservableList = genreModelObservableList;
     }
 
     public ListProperty<AuthorInputModel> authorInputsProperty() {
@@ -68,6 +76,10 @@ public class AddBookViewModel {
 
     public ListProperty<GenreInputModel> genreInputsProperty() {
         return genreInputs;
+    }
+
+    public ObservableList<GenreModel> getGenreModelObservableList() {
+        return genreModelObservableList;
     }
 
     public BookModel getBookModel() {

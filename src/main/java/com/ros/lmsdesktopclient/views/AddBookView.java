@@ -2,17 +2,21 @@ package com.ros.lmsdesktopclient.views;
 
 import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import javax.inject.Inject;
 
@@ -32,8 +36,9 @@ public class AddBookView implements BaseView {
     private Button btnAddAuthor;
     private Label lblCoverImage;
     private ImageView coverImageView;
-    private TableView<GenreInputModel> tableViewGenre;
-    private TableColumn<GenreInputModel, ComboBox<String>> columnGenre;
+    //private TableView<GenreInputModel> tableViewGenre;
+    //private TableColumn<GenreInputModel, ComboBox<String>> columnGenre;
+    private ListView<GenreModel> genreModelListView;
     private Button btnAddGenre;
     private Button btnAddBook;
     private Button btnGoBack;
@@ -69,10 +74,11 @@ public class AddBookView implements BaseView {
         btnAddAuthor = new Button("+");
         lblCoverImage = new Label("Cover Image");
         coverImageView = new ImageView();
-        tableViewGenre = new TableView<>();
-        columnGenre = new TableColumn<>("Genres");
-        columnGenre.setCellValueFactory(new PropertyValueFactory<>("cbGenres"));
-        tableViewGenre.getColumns().add(columnGenre);
+//        tableViewGenre = new TableView<>();
+//        columnGenre = new TableColumn<>("Genres");
+//        columnGenre.setCellValueFactory(new PropertyValueFactory<>("cbGenres"));
+//        tableViewGenre.getColumns().add(columnGenre);
+        genreModelListView = new ListView<>();
         btnAddGenre = new Button("+");
         btnAddBook = new Button("Add Book");
         btnGoBack = new Button("Go Back");
@@ -85,7 +91,23 @@ public class AddBookView implements BaseView {
         tfTitle.textProperty().bindBidirectional(addBookViewModel.getBookModel().titleProperty());
         tableViewAuthor.itemsProperty().bindBidirectional(addBookViewModel.authorInputsProperty());
         coverImageView.imageProperty().bindBidirectional(addBookViewModel.getBookModel().coverImageProperty());
-        tableViewGenre.itemsProperty().bindBidirectional(addBookViewModel.genreInputsProperty());
+        //tableViewGenre.itemsProperty().bindBidirectional(addBookViewModel.genreInputsProperty());
+        genreModelListView.setItems(addBookViewModel.getGenreModelObservableList());
+
+        genreModelListView.setCellFactory(CheckBoxListCell.forListView(
+                GenreModel::selectedProperty,
+                new StringConverter<GenreModel>() {
+                    @Override
+                    public String toString(GenreModel genreModel) {
+                        return genreModel == null ? "" : genreModel.getGenre();
+                    }
+
+                    @Override
+                    public GenreModel fromString(String s) {
+                        throw new UnsupportedOperationException("Not needed");
+                    }
+                }
+        ));
 
         btnAddAuthor.setOnAction(actionEvent -> addBookViewModel.executeAddAuthorCommand());
         btnAddGenre.setOnAction(actionEvent -> addBookViewModel.executeAddGenreCommand());
@@ -143,10 +165,10 @@ public class AddBookView implements BaseView {
     }
 
     private Node createTableViewGenre() {
-        HBox hBox = new HBox(tableViewGenre);
+        HBox hBox = new HBox(genreModelListView);
         hBox.setPrefHeight(180);
         hBox.setPrefWidth(200);
-        columnGenre.setPrefWidth(200);
+        //columnGenre.setPrefWidth(200);
         return hBox;
     }
 

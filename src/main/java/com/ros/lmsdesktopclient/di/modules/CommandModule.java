@@ -104,4 +104,9 @@ public abstract class CommandModule {
     @IntoMap
     @CommandTypeKey(CommandType.ISSUE_BOOK)
     abstract Command issueBookCommand(IssueBookCommand command);
+
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.GET_GENRES)
+    abstract Command getGenresCommand(GetGenresCommand command);
 }

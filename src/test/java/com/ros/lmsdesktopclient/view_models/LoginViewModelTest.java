@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.view_models;
 
 import com.ros.lmsdesktopclient.commands.Command;
+import com.ros.lmsdesktopclient.commands.GetGenresCommand;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,12 +21,15 @@ class LoginViewModelTest {
 
     @Mock private LoginModel loginModel;
     @Mock private Command loginCommand;
+    @Mock private Command getGenresCommand;
     private LoginViewModel viewModel;
+
 
     @BeforeEach
     void setUp() {
         Map<CommandType, Command> commands = new EnumMap<>(CommandType.class);    // EnumMap for commands
         commands.put(CommandType.LOGIN, loginCommand);  // Put LOGIN command
+        commands.put(CommandType.GET_GENRES, getGenresCommand);
 
         viewModel = new LoginViewModel(loginModel, commands);
     }
@@ -44,5 +48,6 @@ class LoginViewModelTest {
     void executeLoginCommand_shouldCallExecuteOnCommand() {
         viewModel.executeLoginCommand();
         verify(loginCommand, times(1)).execute(); // Verify execute() was called once
+        verify(getGenresCommand, times(1)).execute();
     }
 }

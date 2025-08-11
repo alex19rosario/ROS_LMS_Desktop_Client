@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.GenreInputModel;
+import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.enums.GenreType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.util.PropertyTypeKey;
@@ -13,6 +14,7 @@ import dagger.Provides;
 import dagger.multibindings.IntoMap;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -55,6 +57,17 @@ public abstract class ModelModule {
                 })
                 .map(GenreType::valueOf)
                 .collect(Collectors.toSet());
+    }
+
+    @Provides
+    @Singleton
+    static ObservableList<GenreModel> genreModelObservableList() {
+
+        List<GenreModel> list = UpFrontDataHandler.getInstance().getGenres().stream()
+                .map(genre -> new GenreModel(genre, false))
+                .toList();
+
+        return FXCollections.observableArrayList(list);
     }
 
     @Provides

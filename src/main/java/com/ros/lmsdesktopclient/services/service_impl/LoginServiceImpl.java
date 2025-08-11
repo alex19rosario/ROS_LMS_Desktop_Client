@@ -20,15 +20,11 @@ import java.net.http.HttpResponse;
 public class LoginServiceImpl implements LoginService {
 
     private final TokenHandler tokenHandler;
-    private final UpFrontDataHandler upFrontDataHandler;
-    private final GenreService genreService;
     private final AuthenticatedHttpClientFactory clientFactory;
 
     @Inject
-    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory, GenreService genreService){
+    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory){
         tokenHandler = TokenHandler.getInstance();
-        upFrontDataHandler = UpFrontDataHandler.getInstance();
-        this.genreService = genreService;
         this.clientFactory = clientFactory;
     }
 
@@ -47,11 +43,6 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
-
-            if (tokenHandler.getToken().isEmpty())
-                throw new RuntimeException("Token was not saved properly!");
-            
-            upFrontDataHandler.saveGenres(genreService.getAllGenres());
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("The username or password are incorrect.");

@@ -6,11 +6,13 @@ import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.concurrent.Task;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public final class LoginCommand extends Command {
 
@@ -30,7 +32,6 @@ public final class LoginCommand extends Command {
         return new Task<>() {
             @Override
             protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException, InterruptedException {
-                Thread.sleep(3000);
                 checkForm(loginModel);
                 LoginDTO loginDTO = new LoginDTO(loginModel.getUsername(), loginModel.getPassword());
                 loginService.login(loginDTO);

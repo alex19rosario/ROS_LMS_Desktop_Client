@@ -10,11 +10,13 @@ public final class LoginViewModel {
 
     private final LoginModel loginModel;
     private final Command loginCommand;
+    private final Command getGenresCommand;
 
     @Inject
     public LoginViewModel(LoginModel loginModel, Map<CommandType, Command> commands){
         this.loginModel = loginModel;
         this.loginCommand = commands.get(CommandType.LOGIN);
+        this.getGenresCommand = commands.get(CommandType.GET_GENRES);
     }
 
     public LoginModel getLoginModel() {
@@ -26,7 +28,8 @@ public final class LoginViewModel {
     }
 
     public void executeLoginCommand(){
-        this.loginCommand.execute();
+        loginCommand.execute();
+        getGenresCommand.execute();
     }
 
 }

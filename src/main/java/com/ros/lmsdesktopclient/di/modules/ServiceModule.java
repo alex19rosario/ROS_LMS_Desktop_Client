@@ -14,13 +14,16 @@ import java.net.http.HttpClient;
 public abstract class ServiceModule {
 
     @Provides
-    static LoginService loginService(AuthenticatedHttpClientFactory factory, GenreService genreService) {
-        LoginService loginService = new LoginServiceImpl(factory, genreService);
+    static LoginService loginService(AuthenticatedHttpClientFactory factory) {
+        LoginService loginService = new LoginServiceImpl(factory);
         return ServiceFactory.createProxy(LoginService.class, loginService);
     }
 
-    @Binds
-    abstract GenreService genreService(GenreServiceImpl genreService);
+    @Provides
+    static GenreService genreService(HttpClient client) {
+        GenreService genreService = new GenreServiceImpl(client);
+        return ServiceFactory.createProxy(GenreService.class, genreService);
+    }
 
     @Provides
     static BookService bookService(HttpClient client) {

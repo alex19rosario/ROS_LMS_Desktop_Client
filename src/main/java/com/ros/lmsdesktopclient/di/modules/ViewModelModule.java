@@ -11,6 +11,7 @@ import dagger.Provides;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
 import java.util.List;
@@ -29,9 +30,10 @@ public abstract class ViewModelModule {
             ListProperty<GenreInputModel> genreInputs,
             BookModel bookModel,
             List<AuthorModel> authors,
-            Set<GenreType> genres
+            Set<GenreType> genres,
+            ObservableList<GenreModel> genreModelObservableList
     ) {
-        return new AddBookViewModel(commands, authorInputs, genreInputs, bookModel, authors, genres);
+        return new AddBookViewModel(commands, authorInputs, genreInputs, bookModel, authors, genres, genreModelObservableList);
     }
 
     @Provides
