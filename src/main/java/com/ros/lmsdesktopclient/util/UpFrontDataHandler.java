@@ -1,8 +1,8 @@
 package com.ros.lmsdesktopclient.util;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -25,11 +25,13 @@ public class UpFrontDataHandler {
     }
 
     private final Function<Set<String>, String> getGenresStr = genres ->
-            String.join(" ", genres);
+            genres.stream()
+                    .sorted()
+                    .collect(Collectors.joining("|"));
 
     private final Function<String, Set<String>> getGenresSet = genresStr ->
-            Arrays.stream(genresStr.split(" "))
-                    .collect(Collectors.toCollection(TreeSet::new));
+            Arrays.stream(genresStr.split("\\|"))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
     public void saveGenres(Set<String> genres){
         preferences.put(GENRES_KEY, getGenresStr.apply(genres));

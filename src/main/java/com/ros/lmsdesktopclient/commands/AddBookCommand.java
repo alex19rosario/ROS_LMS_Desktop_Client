@@ -77,6 +77,7 @@ public class AddBookCommand extends Command{
         //To reset the screen
         book.clear();
         authorInputs.clear();
+        authors.clear();
 
         //Inserting the first empty author to display the text-fields in table-view
         AuthorInputModel authorInputModel = new AuthorInputModel();
@@ -85,7 +86,6 @@ public class AddBookCommand extends Command{
         authorInputModel.getTfLastName().textProperty().bindBidirectional(author.lastNameProperty());
         authorInputs.addFirst(authorInputModel);
         authors.addFirst(author);
-
         genreModelObservableList.forEach(genre -> genre.setSelected(false));
 
     }
