@@ -1,6 +1,4 @@
 package com.ros.lmsdesktopclient.view_models;
-
-import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.commands.*;
@@ -17,29 +15,22 @@ public class AddBookViewModel {
     private final Command addAuthorCommand;
     private final Command addBookCommand;
     private final Command selectFileCommand;
-    private final ListProperty<AuthorInputModel> authorInputs;
+
     private final BookModel bookModel;
     private final ObservableList<GenreModel> genreModelObservableList;
+    private final ListProperty<AuthorModel> authorModelListProperty;
 
     @Inject
     public AddBookViewModel(
             Map<CommandType, Command> commands,
-            ListProperty<AuthorInputModel> authorInputs,
             BookModel bookModel,
-            List<AuthorModel> authors,
-            ObservableList<GenreModel> genreModelObservableList
+            ObservableList<GenreModel> genreModelObservableList,
+            ListProperty<AuthorModel> authorModelListProperty
     ){
         openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
+        this.authorModelListProperty = authorModelListProperty;
 
-        this.authorInputs = authorInputs;
-
-        //Inserting the first empty author to display the text-fields in table-view
-        AuthorInputModel authorInputModel = new AuthorInputModel();
-        AuthorModel author = new AuthorModel();
-        authorInputModel.getTfFirstName().textProperty().bindBidirectional(author.firstNameProperty());
-        authorInputModel.getTfLastName().textProperty().bindBidirectional(author.lastNameProperty());
-        authorInputs.addFirst(authorInputModel);
-        authors.addFirst(author);
+        this.authorModelListProperty.addFirst(new AuthorModel());
 
         addAuthorCommand = commands.get(CommandType.ADD_AUTHOR);
 
@@ -52,12 +43,16 @@ public class AddBookViewModel {
         this.genreModelObservableList = genreModelObservableList;
     }
 
-    public ListProperty<AuthorInputModel> authorInputsProperty() {
-        return authorInputs;
-    }
-
     public ObservableList<GenreModel> getGenreModelObservableList() {
         return genreModelObservableList;
+    }
+
+    public ObservableList<AuthorModel> getAuthorModelListProperty() {
+        return authorModelListProperty.get();
+    }
+
+    public ListProperty<AuthorModel> authorModelListPropertyProperty() {
+        return authorModelListProperty;
     }
 
     public BookModel getBookModel() {

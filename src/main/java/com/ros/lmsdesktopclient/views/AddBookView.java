@@ -1,16 +1,16 @@
 package com.ros.lmsdesktopclient.views;
 
-import com.ros.lmsdesktopclient.models.AuthorInputModel;
+import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.LoadingOverlay;
 import com.ros.lmsdesktopclient.view_models.AddBookViewModel;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -28,9 +28,8 @@ public class AddBookView implements BaseView {
     private TextField tfIsbn;
     private Label lblTitle;
     private TextField tfTitle;
-    private TableView<AuthorInputModel> tableViewAuthor;
-    private TableColumn<AuthorInputModel, TextField> columnFirstName;
-    private TableColumn<AuthorInputModel, TextField> columnLastName;
+    private Label lblAuthors;
+    private VBox authorsContainer;
     private Button btnAddAuthor;
     private Label lblCoverImage;
     private ImageView coverImageView;
@@ -39,6 +38,7 @@ public class AddBookView implements BaseView {
     private Button btnGoBack;
     private Button btnAttachCoverImage;
     private ProgressIndicator progressIndicator;
+
 
     @Inject
     public AddBookView(AddBookViewModel addBookViewModel) {
@@ -60,12 +60,7 @@ public class AddBookView implements BaseView {
         tfIsbn = new TextField();
         lblTitle = new Label("Title");
         tfTitle = new TextField();
-        tableViewAuthor = new TableView<>();
-        columnFirstName = new TableColumn<>("First Name");
-        columnLastName = new TableColumn<>("Last Name");
-        columnFirstName.setCellValueFactory(new PropertyValueFactory<>("tfFirstName"));
-        columnLastName.setCellValueFactory(new PropertyValueFactory<>("tfLastName"));
-        tableViewAuthor.getColumns().addAll(columnFirstName, columnLastName);
+        lblAuthors = new Label("Authors");
         btnAddAuthor = new Button("+");
         lblCoverImage = new Label("Cover Image");
         coverImageView = new ImageView();
@@ -79,14 +74,13 @@ public class AddBookView implements BaseView {
     private void bindComponents() {
         tfIsbn.textProperty().bindBidirectional(addBookViewModel.getBookModel().isbnProperty());
         tfTitle.textProperty().bindBidirectional(addBookViewModel.getBookModel().titleProperty());
-        tableViewAuthor.itemsProperty().bindBidirectional(addBookViewModel.authorInputsProperty());
+
         coverImageView.imageProperty().bindBidirectional(addBookViewModel.getBookModel().coverImageProperty());
-        //tableViewGenre.itemsProperty().bindBidirectional(addBookViewModel.genreInputsProperty());
         genreModelListView.setItems(addBookViewModel.getGenreModelObservableList());
 
         genreModelListView.setCellFactory(CheckBoxListCell.forListView(
                 GenreModel::selectedProperty,
-                new StringConverter<GenreModel>() {
+                new StringConverter<>() {
                     @Override
                     public String toString(GenreModel genreModel) {
                         return genreModel == null ? "" : genreModel.getGenre();
@@ -98,6 +92,9 @@ public class AddBookView implements BaseView {
                     }
                 }
         ));
+
+        // Bind authors list to container
+        bindAuthorContainer(addBookViewModel.getAuthorModelListProperty());
 
         btnAddAuthor.setOnAction(actionEvent -> addBookViewModel.executeAddAuthorCommand());
         btnAddBook.setOnAction(actionEvent -> addBookViewModel.executeAddBookCommand());
@@ -124,7 +121,7 @@ public class AddBookView implements BaseView {
     }
 
     private Node createForm() {
-        VBox vBox = new VBox(25, createFirstSection(), createSecondSection(), createFooter());
+        VBox vBox = new VBox(25, createFirstSection(), createAuthorsContainer(), createFooter());
         vBox.setAlignment(Pos.CENTER);
         return vBox;
     }
@@ -142,21 +139,64 @@ public class AddBookView implements BaseView {
         return gridPane;
     }
 
-    private Node createSecondSection() {
-        tableViewAuthor.setPrefWidth(400);
-        columnFirstName.setPrefWidth(200);
-        columnLastName.setPrefWidth(200);
-        HBox hBox = new HBox(25, btnAddAuthor, tableViewAuthor);
-        hBox.setPrefHeight(200);
-        hBox.setAlignment(Pos.CENTER);
-        return hBox;
+    private Node createAuthorsContainer() {
+
+        authorsContainer = new VBox(5);
+        HBox header = new HBox(10, lblAuthors, btnAddAuthor);
+        VBox wrapper = new VBox(10, header, authorsContainer);
+        wrapper.setPadding(new Insets(10));
+        wrapper.setMaxWidth(400);
+        return wrapper;
+    }
+
+    private void bindAuthorContainer(ObservableList<AuthorModel> authors) {
+        authorsContainer.getChildren().clear();
+
+        // Add rows for existing authors
+        for (AuthorModel author : authors) {
+            authorsContainer.getChildren().add(createAuthorRow(author));
+        }
+
+        // Listen for changes in the list
+        authors.addListener((javafx.collections.ListChangeListener<AuthorModel>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (AuthorModel added : change.getAddedSubList()) {
+                        authorsContainer.getChildren().add(createAuthorRow(added));
+                    }
+                }
+                if (change.wasRemoved()) {
+                    for (AuthorModel removed : change.getRemoved()) {
+                        authorsContainer.getChildren().removeIf(node -> node.getUserData() == removed);
+                    }
+                }
+            }
+        });
+    }
+
+    private HBox createAuthorRow(AuthorModel author) {
+        TextField tfFirstName = new TextField();
+        tfFirstName.setPromptText("First Name");
+        tfFirstName.textProperty().bindBidirectional(author.firstNameProperty());
+
+        TextField tfLastName = new TextField();
+        tfLastName.setPromptText("Last Name");
+        tfLastName.textProperty().bindBidirectional(author.lastNameProperty());
+
+        Button removeBtn = new Button("x");
+        removeBtn.setOnAction(e -> addBookViewModel.getAuthorModelListProperty().remove(author));
+
+        HBox row = new HBox(10, tfFirstName, tfLastName, removeBtn);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setUserData(author);
+
+        return row;
     }
 
     private Node createListViewGenre() {
         HBox hBox = new HBox(genreModelListView);
         hBox.setPrefHeight(180);
         hBox.setPrefWidth(200);
-        //columnGenre.setPrefWidth(200);
         return hBox;
     }
 

@@ -13,7 +13,6 @@ import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Map;
 
 
@@ -24,12 +23,11 @@ public abstract class ViewModelModule {
     @Singleton
     static AddBookViewModel addBookViewModel(
             Map<CommandType, Command> commands,
-            ListProperty<AuthorInputModel> authorInputs,
             BookModel bookModel,
-            List<AuthorModel> authors,
-            ObservableList<GenreModel> genreModelObservableList
+            ObservableList<GenreModel> genreModelObservableList,
+            ListProperty<AuthorModel> authorModelListProperty
     ) {
-        return new AddBookViewModel(commands, authorInputs, bookModel, authors, genreModelObservableList);
+        return new AddBookViewModel(commands, bookModel, genreModelObservableList, authorModelListProperty);
     }
 
     @Provides

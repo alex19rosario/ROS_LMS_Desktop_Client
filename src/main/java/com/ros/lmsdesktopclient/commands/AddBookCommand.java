@@ -1,7 +1,6 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.dtos.AddBookDTO;
-import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
@@ -22,8 +21,7 @@ import java.util.stream.Collectors;
 public class AddBookCommand extends Command{
 
     private final BookModel book;
-    private final List<AuthorModel> authors;
-    private final ListProperty<AuthorInputModel> authorInputs;
+    private final ListProperty<AuthorModel> authorModelListProperty;
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private final ObservableList<GenreModel> genreModelObservableList;
@@ -31,14 +29,12 @@ public class AddBookCommand extends Command{
     @Inject
     public AddBookCommand(
             BookModel book,
-            List<AuthorModel> authors,
-            ListProperty<AuthorInputModel> authorInputs,
+            ListProperty<AuthorModel> authorModelListProperty,
             BookService bookService,
             ObservableList<GenreModel> genreModelObservableList
     ){
         this.book = book;
-        this.authors = authors;
-        this.authorInputs = authorInputs;
+        this.authorModelListProperty = authorModelListProperty;
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
         this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
@@ -51,8 +47,9 @@ public class AddBookCommand extends Command{
         return new Task<>() {
             @Override
             protected Void call() throws EmptyFieldsException, InvalidISBNException, BookAlreadyExistException, ServerErrorException, ExpiredSessionException, NetworkException {
-                checkForm(book, authors);
-                String authorsString = authors.stream()
+                List<AuthorModel> authorModelList = authorModelListProperty.stream().toList();
+                checkForm(book, authorModelList);
+                String authorsString = authorModelList.stream()
                         .map(author -> author.getFirstName().toUpperCase() + "-" + author.getLastName().toUpperCase())
                         .collect(Collectors.joining(","));
 
@@ -76,18 +73,11 @@ public class AddBookCommand extends Command{
         getAlert().getModal(AlertContents.BOOK_ADDED_OK.getValue());
         //To reset the screen
         book.clear();
-        authorInputs.clear();
-        authors.clear();
+        authorModelListProperty.clear();
 
         //Inserting the first empty author to display the text-fields in table-view
-        AuthorInputModel authorInputModel = new AuthorInputModel();
-        AuthorModel author = new AuthorModel();
-        authorInputModel.getTfFirstName().textProperty().bindBidirectional(author.firstNameProperty());
-        authorInputModel.getTfLastName().textProperty().bindBidirectional(author.lastNameProperty());
-        authorInputs.addFirst(authorInputModel);
-        authors.addFirst(author);
+        authorModelListProperty.addFirst(new AuthorModel());
         genreModelObservableList.forEach(genre -> genre.setSelected(false));
-
     }
 
     private void onFailure(){

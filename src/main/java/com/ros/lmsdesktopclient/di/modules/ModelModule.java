@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.di.modules;
 
-import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
@@ -15,23 +14,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 
 @Module
 public abstract class ModelModule {
-
-    @Provides
-    @Singleton
-    static ListProperty<AuthorInputModel> authorInputs() {
-        return new SimpleListProperty<>(FXCollections.observableArrayList());
-    }
-
-    @Provides
-    @Singleton
-    static List<AuthorModel> authors() {
-        return new ArrayList<>();
-    }
 
     @Provides
     @Singleton
@@ -42,6 +28,12 @@ public abstract class ModelModule {
                 .toList();
 
         return FXCollections.observableArrayList(list);
+    }
+
+    @Provides
+    @Singleton
+    static ListProperty<AuthorModel> authorModelListProperty() {
+        return new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
     @Provides
