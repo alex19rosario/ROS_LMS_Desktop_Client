@@ -51,10 +51,6 @@ public class AddBookViewModel {
         return authorModelListProperty.get();
     }
 
-    public ListProperty<AuthorModel> authorModelListPropertyProperty() {
-        return authorModelListProperty;
-    }
-
     public BookModel getBookModel() {
         return bookModel;
     }

@@ -19,7 +19,6 @@ public abstract class Command {
     private Task<Void> commandTask;
     private Alerts alert;
 
-
     public Command() {
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
@@ -75,6 +74,4 @@ public abstract class Command {
             }
         });
     }
-
-
 }
