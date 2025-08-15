@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 public class GetGenresCommand extends Command{
 
@@ -11,7 +12,8 @@ public class GetGenresCommand extends Command{
     private final UpFrontDataHandler upFrontDataHandler;
 
     @Inject
-    public GetGenresCommand(GenreService genreService) {
+    public GetGenresCommand(GenreService genreService, ExecutorService executorService) {
+        super(executorService);
         this.genreService = genreService;
         upFrontDataHandler = UpFrontDataHandler.getInstance();
     }

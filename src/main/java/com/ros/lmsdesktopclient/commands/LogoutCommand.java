@@ -5,11 +5,13 @@ import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Views;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 public class LogoutCommand extends Command{
 
     @Inject
-    public LogoutCommand(){
+    public LogoutCommand(ExecutorService executorService){
+        super(executorService);
         setOnCommandSuccess(this::onSuccess);
     }
 

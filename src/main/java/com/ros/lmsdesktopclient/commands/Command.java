@@ -7,18 +7,19 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
+import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class Command {
     private final DoubleProperty progress;
     private final BooleanProperty running;
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
-    private static final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
+    private final ExecutorService executorService;
     private Alerts alert;
 
-    public Command() {
+    public Command(ExecutorService executorService) {
+        this.executorService = executorService;
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
     }
@@ -53,7 +54,7 @@ public abstract class Command {
         running.set(true);
         progress.set(-1); // show indeterminate spinner
 
-        pool.submit(() -> {
+        executorService.submit(() -> {
             try {
                 runCommand();
                 // Success: run callback on JavaFX thread

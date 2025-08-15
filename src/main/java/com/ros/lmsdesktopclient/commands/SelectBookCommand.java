@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class SelectBookCommand extends Command{
 
@@ -22,11 +23,17 @@ public class SelectBookCommand extends Command{
     private Throwable lastException;
 
     @Inject
-    public SelectBookCommand(SelectedBookModel selectedBookModel, ObjectProperty<BookDisplayModel> selectedRowModel, StorageService storageService) {
+    public SelectBookCommand(
+            SelectedBookModel selectedBookModel,
+            ObjectProperty<BookDisplayModel> selectedRowModel,
+            StorageService storageService,
+            ExecutorService executorService
+    ) {
+        super(executorService);
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;
         this.storageService = storageService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
         this.setOnCommandFailure(this::onFailure);
     }
 

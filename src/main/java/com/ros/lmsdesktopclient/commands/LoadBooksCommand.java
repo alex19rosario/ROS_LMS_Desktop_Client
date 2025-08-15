@@ -17,6 +17,7 @@ import javafx.beans.property.Property;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 public class LoadBooksCommand extends Command{
@@ -27,7 +28,14 @@ public class LoadBooksCommand extends Command{
     private final BookService bookService;
 
     @Inject
-    public LoadBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
+    public LoadBooksCommand(
+            Map<PropertyType, Property> properties,
+            SearchBookModel searchBookModel,
+            ListProperty<BookDisplayModel> books,
+            BookService bookService,
+            ExecutorService executorService
+    ){
+        super(executorService);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;

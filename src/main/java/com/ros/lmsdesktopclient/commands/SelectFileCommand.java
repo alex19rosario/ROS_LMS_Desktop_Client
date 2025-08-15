@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 public class SelectFileCommand extends Command{
 
@@ -15,7 +16,8 @@ public class SelectFileCommand extends Command{
     private final Stage stage;
 
     @Inject
-    public SelectFileCommand(BookModel book, Stage stage){
+    public SelectFileCommand(BookModel book, Stage stage, ExecutorService executorService){
+        super(executorService);
         this.book = book;
         this.stage = stage;
     }

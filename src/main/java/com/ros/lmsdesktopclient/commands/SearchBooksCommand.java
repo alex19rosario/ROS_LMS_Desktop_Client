@@ -17,6 +17,7 @@ import javafx.beans.property.StringProperty;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 public class SearchBooksCommand extends Command{
@@ -30,13 +31,20 @@ public class SearchBooksCommand extends Command{
     private Throwable lastException;
 
     @Inject
-    public SearchBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService) {
+    public SearchBooksCommand(
+            Map<PropertyType, Property> properties,
+            SearchBookModel searchBookModel,
+            ListProperty<BookDisplayModel> books,
+            BookService bookService,
+            ExecutorService executorService
+    ) {
+        super(executorService);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
         this.setOnCommandFailure(this::onFailure);
     }
 

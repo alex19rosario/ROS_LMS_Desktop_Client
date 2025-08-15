@@ -10,6 +10,7 @@ import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 public final class LoginCommand extends Command {
     private final LoginModel loginModel;
@@ -17,7 +18,8 @@ public final class LoginCommand extends Command {
     private Throwable lastException; // store exception for onFailure()
 
     @Inject
-    public LoginCommand(LoginModel loginModel, LoginService loginService) {
+    public LoginCommand(LoginModel loginModel, LoginService loginService, ExecutorService executorService) {
+        super(executorService);
         this.loginModel = loginModel;
         this.loginService = loginService;
         this.setOnCommandSuccess(this::onSuccess);
@@ -29,7 +31,6 @@ public final class LoginCommand extends Command {
         try {
             checkForm(loginModel);
             LoginDTO loginDTO = new LoginDTO(loginModel.getUsername(), loginModel.getPassword());
-            Thread.sleep(5000);
             loginService.login(loginDTO);
         } catch (Exception ex) {
             this.lastException = ex;

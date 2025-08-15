@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -26,10 +27,11 @@ public class AddMemberCommand extends Command{
     private Throwable lastException;
 
     @Inject
-    public AddMemberCommand(MemberModel member, MemberService memberService){
+    public AddMemberCommand(MemberModel member, MemberService memberService, ExecutorService executorService){
+        super(executorService);
         this.member = member;
         this.memberService = memberService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
         setOnCommandSuccess(this::onSuccess);
         setOnCommandFailure(this::onFailure);
     }

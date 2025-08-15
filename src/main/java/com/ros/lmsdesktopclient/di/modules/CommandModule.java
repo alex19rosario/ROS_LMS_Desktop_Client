@@ -11,14 +11,11 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
 
+import java.util.concurrent.ExecutorService;
+
 
 @Module
 public abstract class CommandModule {
-
-//    @Binds
-//    @IntoMap
-//    @CommandTypeKey(CommandType.LOGIN)
-//    abstract Command loginCommand(LoginCommand command);
 
     @Binds
     @IntoMap
@@ -33,29 +30,29 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_BOOK)
-    static Command openAddBookViewCommand() {
-        return new OpenViewCommand(Views.ADD_BOOK);
+    static Command openAddBookViewCommand(ExecutorService executorService) {
+        return new OpenViewCommand(Views.ADD_BOOK, executorService);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_MEMBER)
-    static Command openAddMemberViewCommand() {
-        return new OpenViewCommand(Views.ADD_MEMBER);
+    static Command openAddMemberViewCommand(ExecutorService executorService) {
+        return new OpenViewCommand(Views.ADD_MEMBER, executorService);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ISSUE_BOOK)
-    static Command openIssueBookViewCommand() {
-        return new OpenViewCommand(Views.ISSUE_BOOK);
+    static Command openIssueBookViewCommand(ExecutorService executorService) {
+        return new OpenViewCommand(Views.ISSUE_BOOK, executorService);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_MAIN_MENU)
-    static Command openMainViewCommand() {
-        return new OpenViewCommand(Views.MAIN_MENU);
+    static Command openMainViewCommand(ExecutorService executorService) {
+        return new OpenViewCommand(Views.MAIN_MENU, executorService);
     }
 
     @Binds
@@ -71,8 +68,8 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.SELECT_FILE)
-    static Command selectFileCommand(BookModel bookModel) {
-        return new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage());
+    static Command selectFileCommand(BookModel bookModel, ExecutorService executorService) {
+        return new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage(), executorService);
     }
 
     @Binds

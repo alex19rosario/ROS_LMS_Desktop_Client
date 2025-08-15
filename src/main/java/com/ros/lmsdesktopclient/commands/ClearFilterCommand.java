@@ -10,6 +10,7 @@ import javafx.beans.property.StringProperty;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 
 public class ClearFilterCommand extends Command{
@@ -19,7 +20,8 @@ public class ClearFilterCommand extends Command{
     private Throwable lastException;
 
     @Inject
-    public ClearFilterCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel) {
+    public ClearFilterCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ExecutorService executorService) {
+        super(executorService);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.searchBookModel = searchBookModel;
         this.setOnCommandFailure(this::onFailure);

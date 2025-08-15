@@ -12,6 +12,7 @@ import javafx.beans.property.StringProperty;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 public class IssueBookCommand extends Command {
 
@@ -25,12 +26,14 @@ public class IssueBookCommand extends Command {
     public IssueBookCommand(
             ObjectProperty<BookDisplayModel> selectedRowModel,
             Map<PropertyType, Property> properties,
-            LoanService loanService
+            LoanService loanService,
+            ExecutorService executorService
     ) {
+        super(executorService);
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }

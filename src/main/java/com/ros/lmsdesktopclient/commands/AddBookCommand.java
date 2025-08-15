@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 public class AddBookCommand extends Command{
@@ -31,13 +32,15 @@ public class AddBookCommand extends Command{
             BookModel book,
             ListProperty<AuthorModel> authorModelListProperty,
             BookService bookService,
-            ObservableList<GenreModel> genreModelObservableList
+            ObservableList<GenreModel> genreModelObservableList,
+            ExecutorService executorService
     ){
+        super(executorService);
         this.book = book;
         this.authorModelListProperty = authorModelListProperty;
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN);
+        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
