@@ -12,7 +12,6 @@ import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,6 +24,7 @@ public class AddBookCommand extends Command{
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private final ObservableList<GenreModel> genreModelObservableList;
+    private Throwable lastException; // store exception for onFailure()
 
     @Inject
     public AddBookCommand(
@@ -43,29 +43,28 @@ public class AddBookCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws EmptyFieldsException, InvalidISBNException, BookAlreadyExistException, ServerErrorException, ExpiredSessionException, NetworkException {
-                List<AuthorModel> authorModelList = authorModelListProperty.stream().toList();
-                checkForm(book, authorModelList);
-                String authorsString = authorModelList.stream()
-                        .map(author -> author.getFirstName().toUpperCase() + "-" + author.getLastName().toUpperCase())
-                        .collect(Collectors.joining(","));
+    protected void runCommand() throws Exception {
+        try {
+            List<AuthorModel> authorModelList = authorModelListProperty.stream().toList();
+            checkForm(book, authorModelList);
+            String authorsString = authorModelList.stream()
+                    .map(author -> author.getFirstName().toUpperCase() + "-" + author.getLastName().toUpperCase())
+                    .collect(Collectors.joining(","));
 
-                String genresString = genreModelObservableList.stream()
-                        .filter(GenreModel::isSelected)
-                        .map(GenreModel::getGenre)
-                        .collect(Collectors.joining(","));
+            String genresString = genreModelObservableList.stream()
+                    .filter(GenreModel::isSelected)
+                    .map(GenreModel::getGenre)
+                    .collect(Collectors.joining(","));
 
-                String staffUsername = TokenHandler.getInstance().getUsername();
+            String staffUsername = TokenHandler.getInstance().getUsername();
 
-                AddBookDTO bookDTO = new AddBookDTO(book.getIsbn(), book.getTitle(), authorsString, genresString, staffUsername, book.getCoverImageFile());
-                bookService.addBook(bookDTO);
+            AddBookDTO bookDTO = new AddBookDTO(book.getIsbn(), book.getTitle(), authorsString, genresString, staffUsername, book.getCoverImageFile());
+            bookService.addBook(bookDTO);
+        } catch (Exception ex) {
+            this.lastException = ex;
+            throw ex; // triggers failure in base class
+        }
 
-                return null;
-            }
-        };
     }
 
     private void onSuccess(){
@@ -82,22 +81,22 @@ public class AddBookCommand extends Command{
 
     private void onFailure(){
 
-        Throwable exception = getCommandTask().getException();
+        if (lastException != null) {
+            Alerts alert = switch (lastException){
+                case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+                case NetworkException ignored -> Alerts.NETWORK_ERROR;
+                case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+                case InvalidISBNException ignored -> Alerts.INVALID_ISBN_ERROR;
+                case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+                case BookAlreadyExistException ignored -> Alerts.EXISTING_BOOK_ERROR;
+                default -> throw new IllegalStateException("Unexpected exception: " + lastException);
+            };
 
-        Alerts alert = switch (exception){
-            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
-            case NetworkException ignored -> Alerts.NETWORK_ERROR;
-            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
-            case InvalidISBNException ignored -> Alerts.INVALID_ISBN_ERROR;
-            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
-            case BookAlreadyExistException ignored -> Alerts.EXISTING_BOOK_ERROR;
-            default -> throw new IllegalStateException("Unexpected exception: " + exception);
-        };
-        String content = exception.getMessage();
-        setAlert(alert);
-        getAlert().getModal(content);
+            setAlert(alert);
+            getAlert().getModal(lastException.getMessage());
+        }
 
-        if(exception instanceof ExpiredSessionException){
+        if(lastException instanceof ExpiredSessionException){
             openLoginViewCommand.execute();
         }
     }
@@ -107,4 +106,6 @@ public class AddBookCommand extends Command{
             throw new EmptyFieldsException("Add Book Form: there are empty fields");
         }
     }
+
+
 }

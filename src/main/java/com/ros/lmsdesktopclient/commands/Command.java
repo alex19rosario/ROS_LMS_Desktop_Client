@@ -1,11 +1,11 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.enums.Alerts;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.concurrent.Task;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +16,6 @@ public abstract class Command {
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
     private static final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
-    private Task<Void> commandTask;
     private Alerts alert;
 
     public Command() {
@@ -24,7 +23,7 @@ public abstract class Command {
         this.running = new SimpleBooleanProperty();
     }
 
-    protected abstract Task<Void> createCommandTask();
+    protected abstract void runCommand() throws Exception;
 
     public void setOnCommandSuccess(Runnable onCommandSuccess){
         this.onCommandSuccess = onCommandSuccess;
@@ -42,10 +41,6 @@ public abstract class Command {
         return running;
     }
 
-    public Task<Void> getCommandTask() {
-        return commandTask;
-    }
-
     public Alerts getAlert() {
         return alert;
     }
@@ -54,24 +49,38 @@ public abstract class Command {
         this.alert = alert;
     }
 
-    public void execute(){
-        this.commandTask = createCommandTask();
+    public void execute() {
+        running.set(true);
+        progress.set(-1); // show indeterminate spinner
 
-        running.bind(commandTask.runningProperty());
-        progress.bind(commandTask.progressProperty());
+        pool.submit(() -> {
+            try {
+                runCommand();
+                // Success: run callback on JavaFX thread
+                Platform.runLater(() -> {
+                    running.set(false);
+                    progress.set(1); // completed
+                    if (onCommandSuccess != null) {
+                        onCommandSuccess.run();
+                    }
+                });
 
-        pool.submit(commandTask);
+            } catch (Exception e) {
 
-        commandTask.setOnSucceeded(event -> {
-            if (onCommandSuccess != null) {
-                onCommandSuccess.run();
+                // Failure: run callback on JavaFX thread
+                Platform.runLater(() -> {
+                    running.set(false);
+                    progress.set(0); // failed, reset to 0
+                    if (onCommandFailure != null) {
+                        onCommandFailure.run();
+                    }
+                });
             }
         });
+    }
 
-        commandTask.setOnFailed(event -> {
-            if (onCommandFailure != null) {
-                onCommandFailure.run();
-            }
-        });
+    // Optional helper for reporting progress from runCommand()
+    protected void updateProgress(double value) {
+        Platform.runLater(() -> progress.set(value));
     }
 }

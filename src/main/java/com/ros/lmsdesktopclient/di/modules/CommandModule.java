@@ -15,6 +15,11 @@ import dagger.multibindings.IntoMap;
 @Module
 public abstract class CommandModule {
 
+//    @Binds
+//    @IntoMap
+//    @CommandTypeKey(CommandType.LOGIN)
+//    abstract Command loginCommand(LoginCommand command);
+
     @Binds
     @IntoMap
     @CommandTypeKey(CommandType.LOGIN)

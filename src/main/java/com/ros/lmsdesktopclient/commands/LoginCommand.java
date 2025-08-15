@@ -8,17 +8,16 @@ import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 
 public final class LoginCommand extends Command {
-
     private final LoginModel loginModel;
     private final LoginService loginService;
+    private Throwable lastException; // store exception for onFailure()
 
     @Inject
-    public LoginCommand(LoginModel loginModel, LoginService loginService){
+    public LoginCommand(LoginModel loginModel, LoginService loginService) {
         this.loginModel = loginModel;
         this.loginService = loginService;
         this.setOnCommandSuccess(this::onSuccess);
@@ -26,49 +25,45 @@ public final class LoginCommand extends Command {
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws EmptyFieldsException, AuthenticationException, ServerErrorException, NetworkException, AccessDeniedException, InterruptedException {
-                checkForm(loginModel);
-                LoginDTO loginDTO = new LoginDTO(loginModel.getUsername(), loginModel.getPassword());
-                loginService.login(loginDTO);
-                return null;
-            }
-        };
+    protected void runCommand() throws Exception {
+        try {
+            checkForm(loginModel);
+            LoginDTO loginDTO = new LoginDTO(loginModel.getUsername(), loginModel.getPassword());
+            Thread.sleep(5000);
+            loginService.login(loginDTO);
+        } catch (Exception ex) {
+            this.lastException = ex;
+            throw ex; // triggers failure in base class
+        }
     }
 
-    private void onSuccess(){
+    private void onSuccess() {
         ViewHandler.switchTo(Views.MAIN_MENU);
         loginModel.clear();
     }
 
-    private void onFailure(){
-        // Get the exception from the command task
-        Throwable exception = getCommandTask().getException();
+    private void onFailure() {
         TokenHandler.getInstance().removeAll();
 
-        // Use a switch expression to determine the alert type
-        Alerts alert = switch (exception) {
-            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
-            case NetworkException ignored -> Alerts.NETWORK_ERROR;
-            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
-            case AuthenticationException ignored -> Alerts.AUTHENTICATION_ERROR;
-            case AccessDeniedException ignored -> Alerts.ACCESS_DENIED_ERROR;
-            default -> throw new IllegalStateException("Unexpected exception: " + exception);
-        };
+        if (lastException != null) {
+            Alerts alert = switch (lastException) {
+                case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+                case NetworkException ignored -> Alerts.NETWORK_ERROR;
+                case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+                case AuthenticationException ignored -> Alerts.AUTHENTICATION_ERROR;
+                case AccessDeniedException ignored -> Alerts.ACCESS_DENIED_ERROR;
+                default -> throw new IllegalStateException("Unexpected exception: " + lastException);
+            };
 
-        // Set the determined alert and display the modal
-        String content = exception.getMessage();
-        setAlert(alert);
-        getAlert().getModal(content);
+            setAlert(alert);
+            getAlert().getModal(lastException.getMessage());
+        }
 
-        // Clear the login model
         loginModel.clear();
     }
 
     private void checkForm(LoginModel loginModel) throws EmptyFieldsException {
-        if(!loginModel.isComplete()){
+        if (!loginModel.isComplete()) {
             throw new EmptyFieldsException("Login form: there are empty fields");
         }
     }

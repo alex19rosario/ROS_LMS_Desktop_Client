@@ -19,25 +19,20 @@ public class SelectFileCommand extends Command{
         this.book = book;
         this.stage = stage;
     }
-    @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                javafx.application.Platform.runLater(() -> {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Select Resource");
-                    fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-                    File selectedFile = fileChooser.showOpenDialog(stage);
-                    if (selectedFile != null) {
-                        Image image = new Image(selectedFile.toURI().toString());
-                        book.setCoverImage(image);
-                        book.setCoverImageFile(selectedFile);
-                    }
-                });
-                return null;
+    @Override
+    protected void runCommand() throws Exception {
+        javafx.application.Platform.runLater(() -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Resource");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                Image image = new Image(selectedFile.toURI().toString());
+                book.setCoverImage(image);
+                book.setCoverImageFile(selectedFile);
             }
-        };
+        });
     }
 }

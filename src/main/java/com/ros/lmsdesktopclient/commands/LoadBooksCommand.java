@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -36,29 +35,22 @@ public class LoadBooksCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                SearchBookDTO searchBookDTO = mapToSearchBookDTO.apply(searchBookModel);
+    protected void runCommand() throws Exception {
+        SearchBookDTO searchBookDTO = mapToSearchBookDTO.apply(searchBookModel);
 
-                PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(searchBookDTO);
+        PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(searchBookDTO);
 
-                List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
+        List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
 
-                List<BookDisplayModel> bookDisplayModelList = bookDTOList.stream()
-                        .map(LoadBooksCommand.this::mapToDisplayModel)
-                        .toList();
+        List<BookDisplayModel> bookDisplayModelList = bookDTOList.stream()
+                .map(LoadBooksCommand.this::mapToDisplayModel)
+                .toList();
 
-                Platform.runLater(() -> {
-                    books.setAll(bookDisplayModelList);
-                    totalPages.set(paginatedBooksDTO.totalPages());
-                    searchBookModel.setSize(paginatedBooksDTO.size());
-                });
-
-                return null;
-            }
-        };
+        Platform.runLater(() -> {
+            books.setAll(bookDisplayModelList);
+            totalPages.set(paginatedBooksDTO.totalPages());
+            searchBookModel.setSize(paginatedBooksDTO.size());
+        });
     }
 
     private final Function<SearchBookModel, SearchBookDTO> mapToSearchBookDTO = model -> {

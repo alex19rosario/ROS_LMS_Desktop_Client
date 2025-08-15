@@ -13,7 +13,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -28,6 +27,7 @@ public class SearchBooksCommand extends Command{
     private final ListProperty<BookDisplayModel> books;
     private final BookService bookService;
     private final Command openLoginViewCommand;
+    private Throwable lastException;
 
     @Inject
     public SearchBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService) {
@@ -41,57 +41,54 @@ public class SearchBooksCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws EmptyFieldsException, NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException{
-
-                // Check the form has at least  one search filter
-                if(isbn.isNotEmpty().get()){
-                    BookDTO bookDTO = bookService.searchBookByIsbn(isbn.get());
-                    BookDisplayModel bookDisplayModel = mapToDisplayModel(bookDTO);
-                    Platform.runLater(() -> {
-                        searchBookModel.setPage(0);
-                        books.setAll(bookDisplayModel);
-                    });
-                }
-                else {
-                    checkForm(searchBookModel);
-                    // If form is valid, consume the service
-                    PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(mapToSearchBookDTO.apply(searchBookModel));
-                    List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
-                    // Update the book-display-model list
-                    List<BookDisplayModel> bookDisplayModels = bookDTOList.stream()
-                            .map(SearchBooksCommand.this::mapToDisplayModel)
-                            .toList();
-                    Platform.runLater(() -> {
-                        books.setAll(bookDisplayModels);
-                        totalPages.set(paginatedBooksDTO.totalPages());
-                        searchBookModel.setSize(paginatedBooksDTO.size());
-                    });
-                }
-                return null;
+    protected void runCommand() throws Exception {
+        try {
+            // Check the form has at least  one search filter
+            if(isbn.isNotEmpty().get()){
+                BookDTO bookDTO = bookService.searchBookByIsbn(isbn.get());
+                BookDisplayModel bookDisplayModel = mapToDisplayModel(bookDTO);
+                Platform.runLater(() -> {
+                    searchBookModel.setPage(0);
+                    books.setAll(bookDisplayModel);
+                });
             }
-        };
+            else {
+                checkForm(searchBookModel);
+                // If form is valid, consume the service
+                PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(mapToSearchBookDTO.apply(searchBookModel));
+                List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
+                // Update the book-display-model list
+                List<BookDisplayModel> bookDisplayModels = bookDTOList.stream()
+                        .map(SearchBooksCommand.this::mapToDisplayModel)
+                        .toList();
+                Platform.runLater(() -> {
+                    books.setAll(bookDisplayModels);
+                    totalPages.set(paginatedBooksDTO.totalPages());
+                    searchBookModel.setSize(paginatedBooksDTO.size());
+                });
+            }
+        } catch (Exception ex) {
+            this.lastException = ex;
+            throw ex; // triggers failure in base class
+        }
     }
 
-
     private void onFailure() {
-        Throwable exception = getCommandTask().getException();
 
-        Alerts alert = switch (exception){
-            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
-            case NetworkException ignored -> Alerts.NETWORK_ERROR;
-            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
-            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
-            case BookNotFoundException ignored -> Alerts.BOOK_NOT_FOUND;
-            default -> throw new IllegalStateException("Unexpected exception: " + exception);
-        };
-        String content = exception.getMessage();
-        setAlert(alert);
-        getAlert().getModal(content);
+        if(lastException != null) {
+            Alerts alert = switch (lastException){
+                case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+                case NetworkException ignored -> Alerts.NETWORK_ERROR;
+                case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+                case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+                case BookNotFoundException ignored -> Alerts.BOOK_NOT_FOUND;
+                default -> throw new IllegalStateException("Unexpected exception: " + lastException);
+            };
+            setAlert(alert);
+            getAlert().getModal(lastException.getMessage());
+        }
 
-        if(exception instanceof ExpiredSessionException){
+        if(lastException instanceof ExpiredSessionException){
             openLoginViewCommand.execute();
         }
     }
@@ -149,5 +146,4 @@ public class SearchBooksCommand extends Command{
 
         return model;
     }
-
 }

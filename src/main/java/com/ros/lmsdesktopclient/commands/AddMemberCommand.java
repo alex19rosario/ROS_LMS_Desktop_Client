@@ -10,7 +10,6 @@ import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import com.ros.lmsdesktopclient.util.validators.EmailValidator;
 import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -24,6 +23,7 @@ public class AddMemberCommand extends Command{
     private final MemberModel member;
     private final MemberService memberService;
     private final Command openLoginViewCommand;
+    private Throwable lastException;
 
     @Inject
     public AddMemberCommand(MemberModel member, MemberService memberService){
@@ -35,17 +35,15 @@ public class AddMemberCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-
-        return new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                checkForm(member);
-                AddMemberDTO memberDTO = mapper.apply(member);
-                memberService.addMember(memberDTO);
-                return null;
-            }
-        };
+    protected void runCommand() throws Exception {
+        try {
+            checkForm(member);
+            AddMemberDTO memberDTO = mapper.apply(member);
+            memberService.addMember(memberDTO);
+        } catch (Exception ex) {
+            this.lastException = ex;
+            throw ex; // triggers failure in base class
+        }
     }
 
     private void onSuccess(){
@@ -56,29 +54,29 @@ public class AddMemberCommand extends Command{
     }
 
     private void onFailure(){
-        Throwable exception = getCommandTask().getException();
 
-        Alerts alert = switch (exception){
-            case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
-            case InvalidGovernmentIDException ignored -> Alerts.INVALID_ID_ERROR;
-            case InvalidPhoneNumberException ignored -> Alerts.INVALID_PHONE_ERROR;
-            case InvalidEmailException ignored -> Alerts.INVALID_EMAIL_ERROR;
-            case InvalidPasswordException ignored -> Alerts.INVALID_PASSWORD_ERROR;
-            case PasswordsDoNotMatchException ignored -> Alerts.UNMATCHED_PASSWORDS_ERROR;
-            case NetworkException ignored -> Alerts.NETWORK_ERROR;
-            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
-            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
-            case MemberAlreadyExistException ignored -> Alerts.EXISTING_MEMBER_ERROR;
-            case UsernameAlreadyExistException ignored -> Alerts.EXISTING_USERNAME_ERROR;
-            case EmailAlreadyExistException ignored -> Alerts.EXISTING_EMAIL_ERROR;
-            case InvalidDateOfBirthException ignored -> Alerts.INVALID_DATE_OF_BIRTH;
-            default -> throw new IllegalStateException("Unexpected exception: " + exception);
-        };
-        String content = exception.getMessage();
-        setAlert(alert);
-        getAlert().getModal(content);
+        if(lastException != null) {
+            Alerts alert = switch (lastException){
+                case EmptyFieldsException ignored -> Alerts.EMPTY_FIELDS_WARN;
+                case InvalidGovernmentIDException ignored -> Alerts.INVALID_ID_ERROR;
+                case InvalidPhoneNumberException ignored -> Alerts.INVALID_PHONE_ERROR;
+                case InvalidEmailException ignored -> Alerts.INVALID_EMAIL_ERROR;
+                case InvalidPasswordException ignored -> Alerts.INVALID_PASSWORD_ERROR;
+                case PasswordsDoNotMatchException ignored -> Alerts.UNMATCHED_PASSWORDS_ERROR;
+                case NetworkException ignored -> Alerts.NETWORK_ERROR;
+                case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+                case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+                case MemberAlreadyExistException ignored -> Alerts.EXISTING_MEMBER_ERROR;
+                case UsernameAlreadyExistException ignored -> Alerts.EXISTING_USERNAME_ERROR;
+                case EmailAlreadyExistException ignored -> Alerts.EXISTING_EMAIL_ERROR;
+                case InvalidDateOfBirthException ignored -> Alerts.INVALID_DATE_OF_BIRTH;
+                default -> throw new IllegalStateException("Unexpected exception: " + lastException);
+            };
+            setAlert(alert);
+            getAlert().getModal(lastException.getMessage());
+        }
 
-        if(exception instanceof ExpiredSessionException){
+        if(lastException instanceof ExpiredSessionException){
             openLoginViewCommand.execute();
         }
     }

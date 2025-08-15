@@ -8,11 +8,9 @@ import com.ros.lmsdesktopclient.util.enums.Views;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Objects;
 
 public class SelectBookCommand extends Command{
@@ -21,6 +19,7 @@ public class SelectBookCommand extends Command{
     private final ObjectProperty<BookDisplayModel> selectedRowModel;
     private final StorageService storageService;
     private final Command openLoginViewCommand;
+    private Throwable lastException;
 
     @Inject
     public SelectBookCommand(SelectedBookModel selectedBookModel, ObjectProperty<BookDisplayModel> selectedRowModel, StorageService storageService) {
@@ -32,57 +31,55 @@ public class SelectBookCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws ServerErrorException, IOException, ExpiredSessionException, ImageNotFoundException, NetworkException {
+    protected void runCommand() throws Exception {
+        try {
+            BookDisplayModel selected = selectedRowModel.get();
 
-                BookDisplayModel selected = selectedRowModel.get();
+            Image coverImage = null;
+            String imagePath = selected.getImagePath();
 
-                Image coverImage = null;
-                String imagePath = selected.getImagePath();
-
-                if (imagePath != null && !imagePath.isBlank()) {
-                    coverImage = storageService.getCoverImage(imagePath);
-                }
-                else {
-                    coverImage = new Image(Objects.requireNonNull(getClass().getResource("/images/selected_book_placeholder.png")).toExternalForm());
-                }
-
-                Image finalCoverImage = coverImage; // must be effectively final for lambda
-
-                Platform.runLater(() -> {
-                    selectedBookModel.setIsbn(selected.getIsbn());
-                    selectedBookModel.setTitle(selected.getTitle());
-                    selectedBookModel.setAuthors(selected.getAuthors());
-                    selectedBookModel.setGenres(selected.getGenres());
-                    selectedBookModel.setStatus(selected.getStatus());
-                    if (finalCoverImage != null) {
-                        selectedBookModel.setCoverImage(finalCoverImage);
-                    }
-                });
-
-                return null;
+            if (imagePath != null && !imagePath.isBlank()) {
+                coverImage = storageService.getCoverImage(imagePath);
             }
-        };
+            else {
+                coverImage = new Image(Objects.requireNonNull(getClass().getResource("/images/selected_book_placeholder.png")).toExternalForm());
+            }
+
+            Image finalCoverImage = coverImage; // must be effectively final for lambda
+
+            Platform.runLater(() -> {
+                selectedBookModel.setIsbn(selected.getIsbn());
+                selectedBookModel.setTitle(selected.getTitle());
+                selectedBookModel.setAuthors(selected.getAuthors());
+                selectedBookModel.setGenres(selected.getGenres());
+                selectedBookModel.setStatus(selected.getStatus());
+                if (finalCoverImage != null) {
+                    selectedBookModel.setCoverImage(finalCoverImage);
+                }
+            });
+        } catch (Exception ex) {
+            this.lastException = ex;
+            throw ex; // triggers failure in base class
+        }
     }
 
     private void onFailure() {
-        Throwable exception = getCommandTask().getException();
 
-        Alerts alert = switch (exception){
-            case NetworkException ignored -> Alerts.NETWORK_ERROR;
-            case ServerErrorException ignored -> Alerts.SERVER_ERROR;
-            case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
-            case ImageNotFoundException ignored -> Alerts.IMAGE_NOT_FOUND;
-            default -> throw new IllegalStateException("Unexpected exception: " + exception);
-        };
-        String content = exception.getMessage();
-        setAlert(alert);
-        getAlert().getModal(content);
+        if(lastException != null) {
+            Alerts alert = switch (lastException){
+                case NetworkException ignored -> Alerts.NETWORK_ERROR;
+                case ServerErrorException ignored -> Alerts.SERVER_ERROR;
+                case ExpiredSessionException ignored -> Alerts.EXPIRED_SESSION_ERROR;
+                case ImageNotFoundException ignored -> Alerts.IMAGE_NOT_FOUND;
+                default -> throw new IllegalStateException("Unexpected exception: " + lastException);
+            };
+            setAlert(alert);
+            getAlert().getModal(lastException.getMessage());
+        }
 
-        if(exception instanceof ExpiredSessionException){
+        if(lastException instanceof ExpiredSessionException){
             openLoginViewCommand.execute();
         }
     }
+
 }

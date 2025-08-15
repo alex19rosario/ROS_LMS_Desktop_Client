@@ -10,8 +10,6 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,20 +99,24 @@ class IssueBookViewModelTest {
 
     @Test
     void executeClearFilterCommand_shouldExecuteClearAndThenLoadBooks() {
-        when(clearFilterCommand.getCommandTask()).thenReturn(mockTask);
+        // Arrange
+        // no more mockTask, we just need to mock Command behavior
+        doNothing().when(clearFilterCommand).execute();
 
-        // Capture the EventHandler that gets set
-        ArgumentCaptor<EventHandler<WorkerStateEvent>> handlerCaptor =
-                ArgumentCaptor.forClass(javafx.event.EventHandler.class);
-
+        // Act
         viewModel.executeClearFilterCommand();
 
+        // Assert that clearFilterCommand.execute() was called
         verify(clearFilterCommand, times(1)).execute();
-        verify(mockTask).setOnSucceeded(handlerCaptor.capture());
 
-        // Simulate the task succeeding by invoking the captured handler
-        handlerCaptor.getValue().handle(null);
+        // Capture the Runnable that was set as onCommandSuccess
+        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+        verify(clearFilterCommand).setOnCommandSuccess(runnableCaptor.capture());
 
+        // Simulate success by running the captured Runnable
+        runnableCaptor.getValue().run();
+
+        // Verify that loadBooksCommand.execute() gets called after success
         verify(loadBooksCommand, times(1)).execute();
     }
 

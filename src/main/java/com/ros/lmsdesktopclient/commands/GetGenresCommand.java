@@ -2,7 +2,6 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 
@@ -18,13 +17,7 @@ public class GetGenresCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                upFrontDataHandler.saveGenres(genreService.getAllGenres());
-                return null;
-            }
-        };
+    protected void runCommand() throws Exception {
+        upFrontDataHandler.saveGenres(genreService.getAllGenres());
     }
 }

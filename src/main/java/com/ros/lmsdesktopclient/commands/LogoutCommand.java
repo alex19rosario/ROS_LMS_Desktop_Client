@@ -3,7 +3,6 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Views;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 
@@ -15,14 +14,8 @@ public class LogoutCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                TokenHandler.getInstance().removeAll();
-                return null;
-            }
-        };
+    protected void runCommand() throws Exception {
+        TokenHandler.getInstance().removeAll();
     }
 
     private void onSuccess(){
