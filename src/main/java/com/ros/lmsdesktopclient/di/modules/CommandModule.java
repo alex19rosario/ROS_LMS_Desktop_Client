@@ -2,10 +2,10 @@ package com.ros.lmsdesktopclient.di.modules;
 
 import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookModel;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.CommandTypeKey;
-import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -30,29 +30,29 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_BOOK)
-    static Command openAddBookViewCommand(ExecutorService executorService) {
-        return new OpenViewCommand(Views.ADD_BOOK, executorService);
+    static Command openAddBookViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
+        return new OpenViewCommand(ViewType.ADD_BOOK, executorService, viewHandler);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_MEMBER)
-    static Command openAddMemberViewCommand(ExecutorService executorService) {
-        return new OpenViewCommand(Views.ADD_MEMBER, executorService);
+    static Command openAddMemberViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
+        return new OpenViewCommand(ViewType.ADD_MEMBER, executorService, viewHandler);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ISSUE_BOOK)
-    static Command openIssueBookViewCommand(ExecutorService executorService) {
-        return new OpenViewCommand(Views.ISSUE_BOOK, executorService);
+    static Command openIssueBookViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
+        return new OpenViewCommand(ViewType.ISSUE_BOOK, executorService, viewHandler);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_MAIN_MENU)
-    static Command openMainViewCommand(ExecutorService executorService) {
-        return new OpenViewCommand(Views.MAIN_MENU, executorService);
+    static Command openMainViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
+        return new OpenViewCommand(ViewType.MAIN_MENU, executorService, viewHandler);
     }
 
     @Binds
@@ -68,8 +68,8 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.SELECT_FILE)
-    static Command selectFileCommand(BookModel bookModel, ExecutorService executorService) {
-        return new SelectFileCommand(bookModel, ViewHandler.getInstance().getStage(), executorService);
+    static Command selectFileCommand(BookModel bookModel, ExecutorService executorService, ViewHandler viewHandler) {
+        return new SelectFileCommand(bookModel, viewHandler.getStage(), executorService);
     }
 
     @Binds

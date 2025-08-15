@@ -7,7 +7,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
-import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 
 public abstract class Command {

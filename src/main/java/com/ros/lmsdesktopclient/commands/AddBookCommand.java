@@ -5,10 +5,11 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ObservableList;
@@ -33,14 +34,15 @@ public class AddBookCommand extends Command{
             ListProperty<AuthorModel> authorModelListProperty,
             BookService bookService,
             ObservableList<GenreModel> genreModelObservableList,
-            ExecutorService executorService
+            ExecutorService executorService,
+            ViewHandler viewHandler
     ){
         super(executorService);
         this.book = book;
         this.authorModelListProperty = authorModelListProperty;
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
+        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }

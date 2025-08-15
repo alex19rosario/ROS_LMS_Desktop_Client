@@ -5,9 +5,9 @@ import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
@@ -15,13 +15,20 @@ import java.util.concurrent.ExecutorService;
 public final class LoginCommand extends Command {
     private final LoginModel loginModel;
     private final LoginService loginService;
+    private final ViewHandler viewHandler;
     private Throwable lastException; // store exception for onFailure()
 
     @Inject
-    public LoginCommand(LoginModel loginModel, LoginService loginService, ExecutorService executorService) {
+    public LoginCommand(
+            LoginModel loginModel,
+            LoginService loginService,
+            ExecutorService executorService,
+            ViewHandler viewHandler
+    ) {
         super(executorService);
         this.loginModel = loginModel;
         this.loginService = loginService;
+        this.viewHandler = viewHandler;
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
@@ -39,7 +46,8 @@ public final class LoginCommand extends Command {
     }
 
     private void onSuccess() {
-        ViewHandler.switchTo(Views.MAIN_MENU);
+        //ViewHandler.switchTo(Views.MAIN_MENU);
+        viewHandler.switchTo(ViewType.MAIN_MENU);
         loginModel.clear();
     }
 

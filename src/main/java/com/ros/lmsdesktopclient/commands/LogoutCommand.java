@@ -2,16 +2,19 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 
 public class LogoutCommand extends Command{
 
+    private final ViewHandler viewHandler;
+
     @Inject
-    public LogoutCommand(ExecutorService executorService){
+    public LogoutCommand(ExecutorService executorService, ViewHandler viewHandler){
         super(executorService);
+        this.viewHandler = viewHandler;
         setOnCommandSuccess(this::onSuccess);
     }
 
@@ -21,6 +24,6 @@ public class LogoutCommand extends Command{
     }
 
     private void onSuccess(){
-        ViewHandler.switchTo(Views.LOGIN);
+        viewHandler.switchTo(ViewType.LOGIN);
     }
 }

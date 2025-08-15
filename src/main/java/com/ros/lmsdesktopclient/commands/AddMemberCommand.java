@@ -3,10 +3,11 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import com.ros.lmsdesktopclient.util.validators.EmailValidator;
 import com.ros.lmsdesktopclient.util.validators.PhoneNumberValidator;
@@ -27,11 +28,16 @@ public class AddMemberCommand extends Command{
     private Throwable lastException;
 
     @Inject
-    public AddMemberCommand(MemberModel member, MemberService memberService, ExecutorService executorService){
+    public AddMemberCommand(
+            MemberModel member,
+            MemberService memberService,
+            ExecutorService executorService,
+            ViewHandler viewHandler
+    ){
         super(executorService);
         this.member = member;
         this.memberService = memberService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
+        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         setOnCommandSuccess(this::onSuccess);
         setOnCommandFailure(this::onFailure);
     }

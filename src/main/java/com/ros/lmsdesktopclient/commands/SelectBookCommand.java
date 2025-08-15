@@ -3,8 +3,9 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.service.StorageService;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -27,13 +28,14 @@ public class SelectBookCommand extends Command{
             SelectedBookModel selectedBookModel,
             ObjectProperty<BookDisplayModel> selectedRowModel,
             StorageService storageService,
-            ExecutorService executorService
+            ExecutorService executorService,
+            ViewHandler viewHandler
     ) {
         super(executorService);
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;
         this.storageService = storageService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
+        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandFailure(this::onFailure);
     }
 

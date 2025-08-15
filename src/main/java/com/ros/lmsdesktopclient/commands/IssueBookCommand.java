@@ -27,13 +27,14 @@ public class IssueBookCommand extends Command {
             ObjectProperty<BookDisplayModel> selectedRowModel,
             Map<PropertyType, Property> properties,
             LoanService loanService,
-            ExecutorService executorService
+            ExecutorService executorService,
+            ViewHandler viewHandler
     ) {
         super(executorService);
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
+        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }

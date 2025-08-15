@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.*;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
@@ -36,7 +37,8 @@ public class SearchBooksCommand extends Command{
             SearchBookModel searchBookModel,
             ListProperty<BookDisplayModel> books,
             BookService bookService,
-            ExecutorService executorService
+            ExecutorService executorService,
+            ViewHandler viewHandler
     ) {
         super(executorService);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
@@ -44,7 +46,7 @@ public class SearchBooksCommand extends Command{
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
-        this.openLoginViewCommand = new OpenViewCommand(Views.LOGIN, executorService);
+        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandFailure(this::onFailure);
     }
 
