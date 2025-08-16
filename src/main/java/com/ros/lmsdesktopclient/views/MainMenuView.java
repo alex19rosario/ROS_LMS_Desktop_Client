@@ -31,10 +31,12 @@ public class MainMenuView implements BaseView{
     private Button btnShowStats;
     private Button btnManageAccounts;
     private Button btnAddStaff;
+    private TokenHandler tokenHandler;
 
     @Inject
-    public MainMenuView(MainMenuViewModel mainMenuViewModel) {
+    public MainMenuView(MainMenuViewModel mainMenuViewModel, TokenHandler tokenHandler) {
         this.mainMenuViewModel = mainMenuViewModel;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class MainMenuView implements BaseView{
 
     private void initComponents() {
         lblHeaderTitle = new Label("Main Menu");
-        menuBtnAccount = new MenuButton(TokenHandler.getInstance().getUsername());
+        menuBtnAccount = new MenuButton(tokenHandler.getUsername());
         menuItemUpdate = new MenuItem("Update Account");
         menuItemLogOut = new MenuItem("Log Out");
         menuBtnAccount.getItems().addAll(menuItemUpdate, menuItemLogOut);
@@ -61,7 +63,7 @@ public class MainMenuView implements BaseView{
         btnAddStaff = new Button("Add Staff");
 
         //Render GUI according to role
-        if(!TokenHandler.getInstance().getAuthorities().contains(Roles.ADMIN.str())){
+        if(!tokenHandler.getAuthorities().contains(Roles.ADMIN.str())){
             btnManageAccounts.setVisible(false);
             btnAddStaff.setVisible(false);
         }

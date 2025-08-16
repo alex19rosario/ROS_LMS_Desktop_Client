@@ -24,6 +24,7 @@ public class AddMemberCommand extends Command{
 
     private final MemberModel member;
     private final MemberService memberService;
+    private final TokenHandler tokenHandler;
     private final Command openLoginViewCommand;
     private Throwable lastException;
 
@@ -32,11 +33,13 @@ public class AddMemberCommand extends Command{
             MemberModel member,
             MemberService memberService,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            TokenHandler tokenHandler
     ){
         super(executorService);
         this.member = member;
         this.memberService = memberService;
+        this.tokenHandler = tokenHandler;
         this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         setOnCommandSuccess(this::onSuccess);
         setOnCommandFailure(this::onFailure);
@@ -46,7 +49,7 @@ public class AddMemberCommand extends Command{
     protected void runCommand() throws Exception {
         try {
             checkForm(member);
-            AddMemberDTO memberDTO = mapper.apply(member);
+            AddMemberDTO memberDTO = mapper(member);
             memberService.addMember(memberDTO);
         } catch (Exception ex) {
             this.lastException = ex;
@@ -121,15 +124,18 @@ public class AddMemberCommand extends Command{
 
     private final Predicate<MemberModel> hasValidDateOfBirth = member -> member.getDateOfBirth().isBefore(LocalDate.now());
 
-    private final Function<MemberModel, AddMemberDTO> mapper = memberModel -> new AddMemberDTO(
-            memberModel.getGovernmentID(),
-            memberModel.getFirstName(),
-            memberModel.getLastName(),
-            memberModel.getPhone(),
-            memberModel.getDateOfBirth(),
-            memberModel.getSex(),
-            memberModel.getEmail(),
-            memberModel.getUsername(),
-            memberModel.getPassword(),
-            TokenHandler.getInstance().getUsername());
+    private AddMemberDTO mapper(MemberModel memberModel) {
+        return new AddMemberDTO(
+                memberModel.getGovernmentID(),
+                memberModel.getFirstName(),
+                memberModel.getLastName(),
+                memberModel.getPhone(),
+                memberModel.getDateOfBirth(),
+                memberModel.getSex(),
+                memberModel.getEmail(),
+                memberModel.getUsername(),
+                memberModel.getPassword(),
+                tokenHandler.getUsername()
+        );
+    }
 }

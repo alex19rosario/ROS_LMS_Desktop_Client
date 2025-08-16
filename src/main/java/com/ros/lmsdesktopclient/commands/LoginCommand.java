@@ -16,6 +16,7 @@ public final class LoginCommand extends Command {
     private final LoginModel loginModel;
     private final LoginService loginService;
     private final ViewHandler viewHandler;
+    private final TokenHandler tokenHandler;
     private Throwable lastException; // store exception for onFailure()
 
     @Inject
@@ -23,12 +24,14 @@ public final class LoginCommand extends Command {
             LoginModel loginModel,
             LoginService loginService,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            TokenHandler tokenHandler
     ) {
         super(executorService);
         this.loginModel = loginModel;
         this.loginService = loginService;
         this.viewHandler = viewHandler;
+        this.tokenHandler = tokenHandler;
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
@@ -46,13 +49,12 @@ public final class LoginCommand extends Command {
     }
 
     private void onSuccess() {
-        //ViewHandler.switchTo(Views.MAIN_MENU);
         viewHandler.switchTo(ViewType.MAIN_MENU);
         loginModel.clear();
     }
 
     private void onFailure() {
-        TokenHandler.getInstance().removeAll();
+        tokenHandler.removeAll();
 
         if (lastException != null) {
             Alerts alert = switch (lastException) {
@@ -67,7 +69,6 @@ public final class LoginCommand extends Command {
             setAlert(alert);
             getAlert().getModal(lastException.getMessage());
         }
-
         loginModel.clear();
     }
 

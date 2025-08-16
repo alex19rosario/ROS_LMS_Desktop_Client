@@ -26,10 +26,13 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final HttpClient client;
+    private final TokenHandler tokenHandler;
 
     @Inject
-    public BookServiceImpl(HttpClient client) {
+    public BookServiceImpl(HttpClient client, TokenHandler tokenHandler) {
+
         this.client = client;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class BookServiceImpl implements BookService {
         checkISBN(book);
 
         // 2. Retrieve the authentication token
-        String token = TokenHandler.getInstance().getToken()
+        String token = tokenHandler.getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
         // 3. Create a unique boundary string for multipart form separation
@@ -114,7 +117,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public PaginatedBooksDTO searchBooks(SearchBookDTO filter) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotFoundException {
 
-        String token = TokenHandler.getInstance().getToken()
+        String token = tokenHandler.getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
         try {
@@ -180,7 +183,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDTO searchBookByIsbn(String isbn) throws BookNotFoundException, NetworkException, ServerErrorException, ExpiredSessionException {
-        String token = TokenHandler.getInstance().getToken()
+        String token = tokenHandler.getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
         try {

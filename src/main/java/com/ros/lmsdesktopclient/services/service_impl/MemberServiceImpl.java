@@ -17,15 +17,18 @@ import java.net.http.HttpResponse;
 public class MemberServiceImpl implements MemberService {
 
     private final HttpClient client;
+    private final TokenHandler tokenHandler;
 
-    public MemberServiceImpl(HttpClient client) {
+    public MemberServiceImpl(HttpClient client, TokenHandler tokenHandler) {
         this.client = client;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
     public void addMember(AddMemberDTO member) throws NetworkException, ServerErrorException, ExpiredSessionException, MemberAlreadyExistException, UsernameAlreadyExistException, EmailAlreadyExistException {
 
-        String token = TokenHandler.getInstance().getToken()
+        String token = tokenHandler
+                .getToken()
                 .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
         try {

@@ -20,16 +20,18 @@ public class GenreServiceImpl implements GenreService {
 
     private final HttpClient client;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final TokenHandler tokenHandler;
 
     @Inject
-    public GenreServiceImpl(HttpClient client) {
+    public GenreServiceImpl(HttpClient client, TokenHandler tokenHandler) {
         this.client = client;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
     public Set<String> getAllGenres() throws AccessDeniedException {
 
-        String token = TokenHandler.getInstance()
+        String token = tokenHandler
                 .getToken()
                 .orElseThrow(() -> new RuntimeException("Token is missing"));
 

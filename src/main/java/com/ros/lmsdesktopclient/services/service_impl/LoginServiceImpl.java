@@ -23,8 +23,8 @@ public class LoginServiceImpl implements LoginService {
     private final AuthenticatedHttpClientFactory clientFactory;
 
     @Inject
-    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory){
-        tokenHandler = TokenHandler.getInstance();
+    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory, TokenHandler tokenHandler){
+        this.tokenHandler = tokenHandler;
         this.clientFactory = clientFactory;
     }
 

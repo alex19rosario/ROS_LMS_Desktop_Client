@@ -19,6 +19,7 @@ public class IssueBookCommand extends Command {
     private final ObjectProperty<BookDisplayModel> selectedRowModel;
     private final StringProperty memberUsername;
     private final LoanService loanService;
+    private final TokenHandler tokenHandler;
     private final Command openLoginViewCommand;
     private Throwable lastException;
 
@@ -28,12 +29,14 @@ public class IssueBookCommand extends Command {
             Map<PropertyType, Property> properties,
             LoanService loanService,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            TokenHandler tokenHandler
     ) {
         super(executorService);
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
+        this.tokenHandler = tokenHandler;
         this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
@@ -45,7 +48,7 @@ public class IssueBookCommand extends Command {
             checkForm(selectedRowModel, memberUsername);
             checkIfBookAvailable(selectedRowModel);
 
-            AddLoanDTO addLoanDTO = new AddLoanDTO(selectedRowModel.get().getId(), memberUsername.get(), TokenHandler.getInstance().getUsername());
+            AddLoanDTO addLoanDTO = new AddLoanDTO(selectedRowModel.get().getId(), memberUsername.get(), tokenHandler.getUsername());
             loanService.issueBook(addLoanDTO);
         } catch (Exception ex) {
             this.lastException = ex;

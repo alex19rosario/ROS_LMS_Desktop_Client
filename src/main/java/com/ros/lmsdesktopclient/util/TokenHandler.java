@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -24,21 +25,15 @@ public class TokenHandler {
     private static final String TOKEN_KEY = "token";
     private static final String AUTHORITIES_KEY = "authorities";
     private static final String USERNAME_KEY = "sub";
+
     private final Preferences preferences;
     private final RSAPublicKey publicKey;
 
-    private TokenHandler() {
+    @Inject
+    public TokenHandler() {
         // Initialize preferences for this class's package
         this.preferences = Preferences.userNodeForPackage(TokenHandler.class);
         this.publicKey = getPublicKey();
-    }
-
-    private static class SingletonHelper{
-        private static final TokenHandler _tokenHandler = new TokenHandler();
-    }
-
-    public static TokenHandler getInstance(){
-        return SingletonHelper._tokenHandler;
     }
 
     // Helper method to load an RSA public key from a string

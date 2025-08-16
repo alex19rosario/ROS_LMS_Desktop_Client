@@ -26,6 +26,7 @@ public class AddBookCommand extends Command{
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private final ObservableList<GenreModel> genreModelObservableList;
+    private final TokenHandler tokenHandler;
     private Throwable lastException; // store exception for onFailure()
 
     @Inject
@@ -35,13 +36,15 @@ public class AddBookCommand extends Command{
             BookService bookService,
             ObservableList<GenreModel> genreModelObservableList,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            TokenHandler tokenHandler
     ){
         super(executorService);
         this.book = book;
         this.authorModelListProperty = authorModelListProperty;
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
+        this.tokenHandler = tokenHandler;
         this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
@@ -61,7 +64,7 @@ public class AddBookCommand extends Command{
                     .map(GenreModel::getGenre)
                     .collect(Collectors.joining(","));
 
-            String staffUsername = TokenHandler.getInstance().getUsername();
+            String staffUsername = tokenHandler.getUsername();
 
             AddBookDTO bookDTO = new AddBookDTO(book.getIsbn(), book.getTitle(), authorsString, genresString, staffUsername, book.getCoverImageFile());
             bookService.addBook(bookDTO);

@@ -20,17 +20,19 @@ import java.net.http.HttpResponse;
 public class StorageServiceImpl implements StorageService {
 
     private final HttpClient client;
+    private final TokenHandler tokenHandler;
 
     @Inject
-    public StorageServiceImpl(HttpClient client) {
+    public StorageServiceImpl(HttpClient client, TokenHandler tokenHandler) {
         this.client = client;
+        this.tokenHandler = tokenHandler;
     }
 
     @Override
     public Image getCoverImage(String filename) throws NetworkException, ServerErrorException, ExpiredSessionException, ImageNotFoundException, IOException {
         try {
 
-            String token = TokenHandler.getInstance().getToken()
+            String token = tokenHandler.getToken()
                     .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
 
             String imageUrl = ApiUrls.IMAGES.getUrl() + filename;
