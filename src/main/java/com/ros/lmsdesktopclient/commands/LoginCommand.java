@@ -48,12 +48,12 @@ public final class LoginCommand extends Command {
         }
     }
 
-    private void onSuccess() {
+    void onSuccess() {
         viewHandler.switchTo(ViewType.MAIN_MENU);
         loginModel.clear();
     }
 
-    private void onFailure() {
+    void onFailure() {
         tokenHandler.removeAll();
 
         if (lastException != null) {
@@ -76,5 +76,13 @@ public final class LoginCommand extends Command {
         if (!loginModel.isComplete()) {
             throw new EmptyFieldsException("Login form: there are empty fields");
         }
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
+    }
+
+    public Throwable getLastException() {
+        return lastException;
     }
 }

@@ -3,11 +3,9 @@ package com.ros.lmsdesktopclient.services.service_impl;
 
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
-import com.ros.lmsdesktopclient.services.service.GenreService;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 
 import javax.inject.Inject;
@@ -43,6 +41,10 @@ public class LoginServiceImpl implements LoginService {
             // Send the request and capture the response
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             tokenHandler.saveToken(response.body());
+
+            if (!tokenHandler.getAuthorities().contains("ROLE_STAFF")) {
+                throw new AccessDeniedException("Access denied: Members are not authorized to log into this application.");
+            }
 
         } catch (InterruptedException | URISyntaxException | IOException e) {
             throw new AuthenticationException("The username or password are incorrect.");

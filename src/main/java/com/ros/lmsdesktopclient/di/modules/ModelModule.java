@@ -4,7 +4,7 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
-import com.ros.lmsdesktopclient.util.PropertyTypeKey;
+import com.ros.lmsdesktopclient.util.annotations.PropertyTypeKey;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import dagger.Module;
 import dagger.Provides;

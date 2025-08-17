@@ -29,7 +29,7 @@ public class LogoutCommand extends Command{
         tokenHandler.removeAll();
     }
 
-    private void onSuccess(){
+    void onSuccess(){
         viewHandler.switchTo(ViewType.LOGIN);
     }
 }

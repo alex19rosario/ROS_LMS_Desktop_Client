@@ -1,16 +1,15 @@
 package com.ros.lmsdesktopclient.view_models;
 
+import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.commands.Command;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(JavaFxExtension.class)
 class IssueBookViewModelTest {
 
     @Mock private Command searchBooksCommand;
@@ -45,13 +45,6 @@ class IssueBookViewModelTest {
     private StringProperty memberUsername;
 
     private IssueBookViewModel viewModel;
-
-    @BeforeAll
-    static void initJavaFx() {
-        // Make Platform.runLater run immediately in tests
-        Platform.setImplicitExit(false);
-        Platform.startup(() -> {});
-    }
 
     @BeforeEach
     void setUp() {

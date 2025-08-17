@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -37,7 +38,8 @@ public class AddBookCommand extends Command{
             ObservableList<GenreModel> genreModelObservableList,
             ExecutorService executorService,
             ViewHandler viewHandler,
-            TokenHandler tokenHandler
+            TokenHandler tokenHandler,
+            @LoginCommandQualifier Command openLoginViewCommand
     ){
         super(executorService);
         this.book = book;
@@ -45,7 +47,8 @@ public class AddBookCommand extends Command{
         this.genreModelObservableList = genreModelObservableList;
         this.bookService = bookService;
         this.tokenHandler = tokenHandler;
-        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+        this.openLoginViewCommand = openLoginViewCommand;
+
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }
@@ -75,7 +78,7 @@ public class AddBookCommand extends Command{
 
     }
 
-    private void onSuccess(){
+    void onSuccess(){
         setAlert(Alerts.BOOK_ADDED_SUCCESS);
         getAlert().getModal(AlertContents.BOOK_ADDED_OK.getValue());
         //To reset the screen
@@ -87,7 +90,7 @@ public class AddBookCommand extends Command{
         genreModelObservableList.forEach(genre -> genre.setSelected(false));
     }
 
-    private void onFailure(){
+    void onFailure(){
 
         if (lastException != null) {
             Alerts alert = switch (lastException){
@@ -115,5 +118,11 @@ public class AddBookCommand extends Command{
         }
     }
 
+    public Throwable getLastException() {
+        return lastException;
+    }
 
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
+    }
 }

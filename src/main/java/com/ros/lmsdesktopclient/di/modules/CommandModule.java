@@ -3,8 +3,9 @@ package com.ros.lmsdesktopclient.di.modules;
 import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
-import com.ros.lmsdesktopclient.util.CommandTypeKey;
+import com.ros.lmsdesktopclient.util.annotations.CommandTypeKey;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 import dagger.Binds;
 import dagger.Module;
@@ -106,4 +107,10 @@ public abstract class CommandModule {
     @IntoMap
     @CommandTypeKey(CommandType.GET_GENRES)
     abstract Command getGenresCommand(GetGenresCommand command);
+
+    @Provides
+    @LoginCommandQualifier
+    static Command provideLoginViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
+        return new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+    }
 }
