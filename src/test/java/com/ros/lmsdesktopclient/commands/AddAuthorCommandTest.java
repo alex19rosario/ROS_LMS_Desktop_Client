@@ -2,6 +2,7 @@ package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.models.AuthorModel;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -22,13 +23,18 @@ class AddAuthorCommandTest {
 
     @Mock
     ExecutorService executorService;
+
     ListProperty<AuthorModel> authorList;
+    UiExecutor immediateUiExecutor;
     AddAuthorCommand command;
 
     @BeforeEach
     void setup() {
         authorList = new SimpleListProperty<>(FXCollections.observableArrayList());
-        command = new AddAuthorCommand(authorList, executorService);
+        // Replace Platform.runLater with a direct call
+        immediateUiExecutor = Runnable::run;
+
+        command = new AddAuthorCommand(authorList, executorService, immediateUiExecutor);
     }
 
     @Test
@@ -36,10 +42,6 @@ class AddAuthorCommandTest {
         assertEquals(0, authorList.size());
 
         command.runCommand();
-
-        // flush JavaFX runLater queue
-        Platform.runLater(() -> {});
-        Thread.sleep(50); // small wait to allow runLater to execute
 
         assertEquals(1, authorList.size());
     }

@@ -6,7 +6,9 @@ import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.*;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.application.Platform;
@@ -30,6 +32,7 @@ public class SearchBooksCommand extends Command{
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private Throwable lastException;
+    private UiExecutor javaFxUiExecutor;
 
     @Inject
     public SearchBooksCommand(
@@ -38,7 +41,9 @@ public class SearchBooksCommand extends Command{
             ListProperty<BookDisplayModel> books,
             BookService bookService,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            UiExecutor javaFxUiExecutor,
+            @LoginCommandQualifier Command openLoginViewCommand
     ) {
         super(executorService);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
@@ -46,7 +51,8 @@ public class SearchBooksCommand extends Command{
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
-        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+        this.javaFxUiExecutor = javaFxUiExecutor;
+        this.openLoginViewCommand = openLoginViewCommand;
         this.setOnCommandFailure(this::onFailure);
     }
 
@@ -57,7 +63,7 @@ public class SearchBooksCommand extends Command{
             if(isbn.isNotEmpty().get()){
                 BookDTO bookDTO = bookService.searchBookByIsbn(isbn.get());
                 BookDisplayModel bookDisplayModel = mapToDisplayModel(bookDTO);
-                Platform.runLater(() -> {
+                javaFxUiExecutor.runLater(() -> {
                     searchBookModel.setPage(0);
                     books.setAll(bookDisplayModel);
                 });
@@ -71,7 +77,7 @@ public class SearchBooksCommand extends Command{
                 List<BookDisplayModel> bookDisplayModels = bookDTOList.stream()
                         .map(SearchBooksCommand.this::mapToDisplayModel)
                         .toList();
-                Platform.runLater(() -> {
+                javaFxUiExecutor.runLater(() -> {
                     books.setAll(bookDisplayModels);
                     totalPages.set(paginatedBooksDTO.totalPages());
                     searchBookModel.setSize(paginatedBooksDTO.size());

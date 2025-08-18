@@ -21,9 +21,9 @@ public abstract class ModelModule {
 
     @Provides
     @Singleton
-    static ObservableList<GenreModel> genreModelObservableList() {
+    static ObservableList<GenreModel> genreModelObservableList(UpFrontDataHandler upFrontDataHandler) {
 
-        List<GenreModel> list = UpFrontDataHandler.getInstance().getGenres().stream()
+        List<GenreModel> list = upFrontDataHandler.getGenres().stream()
                 .map(genre -> new GenreModel(genre, false))
                 .toList();
 

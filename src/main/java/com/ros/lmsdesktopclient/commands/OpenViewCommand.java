@@ -1,5 +1,6 @@
 package com.ros.lmsdesktopclient.commands;
 
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 import javafx.application.Platform;
@@ -11,20 +12,23 @@ public class OpenViewCommand extends Command{
 
     private final ViewType view;
     private final ViewHandler viewHandler;
+    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public OpenViewCommand(
             ViewType view,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            UiExecutor javaFxUiExecutor
     ){
         super(executorService);
         this.view = view;
         this.viewHandler = viewHandler;
+        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
     protected void runCommand() throws Exception {
-        Platform.runLater(() -> viewHandler.switchTo(this.view));
+        javaFxUiExecutor.runLater(() -> viewHandler.switchTo(this.view));
     }
 }

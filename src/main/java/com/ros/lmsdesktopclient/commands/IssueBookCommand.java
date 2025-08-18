@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.services.service.LoanService;
 import com.ros.lmsdesktopclient.util.*;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.*;
 import com.ros.lmsdesktopclient.util.exceptions.*;
 import javafx.beans.property.ObjectProperty;
@@ -30,14 +31,15 @@ public class IssueBookCommand extends Command {
             LoanService loanService,
             ExecutorService executorService,
             ViewHandler viewHandler,
-            TokenHandler tokenHandler
+            TokenHandler tokenHandler,
+            @LoginCommandQualifier Command openLoginViewCommand
     ) {
         super(executorService);
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
         this.tokenHandler = tokenHandler;
-        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+        this.openLoginViewCommand = openLoginViewCommand;
         this.setOnCommandSuccess(this::onSuccess);
         this.setOnCommandFailure(this::onFailure);
     }

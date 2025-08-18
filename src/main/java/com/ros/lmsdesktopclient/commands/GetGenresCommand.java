@@ -12,10 +12,14 @@ public class GetGenresCommand extends Command{
     private final UpFrontDataHandler upFrontDataHandler;
 
     @Inject
-    public GetGenresCommand(GenreService genreService, ExecutorService executorService) {
+    public GetGenresCommand(
+            GenreService genreService,
+            ExecutorService executorService,
+            UpFrontDataHandler upFrontDataHandler
+    ) {
         super(executorService);
         this.genreService = genreService;
-        upFrontDataHandler = UpFrontDataHandler.getInstance();
+        this.upFrontDataHandler = upFrontDataHandler;
     }
 
     @Override

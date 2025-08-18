@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.models.BookModel;
-import javafx.concurrent.Task;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -14,18 +14,27 @@ public class SelectFileCommand extends Command{
 
     private final BookModel book;
     private final Stage stage;
+    private final FileChooser fileChooser;
+    private final UiExecutor javaFxUiExecutor;
 
     @Inject
-    public SelectFileCommand(BookModel book, Stage stage, ExecutorService executorService){
+    public SelectFileCommand(
+            BookModel book,
+            Stage stage,
+            FileChooser fileChooser,
+            ExecutorService executorService,
+            UiExecutor javaFxUiExecutor
+    ){
         super(executorService);
         this.book = book;
         this.stage = stage;
+        this.fileChooser = fileChooser;
+        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
     protected void runCommand() throws Exception {
-        javafx.application.Platform.runLater(() -> {
-            FileChooser fileChooser = new FileChooser();
+        javaFxUiExecutor.runLater(() -> {
             fileChooser.setTitle("Select Resource");
             fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
 

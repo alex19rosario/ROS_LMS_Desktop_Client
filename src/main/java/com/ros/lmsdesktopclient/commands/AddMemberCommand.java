@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -34,13 +35,14 @@ public class AddMemberCommand extends Command{
             MemberService memberService,
             ExecutorService executorService,
             ViewHandler viewHandler,
-            TokenHandler tokenHandler
+            TokenHandler tokenHandler,
+            @LoginCommandQualifier Command openLoginViewCommand
     ){
         super(executorService);
         this.member = member;
         this.memberService = memberService;
         this.tokenHandler = tokenHandler;
-        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+        this.openLoginViewCommand = openLoginViewCommand;
         setOnCommandSuccess(this::onSuccess);
         setOnCommandFailure(this::onFailure);
     }

@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.BookStatus;
 import com.ros.lmsdesktopclient.util.enums.GenreType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
@@ -26,6 +27,7 @@ public class LoadBooksCommand extends Command{
     private final SearchBookModel searchBookModel;
     private final ListProperty<BookDisplayModel> books;
     private final BookService bookService;
+    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public LoadBooksCommand(
@@ -33,13 +35,15 @@ public class LoadBooksCommand extends Command{
             SearchBookModel searchBookModel,
             ListProperty<BookDisplayModel> books,
             BookService bookService,
-            ExecutorService executorService
+            ExecutorService executorService,
+            UiExecutor javaFxUiExecutor
     ){
         super(executorService);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
+        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class LoadBooksCommand extends Command{
                 .map(LoadBooksCommand.this::mapToDisplayModel)
                 .toList();
 
-        Platform.runLater(() -> {
+        javaFxUiExecutor.runLater(() -> {
             books.setAll(bookDisplayModelList);
             totalPages.set(paginatedBooksDTO.totalPages());
             searchBookModel.setSize(paginatedBooksDTO.size());

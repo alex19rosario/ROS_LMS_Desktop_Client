@@ -3,7 +3,9 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.service.StorageService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
+import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -22,6 +24,7 @@ public class SelectBookCommand extends Command{
     private final StorageService storageService;
     private final Command openLoginViewCommand;
     private Throwable lastException;
+    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public SelectBookCommand(
@@ -29,13 +32,16 @@ public class SelectBookCommand extends Command{
             ObjectProperty<BookDisplayModel> selectedRowModel,
             StorageService storageService,
             ExecutorService executorService,
-            ViewHandler viewHandler
+            ViewHandler viewHandler,
+            UiExecutor javaFxUiExecutor,
+            @LoginCommandQualifier Command openLoginViewCommand
     ) {
         super(executorService);
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;
         this.storageService = storageService;
-        this.openLoginViewCommand = new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+        this.javaFxUiExecutor = javaFxUiExecutor;
+        this.openLoginViewCommand = openLoginViewCommand;
         this.setOnCommandFailure(this::onFailure);
     }
 
@@ -56,7 +62,7 @@ public class SelectBookCommand extends Command{
 
             Image finalCoverImage = coverImage; // must be effectively final for lambda
 
-            Platform.runLater(() -> {
+            javaFxUiExecutor.runLater(() -> {
                 selectedBookModel.setIsbn(selected.getIsbn());
                 selectedBookModel.setTitle(selected.getTitle());
                 selectedBookModel.setAuthors(selected.getAuthors());

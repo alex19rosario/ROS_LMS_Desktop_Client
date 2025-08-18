@@ -23,7 +23,8 @@ import java.util.Arrays;
 
 public class IssueBookView implements BaseView {
 
-    private IssueBookViewModel issueBookViewModel;
+    private final IssueBookViewModel issueBookViewModel;
+    private final UpFrontDataHandler upFrontDataHandler;
 
     private Label lblHeaderTitle;
     private Label lblIsbn;
@@ -60,8 +61,9 @@ public class IssueBookView implements BaseView {
     private ProgressIndicator progressIndicator;
 
     @Inject
-    public IssueBookView(IssueBookViewModel issueBookViewModel) {
+    public IssueBookView(IssueBookViewModel issueBookViewModel, UpFrontDataHandler upFrontDataHandler) {
         this.issueBookViewModel = issueBookViewModel;
+        this.upFrontDataHandler = upFrontDataHandler;
     }
 
     @Override
@@ -117,7 +119,7 @@ public class IssueBookView implements BaseView {
 
         // Loading data to comboBoxes
         cbGenre.setItems(FXCollections
-                .observableList(UpFrontDataHandler.getInstance().getGenres()
+                .observableList(upFrontDataHandler.getGenres()
                         .stream().toList()));
 
         cbStatus.setItems(FXCollections

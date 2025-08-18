@@ -2,6 +2,7 @@ package com.ros.lmsdesktopclient.di.modules;
 
 import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookModel;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
@@ -11,6 +12,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
+import javafx.stage.FileChooser;
 
 import java.util.concurrent.ExecutorService;
 
@@ -31,29 +33,29 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_BOOK)
-    static Command openAddBookViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
-        return new OpenViewCommand(ViewType.ADD_BOOK, executorService, viewHandler);
+    static Command openAddBookViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.ADD_BOOK, executorService, viewHandler, javaFxUiExecutor);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ADD_MEMBER)
-    static Command openAddMemberViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
-        return new OpenViewCommand(ViewType.ADD_MEMBER, executorService, viewHandler);
+    static Command openAddMemberViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.ADD_MEMBER, executorService, viewHandler, javaFxUiExecutor);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_ISSUE_BOOK)
-    static Command openIssueBookViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
-        return new OpenViewCommand(ViewType.ISSUE_BOOK, executorService, viewHandler);
+    static Command openIssueBookViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.ISSUE_BOOK, executorService, viewHandler, javaFxUiExecutor);
     }
 
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_MAIN_MENU)
-    static Command openMainViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
-        return new OpenViewCommand(ViewType.MAIN_MENU, executorService, viewHandler);
+    static Command openMainViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.MAIN_MENU, executorService, viewHandler, javaFxUiExecutor);
     }
 
     @Binds
@@ -69,8 +71,8 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.SELECT_FILE)
-    static Command selectFileCommand(BookModel bookModel, ExecutorService executorService, ViewHandler viewHandler) {
-        return new SelectFileCommand(bookModel, viewHandler.getStage(), executorService);
+    static Command selectFileCommand(BookModel bookModel, ViewHandler viewHandler, FileChooser fileChooser, ExecutorService executorService, UiExecutor javaFxUiExecutor) {
+        return new SelectFileCommand(bookModel, viewHandler.getStage(), fileChooser, executorService, javaFxUiExecutor);
     }
 
     @Binds
@@ -110,7 +112,7 @@ public abstract class CommandModule {
 
     @Provides
     @LoginCommandQualifier
-    static Command provideLoginViewCommand(ExecutorService executorService, ViewHandler viewHandler) {
-        return new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler);
+    static Command provideLoginViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.LOGIN, executorService, viewHandler, javaFxUiExecutor);
     }
 }
