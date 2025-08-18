@@ -4,6 +4,7 @@ import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
@@ -16,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.concurrent.ExecutorService;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,12 +33,21 @@ class LoginCommandTest {
     ViewHandler viewHandler;
     @Mock
     TokenHandler tokenHandler;
+    @Mock
+    UiExecutor uiExecutor;
 
     LoginCommand command;
 
     @BeforeEach
     void setup() {
-        command = new LoginCommand(loginModel, loginService, executorService, viewHandler, tokenHandler);
+        command = new LoginCommand(
+                loginModel,
+                loginService,
+                executorService,
+                viewHandler,
+                tokenHandler,
+                uiExecutor
+        );
     }
 
     @Test
@@ -71,7 +80,7 @@ class LoginCommandTest {
         assertThrows(AuthenticationException.class, command::runCommand);
 
         // Verify the exception was stored
-        assertTrue(command.getLastException() instanceof AuthenticationException);
+        assertInstanceOf(AuthenticationException.class, command.getLastException());
     }
 
 

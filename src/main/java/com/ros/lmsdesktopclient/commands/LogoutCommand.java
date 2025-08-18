@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 
@@ -16,9 +17,10 @@ public class LogoutCommand extends Command{
     public LogoutCommand(
             ExecutorService executorService,
             ViewHandler viewHandler,
-            TokenHandler tokenHandler
+            TokenHandler tokenHandler,
+            UiExecutor uiExecutor
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.viewHandler = viewHandler;
         this.tokenHandler = tokenHandler;
         setOnCommandSuccess(this::onSuccess);

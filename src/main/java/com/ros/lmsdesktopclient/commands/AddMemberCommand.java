@@ -3,6 +3,7 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.AddMemberDTO;
 import com.ros.lmsdesktopclient.models.MemberModel;
 import com.ros.lmsdesktopclient.services.service.MemberService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
@@ -34,11 +35,11 @@ public class AddMemberCommand extends Command{
             MemberModel member,
             MemberService memberService,
             ExecutorService executorService,
-            ViewHandler viewHandler,
             TokenHandler tokenHandler,
+            UiExecutor uiExecutor,
             @LoginCommandQualifier Command openLoginViewCommand
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.member = member;
         this.memberService = memberService;
         this.tokenHandler = tokenHandler;
@@ -59,14 +60,14 @@ public class AddMemberCommand extends Command{
         }
     }
 
-    private void onSuccess(){
+    void onSuccess(){
         setAlert(Alerts.MEMBER_ADDED_SUCCESS);
         getAlert().getModal(AlertContents.MEMBER_ADDED_OK.getValue());
         //reset screen
         member.clear();
     }
 
-    private void onFailure(){
+    void onFailure(){
 
         if(lastException != null) {
             Alerts alert = switch (lastException){
@@ -139,5 +140,13 @@ public class AddMemberCommand extends Command{
                 memberModel.getPassword(),
                 tokenHandler.getUsername()
         );
+    }
+
+    public Throwable getLastException() {
+        return lastException;
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
     }
 }

@@ -18,19 +18,17 @@ public class ClearFilterCommand extends Command{
     private final StringProperty isbn;
     private final SearchBookModel searchBookModel;
     private Throwable lastException;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public ClearFilterCommand(
             Map<PropertyType, Property> properties,
             SearchBookModel searchBookModel,
             ExecutorService executorService,
-            UiExecutor javaFxUiExecutor
+            UiExecutor uiExecutor
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.searchBookModel = searchBookModel;
-        this.javaFxUiExecutor = javaFxUiExecutor;
         this.setOnCommandFailure(this::onFailure);
     }
 
@@ -40,7 +38,7 @@ public class ClearFilterCommand extends Command{
             if (!searchBookModel.isComplete() && (isbn.get() == null || isbn.get().isBlank())) {
                 throw new AlreadyClearedException("The search form is already cleared.");
             }
-            javaFxUiExecutor.runLater(() -> {
+            getUiExecutor().runLater(() -> {
                 searchBookModel.clear();
                 isbn.setValue("");
             });
@@ -50,11 +48,19 @@ public class ClearFilterCommand extends Command{
         }
     }
 
-    private void onFailure() {
+    void onFailure() {
         if(lastException != null) {
             Alerts alert = Alerts.ALREADY_CLEARED_ERROR;
             setAlert(alert);
             getAlert().getModal(lastException.getMessage());
         }
+    }
+
+    public Throwable getLastException() {
+        return lastException;
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
     }
 }

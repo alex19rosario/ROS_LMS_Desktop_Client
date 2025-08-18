@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.services.service.GenreService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,14 @@ class GetGenresCommandTest {
     UpFrontDataHandler upFrontDataHandler;
     @Mock
     ExecutorService executorService;
+    @Mock
+    UiExecutor uiExecutor;
 
     GetGenresCommand command;
 
     @BeforeEach
     void setup() {
-        command = new GetGenresCommand(genreService, executorService, upFrontDataHandler);
+        command = new GetGenresCommand(genreService, executorService, upFrontDataHandler, uiExecutor);
     }
 
     @Test

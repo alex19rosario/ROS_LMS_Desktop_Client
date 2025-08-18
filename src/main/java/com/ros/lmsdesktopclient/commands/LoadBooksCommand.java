@@ -27,7 +27,6 @@ public class LoadBooksCommand extends Command{
     private final SearchBookModel searchBookModel;
     private final ListProperty<BookDisplayModel> books;
     private final BookService bookService;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public LoadBooksCommand(
@@ -36,14 +35,13 @@ public class LoadBooksCommand extends Command{
             ListProperty<BookDisplayModel> books,
             BookService bookService,
             ExecutorService executorService,
-            UiExecutor javaFxUiExecutor
+            UiExecutor uiExecutor
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
-        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class LoadBooksCommand extends Command{
                 .map(LoadBooksCommand.this::mapToDisplayModel)
                 .toList();
 
-        javaFxUiExecutor.runLater(() -> {
+        getUiExecutor().runLater(() -> {
             books.setAll(bookDisplayModelList);
             totalPages.set(paginatedBooksDTO.totalPages());
             searchBookModel.setSize(paginatedBooksDTO.size());

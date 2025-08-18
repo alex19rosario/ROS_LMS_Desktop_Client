@@ -5,6 +5,7 @@ import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.annotations.LoginCommandQualifier;
 import com.ros.lmsdesktopclient.util.enums.AlertContents;
@@ -37,11 +38,11 @@ public class AddBookCommand extends Command{
             BookService bookService,
             ObservableList<GenreModel> genreModelObservableList,
             ExecutorService executorService,
-            ViewHandler viewHandler,
+            UiExecutor uiExecutor,
             TokenHandler tokenHandler,
             @LoginCommandQualifier Command openLoginViewCommand
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.book = book;
         this.authorModelListProperty = authorModelListProperty;
         this.genreModelObservableList = genreModelObservableList;

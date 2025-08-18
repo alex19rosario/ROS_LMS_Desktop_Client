@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.services.service.GenreService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 
 import javax.inject.Inject;
@@ -15,9 +16,10 @@ public class GetGenresCommand extends Command{
     public GetGenresCommand(
             GenreService genreService,
             ExecutorService executorService,
-            UpFrontDataHandler upFrontDataHandler
+            UpFrontDataHandler upFrontDataHandler,
+            UiExecutor uiExecutor
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.genreService = genreService;
         this.upFrontDataHandler = upFrontDataHandler;
     }

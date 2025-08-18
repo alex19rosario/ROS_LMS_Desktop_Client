@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,12 +24,14 @@ class LogoutCommandTest {
     ViewHandler viewHandler;
     @Mock
     TokenHandler tokenHandler;
+    @Mock
+    UiExecutor uiExecutor;
 
     LogoutCommand command;
 
     @BeforeEach
     void setup() {
-        command = new LogoutCommand(executorService, viewHandler, tokenHandler);
+        command = new LogoutCommand(executorService, viewHandler, tokenHandler, uiExecutor);
     }
 
     @Test

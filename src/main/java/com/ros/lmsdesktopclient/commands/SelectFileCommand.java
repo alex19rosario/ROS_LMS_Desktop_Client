@@ -15,7 +15,6 @@ public class SelectFileCommand extends Command{
     private final BookModel book;
     private final Stage stage;
     private final FileChooser fileChooser;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public SelectFileCommand(
@@ -23,18 +22,17 @@ public class SelectFileCommand extends Command{
             Stage stage,
             FileChooser fileChooser,
             ExecutorService executorService,
-            UiExecutor javaFxUiExecutor
+            UiExecutor uiExecutor
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.book = book;
         this.stage = stage;
         this.fileChooser = fileChooser;
-        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
     protected void runCommand() throws Exception {
-        javaFxUiExecutor.runLater(() -> {
+        getUiExecutor().runLater(() -> {
             fileChooser.setTitle("Select Resource");
             fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
 

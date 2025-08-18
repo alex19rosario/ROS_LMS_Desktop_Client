@@ -1,6 +1,5 @@
-package com.ros.lmsdesktopclient.util.validators;
+package com.ros.lmsdesktopclient.util;
 
-import com.ros.lmsdesktopclient.util.UiExecutor;
 import javafx.application.Platform;
 
 import javax.inject.Inject;

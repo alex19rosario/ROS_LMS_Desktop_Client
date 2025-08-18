@@ -1,7 +1,7 @@
 package com.ros.lmsdesktopclient.commands;
 
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -15,10 +15,12 @@ public abstract class Command {
     private Runnable onCommandSuccess;
     private Runnable onCommandFailure;
     private final ExecutorService executorService;
+    private final UiExecutor uiExecutor;
     private Alerts alert;
 
-    public Command(ExecutorService executorService) {
+    public Command(ExecutorService executorService, UiExecutor uiExecutor) {
         this.executorService = executorService;
+        this.uiExecutor = uiExecutor;
         this.progress = new SimpleDoubleProperty();
         this.running = new SimpleBooleanProperty();
     }
@@ -57,7 +59,7 @@ public abstract class Command {
             try {
                 runCommand();
                 // Success: run callback on JavaFX thread
-                Platform.runLater(() -> {
+                uiExecutor.runLater(() -> {
                     running.set(false);
                     progress.set(1); // completed
                     if (onCommandSuccess != null) {
@@ -68,7 +70,7 @@ public abstract class Command {
             } catch (Exception e) {
 
                 // Failure: run callback on JavaFX thread
-                Platform.runLater(() -> {
+                uiExecutor.runLater(() -> {
                     running.set(false);
                     progress.set(0); // failed, reset to 0
                     if (onCommandFailure != null) {
@@ -81,6 +83,10 @@ public abstract class Command {
 
     // Optional helper for reporting progress from runCommand()
     protected void updateProgress(double value) {
-        Platform.runLater(() -> progress.set(value));
+        uiExecutor.runLater(() -> progress.set(value));
+    }
+
+    public UiExecutor getUiExecutor() {
+        return uiExecutor;
     }
 }

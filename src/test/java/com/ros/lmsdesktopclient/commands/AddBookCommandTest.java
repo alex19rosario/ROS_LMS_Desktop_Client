@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
 import com.ros.lmsdesktopclient.util.TokenHandler;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -30,7 +31,7 @@ public class AddBookCommandTest {
 
     @Mock BookService bookService;
     @Mock ExecutorService executorService;
-    @Mock ViewHandler viewHandler;
+    @Mock UiExecutor uiExecutor;
     @Mock TokenHandler tokenHandler;
     @Mock Command openLoginViewCommand; // injected mock
 
@@ -52,7 +53,7 @@ public class AddBookCommandTest {
                 bookService,
                 genreList,
                 executorService,
-                viewHandler,
+                uiExecutor,
                 tokenHandler,
                 openLoginViewCommand
         );

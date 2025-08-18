@@ -3,6 +3,7 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.models.LoginModel;
 import com.ros.lmsdesktopclient.services.service.LoginService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
@@ -25,9 +26,10 @@ public final class LoginCommand extends Command {
             LoginService loginService,
             ExecutorService executorService,
             ViewHandler viewHandler,
-            TokenHandler tokenHandler
+            TokenHandler tokenHandler,
+            UiExecutor uiExecutor
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.loginModel = loginModel;
         this.loginService = loginService;
         this.viewHandler = viewHandler;

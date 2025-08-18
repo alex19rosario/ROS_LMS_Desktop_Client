@@ -24,7 +24,6 @@ public class SelectBookCommand extends Command{
     private final StorageService storageService;
     private final Command openLoginViewCommand;
     private Throwable lastException;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public SelectBookCommand(
@@ -32,15 +31,13 @@ public class SelectBookCommand extends Command{
             ObjectProperty<BookDisplayModel> selectedRowModel,
             StorageService storageService,
             ExecutorService executorService,
-            ViewHandler viewHandler,
-            UiExecutor javaFxUiExecutor,
+            UiExecutor uiExecutor,
             @LoginCommandQualifier Command openLoginViewCommand
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.selectedBookModel = selectedBookModel;
         this.selectedRowModel = selectedRowModel;
         this.storageService = storageService;
-        this.javaFxUiExecutor = javaFxUiExecutor;
         this.openLoginViewCommand = openLoginViewCommand;
         this.setOnCommandFailure(this::onFailure);
     }
@@ -62,7 +59,7 @@ public class SelectBookCommand extends Command{
 
             Image finalCoverImage = coverImage; // must be effectively final for lambda
 
-            javaFxUiExecutor.runLater(() -> {
+            getUiExecutor().runLater(() -> {
                 selectedBookModel.setIsbn(selected.getIsbn());
                 selectedBookModel.setTitle(selected.getTitle());
                 selectedBookModel.setAuthors(selected.getAuthors());
@@ -78,7 +75,7 @@ public class SelectBookCommand extends Command{
         }
     }
 
-    private void onFailure() {
+    void onFailure() {
 
         if(lastException != null) {
             Alerts alert = switch (lastException){
@@ -97,4 +94,11 @@ public class SelectBookCommand extends Command{
         }
     }
 
+    public Throwable getLastException() {
+        return lastException;
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
+    }
 }

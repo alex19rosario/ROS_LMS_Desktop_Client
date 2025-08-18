@@ -1,10 +1,10 @@
 package com.ros.lmsdesktopclient.di.modules;
 
+import com.ros.lmsdesktopclient.util.JavaFxUiExecutor;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
-import com.ros.lmsdesktopclient.util.validators.JavaFxUiExecutor;
 import com.ros.lmsdesktopclient.views.BaseView;
 import dagger.Binds;
 import dagger.Module;

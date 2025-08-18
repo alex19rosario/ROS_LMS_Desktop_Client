@@ -9,21 +9,19 @@ import java.util.concurrent.ExecutorService;
 public class AddAuthorCommand extends Command {
 
     private final ListProperty<AuthorModel> authorModelListProperty;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public AddAuthorCommand(
             ListProperty<AuthorModel> authorModelListProperty,
             ExecutorService executorService,
-            UiExecutor javaFxUiExecutor
+            UiExecutor uiExecutor
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.authorModelListProperty = authorModelListProperty;
-        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
     protected void runCommand() throws Exception {
-        javaFxUiExecutor.runLater(() -> authorModelListProperty.addFirst(new AuthorModel()));
+        getUiExecutor().runLater(() -> authorModelListProperty.addFirst(new AuthorModel()));
     }
 }

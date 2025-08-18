@@ -30,11 +30,11 @@ public class IssueBookCommand extends Command {
             Map<PropertyType, Property> properties,
             LoanService loanService,
             ExecutorService executorService,
-            ViewHandler viewHandler,
             TokenHandler tokenHandler,
+            UiExecutor uiExecutor,
             @LoginCommandQualifier Command openLoginViewCommand
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.selectedRowModel = selectedRowModel;
         this.memberUsername = (StringProperty) properties.get(PropertyType.MEMBER_USERNAME);
         this.loanService = loanService;
@@ -58,7 +58,7 @@ public class IssueBookCommand extends Command {
         }
     }
 
-    private void onSuccess() {
+    void onSuccess() {
         setAlert(Alerts.BOOK_ISSUED_SUCCESS);
         getAlert().getModal(AlertContents.BOOK_ISSUED_OK.getValue());
         //To reset the screen
@@ -66,7 +66,7 @@ public class IssueBookCommand extends Command {
 
     }
 
-    private void onFailure() {
+    void onFailure() {
 
         if(lastException != null) {
             Alerts alert = switch (lastException){
@@ -104,5 +104,13 @@ public class IssueBookCommand extends Command {
 
         if(isBookNotAvailable)
             throw new BookNotAvailableException("The selected book, with isbn: " + selectedRowModel.get().getIsbn() + ", is not available");
+    }
+
+    public Throwable getLastException() {
+        return lastException;
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
     }
 }

@@ -32,7 +32,6 @@ public class SearchBooksCommand extends Command{
     private final BookService bookService;
     private final Command openLoginViewCommand;
     private Throwable lastException;
-    private UiExecutor javaFxUiExecutor;
 
     @Inject
     public SearchBooksCommand(
@@ -41,17 +40,15 @@ public class SearchBooksCommand extends Command{
             ListProperty<BookDisplayModel> books,
             BookService bookService,
             ExecutorService executorService,
-            ViewHandler viewHandler,
-            UiExecutor javaFxUiExecutor,
+            UiExecutor uiExecutor,
             @LoginCommandQualifier Command openLoginViewCommand
     ) {
-        super(executorService);
+        super(executorService, uiExecutor);
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
         this.bookService = bookService;
-        this.javaFxUiExecutor = javaFxUiExecutor;
         this.openLoginViewCommand = openLoginViewCommand;
         this.setOnCommandFailure(this::onFailure);
     }
@@ -63,7 +60,7 @@ public class SearchBooksCommand extends Command{
             if(isbn.isNotEmpty().get()){
                 BookDTO bookDTO = bookService.searchBookByIsbn(isbn.get());
                 BookDisplayModel bookDisplayModel = mapToDisplayModel(bookDTO);
-                javaFxUiExecutor.runLater(() -> {
+                getUiExecutor().runLater(() -> {
                     searchBookModel.setPage(0);
                     books.setAll(bookDisplayModel);
                 });
@@ -77,7 +74,7 @@ public class SearchBooksCommand extends Command{
                 List<BookDisplayModel> bookDisplayModels = bookDTOList.stream()
                         .map(SearchBooksCommand.this::mapToDisplayModel)
                         .toList();
-                javaFxUiExecutor.runLater(() -> {
+                getUiExecutor().runLater(() -> {
                     books.setAll(bookDisplayModels);
                     totalPages.set(paginatedBooksDTO.totalPages());
                     searchBookModel.setSize(paginatedBooksDTO.size());
@@ -89,7 +86,7 @@ public class SearchBooksCommand extends Command{
         }
     }
 
-    private void onFailure() {
+    void onFailure() {
 
         if(lastException != null) {
             Alerts alert = switch (lastException){
@@ -161,5 +158,13 @@ public class SearchBooksCommand extends Command{
         model.setImagePath(dto.imagePath());
 
         return model;
+    }
+
+    public Throwable getLastException() {
+        return lastException;
+    }
+
+    public void setLastException(Throwable lastException) {
+        this.lastException = lastException;
     }
 }

@@ -3,7 +3,6 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.util.UiExecutor;
-import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

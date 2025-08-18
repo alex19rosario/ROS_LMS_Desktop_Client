@@ -12,23 +12,21 @@ public class OpenViewCommand extends Command{
 
     private final ViewType view;
     private final ViewHandler viewHandler;
-    private final UiExecutor javaFxUiExecutor;
 
     @Inject
     public OpenViewCommand(
             ViewType view,
             ExecutorService executorService,
             ViewHandler viewHandler,
-            UiExecutor javaFxUiExecutor
+            UiExecutor uiExecutor
     ){
-        super(executorService);
+        super(executorService, uiExecutor);
         this.view = view;
         this.viewHandler = viewHandler;
-        this.javaFxUiExecutor = javaFxUiExecutor;
     }
 
     @Override
     protected void runCommand() throws Exception {
-        javaFxUiExecutor.runLater(() -> viewHandler.switchTo(this.view));
+        getUiExecutor().runLater(() -> viewHandler.switchTo(this.view));
     }
 }
