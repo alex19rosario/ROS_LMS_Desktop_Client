@@ -54,7 +54,7 @@ public class SelectBookCommand extends Command{
                 coverImage = storageService.getCoverImage(imagePath);
             }
             else {
-                coverImage = new Image(Objects.requireNonNull(getClass().getResource("/images/selected_book_placeholder.png")).toExternalForm());
+                coverImage = new Image(Objects.requireNonNull(getClass().getResource("/images/default_image.jpg")).toExternalForm());
             }
 
             Image finalCoverImage = coverImage; // must be effectively final for lambda

@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.util.Objects;
 
 /**
  * Holds JavaFX properties representing a book within the LMS desktop application.
@@ -32,16 +31,17 @@ public class BookModel implements Clearable, Completable{
     private final ListProperty<StringProperty> genres;
     private final ObjectProperty<Image> coverImage;
     private final ObjectProperty<File> coverImageFile;
-    private final Image DEFAULT_IMAGE = new Image(Objects.requireNonNull(getClass().getResource("/images/upload_image.png")).toExternalForm());
+    private final Image defaultCover;
 
     @Inject
-    public  BookModel(){
+    public  BookModel(Image defaultCover){
         this.isbn = new SimpleStringProperty("");
         this.title = new SimpleStringProperty("");
         this.genres = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.genres.addFirst(new SimpleStringProperty(GenreType.SCIENCE.getStr()));
         this.coverImage = new SimpleObjectProperty<>();
-        this.coverImage.set(DEFAULT_IMAGE);
+        this.defaultCover = defaultCover;
+        this.coverImage.set(defaultCover);
         this.coverImageFile = new SimpleObjectProperty<>();
     }
 
@@ -71,10 +71,6 @@ public class BookModel implements Clearable, Completable{
 
     public ObservableList<StringProperty> getGenres() {
         return genres.get();
-    }
-
-    public ListProperty<StringProperty> genresProperty() {
-        return genres;
     }
 
     public void setGenres(ObservableList<StringProperty> genres) {
@@ -109,7 +105,7 @@ public class BookModel implements Clearable, Completable{
         this.setTitle("");
         this.getGenres().clear();
         this.setGenres(FXCollections.observableArrayList(new SimpleStringProperty(GenreType.SCIENCE.getStr())));
-        this.coverImage.set(DEFAULT_IMAGE);
+        this.coverImage.set(defaultCover);
         this.coverImageFile.set(null);
     }
 

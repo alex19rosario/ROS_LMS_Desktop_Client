@@ -9,11 +9,13 @@ import com.ros.lmsdesktopclient.views.BaseView;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Objects;
 
 @Module
 public abstract class AppModule {
@@ -38,4 +40,9 @@ public abstract class AppModule {
     @Binds
     @Singleton
     abstract UiExecutor javaFxUiExecutor(JavaFxUiExecutor uiExecutor);
+
+    @Provides
+    static Image defaultCover() {
+        return new Image(Objects.requireNonNull(AppModule.class.getResource("/images/default_image.jpg")).toExternalForm());
+    }
 }

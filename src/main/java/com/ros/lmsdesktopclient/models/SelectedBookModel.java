@@ -35,9 +35,8 @@ public class SelectedBookModel implements Clearable{
     private final StringProperty status;
 
     @Inject
-    public SelectedBookModel() {
+    public SelectedBookModel(Image defaultImage) {
         coverImage = new SimpleObjectProperty<>();
-        Image defaultImage = new Image(Objects.requireNonNull(getClass().getResource("/images/selected_book_placeholder.png")).toExternalForm());
         this.coverImage.set(defaultImage);
         isbn = new SimpleStringProperty();
         title = new SimpleStringProperty();
