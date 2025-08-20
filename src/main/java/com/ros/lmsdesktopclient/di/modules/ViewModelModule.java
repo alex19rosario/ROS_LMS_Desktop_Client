@@ -3,7 +3,6 @@ package com.ros.lmsdesktopclient.di.modules;
 import com.ros.lmsdesktopclient.commands.Command;
 import com.ros.lmsdesktopclient.models.*;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
-import com.ros.lmsdesktopclient.util.enums.GenreType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.view_models.*;
 import dagger.Module;
@@ -11,11 +10,10 @@ import dagger.Provides;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @Module
@@ -25,13 +23,11 @@ public abstract class ViewModelModule {
     @Singleton
     static AddBookViewModel addBookViewModel(
             Map<CommandType, Command> commands,
-            ListProperty<AuthorInputModel> authorInputs,
-            ListProperty<GenreInputModel> genreInputs,
             BookModel bookModel,
-            List<AuthorModel> authors,
-            Set<GenreType> genres
+            ObservableList<GenreModel> genreModelObservableList,
+            ListProperty<AuthorModel> authorModelListProperty
     ) {
-        return new AddBookViewModel(commands, authorInputs, genreInputs, bookModel, authors, genres);
+        return new AddBookViewModel(commands, bookModel, genreModelObservableList, authorModelListProperty);
     }
 
     @Provides

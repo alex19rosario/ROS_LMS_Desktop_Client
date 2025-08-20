@@ -1,32 +1,32 @@
 package com.ros.lmsdesktopclient.commands;
 
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
-import com.ros.lmsdesktopclient.util.enums.Views;
-import javafx.concurrent.Task;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
+import javafx.application.Platform;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 public class OpenViewCommand extends Command{
 
-    private final Views view;
+    private final ViewType view;
+    private final ViewHandler viewHandler;
 
     @Inject
-    public OpenViewCommand(Views view){
+    public OpenViewCommand(
+            ViewType view,
+            ExecutorService executorService,
+            ViewHandler viewHandler,
+            UiExecutor uiExecutor
+    ){
+        super(executorService, uiExecutor);
         this.view = view;
-        this.setOnCommandSuccess(this::onSuccess);
+        this.viewHandler = viewHandler;
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                return null;
-            }
-        };
-    }
-
-    private void onSuccess(){
-        ViewHandler.switchTo(this.view);
+    protected void runCommand() throws Exception {
+        getUiExecutor().runLater(() -> viewHandler.switchTo(this.view));
     }
 }

@@ -16,5 +16,6 @@ public enum CommandType {
     CLEAR_FILTER,
     LOAD_BOOKS,
     SELECT_BOOK,
-    ISSUE_BOOK;
+    ISSUE_BOOK,
+    GET_GENRES;
 }

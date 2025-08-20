@@ -12,14 +12,4 @@ public record PaginatedBooksDTO(
         List<BookDTO> bookDTOList,
         int totalPages,
         int size
-) {
-
-    @Override
-    public String toString() {
-        return "PaginatedBooksDTO{" +
-                "bookDTOList=" + bookDTOList +
-                ", totalPages=" + totalPages +
-                ", size=" + size +
-                '}';
-    }
-}
+) {}

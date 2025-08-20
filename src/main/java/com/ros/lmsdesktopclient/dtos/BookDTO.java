@@ -22,17 +22,4 @@ public record BookDTO(
         Set<GenreType> genres,
         boolean status,
         String imagePath
-) {
-    @Override
-    public String toString() {
-        return "BookDTO{" +
-                "id=" + id +
-                ", isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", authors=" + authors +
-                ", genres=" + genres +
-                ", status=" + status +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
-    }
-}
+) {}

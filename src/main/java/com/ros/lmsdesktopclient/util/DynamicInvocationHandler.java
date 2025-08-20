@@ -36,19 +36,24 @@ public class DynamicInvocationHandler implements InvocationHandler {
         }
     }
 
-    private void checkNetwork() throws NetworkException{
+    private void checkNetwork() throws NetworkException {
         try {
-            // Use HTTP connection to a reliable public endpoint
-            URL url = new URL("https://www.google.com"); // Or another reliable site
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(2000);
-            connection.setReadTimeout(2000);
+            HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(java.time.Duration.ofSeconds(2))
+                .build();
 
-            // Just opening the connection is enough to verify reachability
-            connection.connect();
-            connection.disconnect();
-        } catch (IOException e) {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://www.google.com"))
+                    .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                    .timeout(java.time.Duration.ofSeconds(2))
+                    .build();
+
+            HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+            if (response.statusCode() >= 400) {
+                throw new NetworkException("Internet is not reachable. Status code: " + response.statusCode());
+            }
+
+        } catch (IOException | InterruptedException e) {
             throw new NetworkException("No internet connection available");
         }
     }

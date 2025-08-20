@@ -22,8 +22,6 @@ public class LoadingOverlay {
 
         borderPane.visibleProperty().bind(progressIndicator.visibleProperty());
 
-        StackPane root = new StackPane(content, borderPane);
-
-        return root;
+        return new StackPane(content, borderPane);
     }
 }

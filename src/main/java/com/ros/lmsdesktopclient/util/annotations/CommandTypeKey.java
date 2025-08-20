@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.util;
+package com.ros.lmsdesktopclient.util.annotations;
 
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import dagger.MapKey;

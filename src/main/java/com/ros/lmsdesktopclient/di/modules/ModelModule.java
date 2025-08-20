@@ -1,60 +1,39 @@
 package com.ros.lmsdesktopclient.di.modules;
 
-import com.ros.lmsdesktopclient.models.AuthorInputModel;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
-import com.ros.lmsdesktopclient.models.GenreInputModel;
-import com.ros.lmsdesktopclient.util.enums.GenreType;
+import com.ros.lmsdesktopclient.models.GenreModel;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
-import com.ros.lmsdesktopclient.util.PropertyTypeKey;
+import com.ros.lmsdesktopclient.util.annotations.PropertyTypeKey;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoMap;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Module
 public abstract class ModelModule {
 
     @Provides
     @Singleton
-    static ListProperty<AuthorInputModel> authorInputs() {
-        return new SimpleListProperty<>(FXCollections.observableArrayList());
+    static ObservableList<GenreModel> genreModelObservableList(UpFrontDataHandler upFrontDataHandler) {
+
+        List<GenreModel> list = upFrontDataHandler.getGenres().stream()
+                .map(genre -> new GenreModel(genre, false))
+                .toList();
+
+        return FXCollections.observableArrayList(list);
     }
 
     @Provides
     @Singleton
-    static ListProperty<GenreInputModel> genreInputs() {
+    static ListProperty<AuthorModel> authorModelListProperty() {
         return new SimpleListProperty<>(FXCollections.observableArrayList());
-    }
-
-    @Provides
-    @Singleton
-    static List<AuthorModel> authors() {
-        return new ArrayList<>();
-    }
-
-    @Provides
-    static Set<GenreType> genres() {
-        return UpFrontDataHandler.getInstance().getGenres().stream()
-                .map(String::toUpperCase)
-                .filter(name -> {
-                    try {
-                        GenreType.valueOf(name);
-                        return true;
-                    } catch (IllegalArgumentException e) {
-                        return false;
-                    }
-                })
-                .map(GenreType::valueOf)
-                .collect(Collectors.toSet());
     }
 
     @Provides

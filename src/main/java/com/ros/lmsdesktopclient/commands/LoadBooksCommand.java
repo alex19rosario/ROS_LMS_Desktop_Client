@@ -6,6 +6,7 @@ import com.ros.lmsdesktopclient.dtos.SearchBookDTO;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.services.service.BookService;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.BookStatus;
 import com.ros.lmsdesktopclient.util.enums.GenreType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
@@ -13,11 +14,11 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
-import javafx.concurrent.Task;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 
 public class LoadBooksCommand extends Command{
@@ -28,7 +29,15 @@ public class LoadBooksCommand extends Command{
     private final BookService bookService;
 
     @Inject
-    public LoadBooksCommand(Map<PropertyType, Property> properties, SearchBookModel searchBookModel, ListProperty<BookDisplayModel> books, BookService bookService){
+    public LoadBooksCommand(
+            Map<PropertyType, Property> properties,
+            SearchBookModel searchBookModel,
+            ListProperty<BookDisplayModel> books,
+            BookService bookService,
+            ExecutorService executorService,
+            UiExecutor uiExecutor
+    ){
+        super(executorService, uiExecutor);
         this.totalPages = (IntegerProperty) properties.get(PropertyType.TOTAL_PAGES);
         this.searchBookModel = searchBookModel;
         this.books = books;
@@ -36,29 +45,22 @@ public class LoadBooksCommand extends Command{
     }
 
     @Override
-    protected Task<Void> createCommandTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                SearchBookDTO searchBookDTO = mapToSearchBookDTO.apply(searchBookModel);
+    protected void runCommand() throws Exception {
+        SearchBookDTO searchBookDTO = mapToSearchBookDTO.apply(searchBookModel);
 
-                PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(searchBookDTO);
+        PaginatedBooksDTO paginatedBooksDTO = bookService.searchBooks(searchBookDTO);
 
-                List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
+        List<BookDTO> bookDTOList = paginatedBooksDTO.bookDTOList();
 
-                List<BookDisplayModel> bookDisplayModelList = bookDTOList.stream()
-                        .map(LoadBooksCommand.this::mapToDisplayModel)
-                        .toList();
+        List<BookDisplayModel> bookDisplayModelList = bookDTOList.stream()
+                .map(LoadBooksCommand.this::mapToDisplayModel)
+                .toList();
 
-                Platform.runLater(() -> {
-                    books.setAll(bookDisplayModelList);
-                    totalPages.set(paginatedBooksDTO.totalPages());
-                    searchBookModel.setSize(paginatedBooksDTO.size());
-                });
-
-                return null;
-            }
-        };
+        getUiExecutor().runLater(() -> {
+            books.setAll(bookDisplayModelList);
+            totalPages.set(paginatedBooksDTO.totalPages());
+            searchBookModel.setSize(paginatedBooksDTO.size());
+        });
     }
 
     private final Function<SearchBookModel, SearchBookDTO> mapToSearchBookDTO = model -> {

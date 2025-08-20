@@ -1,40 +1,34 @@
 package com.ros.lmsdesktopclient.util;
 
-import com.ros.lmsdesktopclient.di.factories.DaggerViewFactory;
-import com.ros.lmsdesktopclient.util.enums.Views;
+import com.ros.lmsdesktopclient.util.enums.ViewType;
 import com.ros.lmsdesktopclient.views.BaseView;
-import com.ros.lmsdesktopclient.di.factories.ViewFactory;
 import javafx.stage.Stage;
 
-public class ViewHandler {
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.util.Map;
 
+@Singleton
+public class ViewHandler {
+    private final Map<ViewType, Provider<BaseView>> views;
     private Stage stage;
 
-    private static final ViewFactory factory = DaggerViewFactory.create();
-
-
-    private static class SingletonHelper {
-        private static final ViewHandler INSTANCE = new ViewHandler();
+    @Inject
+    public ViewHandler(Map<ViewType, Provider<BaseView>> views) {
+        this.views = views;
     }
 
-    public static void setStageToInstance(Stage stage){
-        getInstance().setStage(stage);
-    }
-
-    public static ViewHandler getInstance() {
-        return SingletonHelper.INSTANCE;
-    }
-
-    private void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     public Stage getStage() {
-        return this.stage;
+        return stage;
     }
 
-    public static void switchTo(Views view) {
-        BaseView baseView = view.getViewInstance(factory); // pass factory here
-        baseView.start(getInstance().getStage());
+    public void switchTo(ViewType viewType) {
+        BaseView view = views.get(viewType).get();
+        view.start(stage);
     }
 }

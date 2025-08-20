@@ -111,7 +111,7 @@ public class IssueBookViewModel {
     public void executeClearFilterCommand() {
         clearFilterCommand.execute();
 
-        clearFilterCommand.getCommandTask().setOnSucceeded(event -> {
+        clearFilterCommand.setOnCommandSuccess(() -> {
             loadBooksCommand.execute();
         });
     }

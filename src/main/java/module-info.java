@@ -25,4 +25,6 @@ module com.example.lmsdesktopclient {
     exports com.ros.lmsdesktopclient.di.factories;
     exports com.ros.lmsdesktopclient.util.enums to com.auth0.jwt;
     opens com.ros.lmsdesktopclient.util.enums to com.fasterxml.jackson.databind;
+    exports com.ros.lmsdesktopclient.util.annotations to com.auth0.jwt;
+    opens com.ros.lmsdesktopclient.util.annotations to com.fasterxml.jackson.databind;
 }

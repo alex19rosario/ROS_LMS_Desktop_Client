@@ -18,17 +18,4 @@ public record AddBookDTO(
         String genres,
         String staffUsername,
         File coverImage
-        ) {
-
-    @Override
-    public String toString() {
-        return "AddBookDTO{" +
-                "ISBN=" + ISBN +
-                ", title='" + title + '\'' +
-                ", authors='" + authors + '\'' +
-                ", genres='" + genres + '\'' +
-                ", staffUsername='" + staffUsername + '\'' +
-                ", coverImage=" + coverImage +
-                '}';
-    }
-}
+        ) {}
