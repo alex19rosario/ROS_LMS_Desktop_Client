@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.di.modules;
 
 import com.ros.lmsdesktopclient.commands.*;
+import com.ros.lmsdesktopclient.di.factories.ImageFactory;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
@@ -71,8 +72,8 @@ public abstract class CommandModule {
     @Provides
     @IntoMap
     @CommandTypeKey(CommandType.SELECT_FILE)
-    static Command selectFileCommand(BookModel bookModel, ViewHandler viewHandler, FileChooser fileChooser, ExecutorService executorService, UiExecutor javaFxUiExecutor) {
-        return new SelectFileCommand(bookModel, viewHandler.getStage(), fileChooser, executorService, javaFxUiExecutor);
+    static Command selectFileCommand(BookModel bookModel, ViewHandler viewHandler, FileChooser fileChooser, ExecutorService executorService, UiExecutor javaFxUiExecutor, ImageFactory imageFactory) {
+        return new SelectFileCommand(bookModel, viewHandler.getStage(), fileChooser, executorService, javaFxUiExecutor, imageFactory);
     }
 
     @Binds

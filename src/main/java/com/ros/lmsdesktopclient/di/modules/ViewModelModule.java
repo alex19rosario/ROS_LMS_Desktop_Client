@@ -2,6 +2,7 @@ package com.ros.lmsdesktopclient.di.modules;
 
 import com.ros.lmsdesktopclient.commands.Command;
 import com.ros.lmsdesktopclient.models.*;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import com.ros.lmsdesktopclient.view_models.*;
@@ -44,9 +45,10 @@ public abstract class ViewModelModule {
             ListProperty<BookDisplayModel> books,
             SelectedBookModel selectedBookModel,
             ObjectProperty<BookDisplayModel> selectedRowModel,
-            Map<CommandType, Command> commands
+            Map<CommandType, Command> commands,
+            UiExecutor uiExecutor
     ) {
-        return new IssueBookViewModel(properties, searchBookModel, books, selectedBookModel, selectedRowModel, commands);
+        return new IssueBookViewModel(properties, searchBookModel, books, selectedBookModel, selectedRowModel, commands, uiExecutor);
     }
 
     @Provides

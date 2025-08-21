@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class ClearFilterCommandTest {
 
     @Mock
@@ -138,14 +136,22 @@ class ClearFilterCommandTest {
     }
 
     @Test
-    void onFailure_withUnexpectedException_shouldThrowIllegalStateException() {
+    void onFailure_withUnexpectedException_shouldSetAlert() {
         // Arrange
-        ClearFilterCommand spyCommand = Mockito.spy(command);
+        ClearFilterCommand spyCommand = spy(command);
 
-        spyCommand.setLastException(new RuntimeException("Unexpected error"));
+        RuntimeException unexpected = new RuntimeException("Unexpected error");
+        spyCommand.setLastException(unexpected);
 
-        // Act & Assert
-        assertThrows(IllegalStateException.class, spyCommand::onFailure);
+        Alerts mockAlert = mock(Alerts.class);
+        doReturn(mockAlert).when(spyCommand).getAlert();
+
+        // Act
+        spyCommand.onFailure();
+
+        // Assert
+        verify(spyCommand).setAlert(Alerts.ALREADY_CLEARED_ERROR);
+        verify(mockAlert).getModal("Unexpected error");
     }
 
 }

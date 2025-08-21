@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.dtos.AuthorDTO;
 import com.ros.lmsdesktopclient.dtos.BookDTO;
 import com.ros.lmsdesktopclient.dtos.PaginatedBooksDTO;
@@ -31,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class SearchBooksCommandTest {
 
     @Mock BookService bookService;

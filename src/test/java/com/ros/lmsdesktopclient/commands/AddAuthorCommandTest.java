@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.models.AuthorModel;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import javafx.beans.property.ListProperty;
@@ -17,7 +16,6 @@ import java.util.concurrent.ExecutorService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class AddAuthorCommandTest {
 
     @Mock

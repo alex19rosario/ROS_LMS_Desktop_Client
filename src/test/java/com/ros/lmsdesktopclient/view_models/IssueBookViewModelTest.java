@@ -1,10 +1,10 @@
 package com.ros.lmsdesktopclient.view_models;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.commands.Command;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
 import javafx.beans.property.*;
@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class IssueBookViewModelTest {
 
     @Mock private Command searchBooksCommand;
@@ -43,6 +42,7 @@ class IssueBookViewModelTest {
     private StringProperty isbn;
     private IntegerProperty totalPages;
     private StringProperty memberUsername;
+    private UiExecutor uiExecutor;
 
     private IssueBookViewModel viewModel;
 
@@ -67,13 +67,16 @@ class IssueBookViewModelTest {
         commands.put(CommandType.OPEN_VIEW_MAIN_MENU, openMainViewCommand);
         commands.put(CommandType.ISSUE_BOOK, issueBookCommand);
 
+        uiExecutor = Runnable::run;
+
         viewModel = new IssueBookViewModel(
                 properties,
                 searchBookModel,
                 books,
                 selectedBookModel,
                 selectedRowModel,
-                commands
+                commands,
+                uiExecutor
         );
     }
 

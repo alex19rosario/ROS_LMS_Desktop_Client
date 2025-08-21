@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class CommandTest {
 
     // Minimal concrete command for testing

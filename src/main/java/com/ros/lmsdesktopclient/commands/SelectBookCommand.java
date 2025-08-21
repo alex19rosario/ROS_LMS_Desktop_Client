@@ -23,6 +23,7 @@ public class SelectBookCommand extends Command{
     private final ObjectProperty<BookDisplayModel> selectedRowModel;
     private final StorageService storageService;
     private final Command openLoginViewCommand;
+    private final Image defaultCoverImage;
     private Throwable lastException;
 
     @Inject
@@ -32,6 +33,7 @@ public class SelectBookCommand extends Command{
             StorageService storageService,
             ExecutorService executorService,
             UiExecutor uiExecutor,
+            Image defaultCoverImage,
             @LoginCommandQualifier Command openLoginViewCommand
     ) {
         super(executorService, uiExecutor);
@@ -39,6 +41,7 @@ public class SelectBookCommand extends Command{
         this.selectedRowModel = selectedRowModel;
         this.storageService = storageService;
         this.openLoginViewCommand = openLoginViewCommand;
+        this.defaultCoverImage = defaultCoverImage;
         this.setOnCommandFailure(this::onFailure);
     }
 
@@ -54,7 +57,7 @@ public class SelectBookCommand extends Command{
                 coverImage = storageService.getCoverImage(imagePath);
             }
             else {
-                coverImage = new Image(Objects.requireNonNull(getClass().getResource("/images/default_image.jpg")).toExternalForm());
+                coverImage = defaultCoverImage;
             }
 
             Image finalCoverImage = coverImage; // must be effectively final for lambda
