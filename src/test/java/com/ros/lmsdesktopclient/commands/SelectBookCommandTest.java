@@ -1,11 +1,9 @@
 package com.ros.lmsdesktopclient.commands;
 
-import com.ros.lmsdesktopclient.JavaFxExtension;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
 import com.ros.lmsdesktopclient.services.service.StorageService;
 import com.ros.lmsdesktopclient.util.UiExecutor;
-import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.Alerts;
 import com.ros.lmsdesktopclient.util.exceptions.ExpiredSessionException;
 import com.ros.lmsdesktopclient.util.exceptions.ImageNotFoundException;
@@ -26,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(JavaFxExtension.class)
 class SelectBookCommandTest {
 
     @Mock
@@ -47,15 +44,19 @@ class SelectBookCommandTest {
     private SimpleObjectProperty<BookDisplayModel> selectedRowModel;
     private SelectBookCommand command;
 
+    private Image mockDefaultCoverImage;
+
     @BeforeEach
     void setUp() {
         selectedRowModel = new SimpleObjectProperty<>();
+        mockDefaultCoverImage = mock(Image.class);
         command = new SelectBookCommand(
                 selectedBookModel,
                 selectedRowModel,
                 storageService,
                 executorService,
                 javaFxUiExecutor,
+                mockDefaultCoverImage,
                 openLoginViewCommand
         );
     }
@@ -97,7 +98,7 @@ class SelectBookCommandTest {
         verify(javaFxUiExecutor).runLater(runnableCaptor.capture());
 
         runnableCaptor.getValue().run();
-        verify(selectedBookModel).setCoverImage(any(Image.class)); // Verify some image was set
+        verify(selectedBookModel).setCoverImage(mockDefaultCoverImage); // Verify some image was set
     }
 
     @Test

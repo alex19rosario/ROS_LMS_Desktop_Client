@@ -1,5 +1,6 @@
 package com.ros.lmsdesktopclient.commands;
 
+import com.ros.lmsdesktopclient.di.factories.ImageFactory;
 import com.ros.lmsdesktopclient.models.BookModel;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import javafx.scene.image.Image;
@@ -15,6 +16,7 @@ public class SelectFileCommand extends Command{
     private final BookModel book;
     private final Stage stage;
     private final FileChooser fileChooser;
+    private final ImageFactory imageFactory;
 
     @Inject
     public SelectFileCommand(
@@ -22,12 +24,14 @@ public class SelectFileCommand extends Command{
             Stage stage,
             FileChooser fileChooser,
             ExecutorService executorService,
-            UiExecutor uiExecutor
+            UiExecutor uiExecutor,
+            ImageFactory imageFactory
     ){
         super(executorService, uiExecutor);
         this.book = book;
         this.stage = stage;
         this.fileChooser = fileChooser;
+        this.imageFactory = imageFactory;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class SelectFileCommand extends Command{
 
             File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
-                Image image = new Image(selectedFile.toURI().toString());
+                Image image = imageFactory.create(selectedFile);
                 book.setCoverImage(image);
                 book.setCoverImageFile(selectedFile);
             }

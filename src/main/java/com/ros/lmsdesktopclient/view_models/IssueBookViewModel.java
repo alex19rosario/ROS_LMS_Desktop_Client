@@ -4,9 +4,9 @@ import com.ros.lmsdesktopclient.commands.*;
 import com.ros.lmsdesktopclient.models.BookDisplayModel;
 import com.ros.lmsdesktopclient.models.SearchBookModel;
 import com.ros.lmsdesktopclient.models.SelectedBookModel;
+import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.enums.CommandType;
 import com.ros.lmsdesktopclient.util.enums.PropertyType;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
@@ -31,6 +31,8 @@ public class IssueBookViewModel {
     private final Command issueBookCommand;
     private final static int FIRST_PAGE = 0;
 
+    private final UiExecutor uiExecutor;
+
     @Inject
     public IssueBookViewModel(
             Map<PropertyType, Property> properties,
@@ -38,7 +40,8 @@ public class IssueBookViewModel {
             ListProperty<BookDisplayModel> books,
             SelectedBookModel selectedBookModel,
             ObjectProperty<BookDisplayModel> selectedRowModel,
-            Map<CommandType, Command> commands
+            Map<CommandType, Command> commands,
+            UiExecutor uiExecutor
     ) {
         this.isbn = (StringProperty) properties.get(PropertyType.ISBN);
         this.searchBookModel = searchBookModel;
@@ -54,6 +57,8 @@ public class IssueBookViewModel {
         this.selectBookCommand = commands.get(CommandType.SELECT_BOOK);
         this.openMainViewCommand = commands.get(CommandType.OPEN_VIEW_MAIN_MENU);
         this.issueBookCommand = commands.get(CommandType.ISSUE_BOOK);
+
+        this.uiExecutor = uiExecutor;
     }
 
     public String getIsbn() {
@@ -103,7 +108,7 @@ public class IssueBookViewModel {
     public void executeSearchBooksCommand() {
         // Reset pagination to the first page before executing a new search.
         // This ensures the results always start from the beginning when search criteria changes.
-        Platform.runLater(() -> searchBookModel.setPage(FIRST_PAGE));
+        uiExecutor.runLater(() -> searchBookModel.setPage(FIRST_PAGE));
 
         this.searchBooksCommand.execute();
     }

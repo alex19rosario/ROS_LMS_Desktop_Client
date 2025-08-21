@@ -1,5 +1,6 @@
 package com.ros.lmsdesktopclient.di.modules;
 
+import com.ros.lmsdesktopclient.di.factories.ImageFactory;
 import com.ros.lmsdesktopclient.util.JavaFxUiExecutor;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.UpFrontDataHandler;
@@ -14,6 +15,7 @@ import javafx.stage.FileChooser;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 
@@ -44,5 +46,15 @@ public abstract class AppModule {
     @Provides
     static Image defaultCover() {
         return new Image(Objects.requireNonNull(AppModule.class.getResource("/images/default_image.jpg")).toExternalForm());
+    }
+
+    @Provides
+    static ImageFactory imageFactory() {
+        return new ImageFactory() {
+            @Override
+            public Image create(File file) {
+                return new Image(file.toURI().toString());
+            }
+        };
     }
 }
