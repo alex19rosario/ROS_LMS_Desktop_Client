@@ -1,4 +1,4 @@
-package com.ros.lmsdesktopclient.util.validators;
+package com.ros.lmsdesktopclient.util.annotations;
 
 import com.ros.lmsdesktopclient.util.enums.ViewType;
 import dagger.MapKey;

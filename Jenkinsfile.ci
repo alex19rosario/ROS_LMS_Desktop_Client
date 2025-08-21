@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    
+    stages {
+        // Stage 1: Checkout code from GitHub
+        stage('Checkout') {
+            steps {
+                script {
+                    // Check if this is a PR (GitHub)
+                    if (env.CHANGE_ID) {
+                        echo "Building PR #${env.CHANGE_ID} from branch: ${env.CHANGE_BRANCH}"
+                        git branch: env.CHANGE_BRANCH, // PR's source branch
+                             url: 'https://github.com/alex19rosario/ROS_LMS_Desktop_Client.git'
+                    }
+                    // Default to 'development' for non-PR triggers
+                    else {
+                        echo "Building default branch: development"
+                        git branch: 'development',
+                             url: 'https://github.com/alex19rosario/ROS_LMS_Desktop_Client.git'
+                    }
+                }
+            }
+        }
+
+        // Stage 2: Run tests, check test coverage and build
+        stage('Test and Build') {
+            steps {
+                echo 'Testing and building JavaFx application with Maven Wrapper...'
+                // Set execute permissions for mvnw
+                sh 'chmod +x mvnw'
+                // Run the build
+                sh './mvnw clean verify' // Fails build if thresholds (40%) not met
+
+                recordCoverage(
+                    tools: [[parser: 'JACOCO']],
+                    id: 'jacoco',
+                    name: 'JaCoCo Coverage',
+                    sourceCodeRetention: 'EVERY_BUILD',
+                    qualityGates: [
+                        [threshold: 40.0, metric: 'LINE', baseline: 'PROJECT', unstable: true],
+                        [threshold: 40.0, metric: 'METHOD', baseline: 'PROJECT', unstable: true],
+                        [threshold: 40.0, metric: 'BRANCH', baseline: 'PROJECT', unstable: true]
+                    ]
+                )
+            }
+        }
+        // Stage 3: SonarQube Scanning
+        stage('SonarQube Scanning') {
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                    sh './mvnw sonar:sonar'
+                }
+            }
+        }
+
+        // Stage 4: SonarQube Quality Gate
+        stage('SonarQube Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+    }
+    
+    post {
+        success {
+            echo '✅ Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+    }
+}

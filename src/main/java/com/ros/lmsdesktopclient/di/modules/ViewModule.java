@@ -1,13 +1,11 @@
 package com.ros.lmsdesktopclient.di.modules;
 
 import com.ros.lmsdesktopclient.util.enums.ViewType;
-import com.ros.lmsdesktopclient.util.validators.ViewTypeKey;
+import com.ros.lmsdesktopclient.util.annotations.ViewTypeKey;
 import com.ros.lmsdesktopclient.views.*;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
-
-import javax.inject.Singleton;
 
 @Module
 public abstract class ViewModule {
