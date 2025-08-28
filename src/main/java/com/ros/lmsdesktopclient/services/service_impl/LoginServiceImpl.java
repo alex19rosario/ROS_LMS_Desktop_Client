@@ -1,8 +1,6 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
-
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
-import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import com.ros.lmsdesktopclient.services.service.LoginService;
 import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -14,27 +12,33 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class LoginServiceImpl implements LoginService {
 
     private final TokenHandler tokenHandler;
-    private final AuthenticatedHttpClientFactory clientFactory;
+    private final HttpClient client;
 
     @Inject
-    public LoginServiceImpl(AuthenticatedHttpClientFactory clientFactory, TokenHandler tokenHandler){
+    public LoginServiceImpl(HttpClient client, TokenHandler tokenHandler){
         this.tokenHandler = tokenHandler;
-        this.clientFactory = clientFactory;
+        this.client = client;
     }
 
     @Override
     public void login(LoginDTO loginDTO) throws NetworkException, ServerErrorException, AuthenticationException, AccessDeniedException {
         try{
-            HttpClient client = clientFactory.create(loginDTO.username(), loginDTO.password());
+            // Create basic auth header
+            String auth = loginDTO.username() + ":" + loginDTO.password();
+            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeader = "Basic " + encodedAuth;
 
             // Build the HTTP request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(ApiUrls.LOGIN.getUrl()))
                     .header("Accept", "application/json")
+                    .header("Authorization", authHeader) // Add Basic Auth header
                     .POST(HttpRequest.BodyPublishers.noBody()) // No body required for Basic Auth
                     .build();
 

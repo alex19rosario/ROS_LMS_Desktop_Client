@@ -1,6 +1,5 @@
 package com.ros.lmsdesktopclient.services;
 
-import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import com.ros.lmsdesktopclient.dtos.LoginDTO;
 import com.ros.lmsdesktopclient.services.service_impl.LoginServiceImpl;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -28,9 +27,6 @@ import static org.mockito.Mockito.when;
 class LoginServiceImplTest {
 
     @Mock
-    private AuthenticatedHttpClientFactory clientFactory;
-
-    @Mock
     private TokenHandler tokenHandler;
 
     @Mock
@@ -51,9 +47,6 @@ class LoginServiceImplTest {
 
     @Test
     void login_successful_withRoleStaff() throws Exception {
-        when(clientFactory.create(loginDTO.username(), loginDTO.password()))
-                .thenReturn(httpClient);
-
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
                 .thenReturn(httpResponse);
 
@@ -67,17 +60,18 @@ class LoginServiceImplTest {
 
     @Test
     void login_shouldThrowAccessDeniedException_whenNotStaff() throws Exception {
-        when(clientFactory.create(any(), any())).thenReturn(httpClient);
-        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+
         when(httpResponse.body()).thenReturn("token");
         when(tokenHandler.getAuthorities()).thenReturn(Set.of("ROLE_MEMBER"));
 
         assertThrows(AccessDeniedException.class, () -> loginService.login(loginDTO));
     }
 
+
     @Test
     void login_shouldThrowAuthenticationException_onIOException() throws Exception {
-        when(clientFactory.create(any(), any())).thenReturn(httpClient);
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
                 .thenThrow(new IOException());
 

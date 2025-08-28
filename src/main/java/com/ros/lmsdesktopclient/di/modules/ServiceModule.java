@@ -1,11 +1,9 @@
 package com.ros.lmsdesktopclient.di.modules;
 
-import com.ros.lmsdesktopclient.di.factories.AuthenticatedHttpClientFactory;
 import com.ros.lmsdesktopclient.di.factories.ServiceFactory;
 import com.ros.lmsdesktopclient.services.service.*;
 import com.ros.lmsdesktopclient.services.service_impl.*;
 import com.ros.lmsdesktopclient.util.TokenHandler;
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
@@ -15,8 +13,8 @@ import java.net.http.HttpClient;
 public abstract class ServiceModule {
 
     @Provides
-    static LoginService loginService(AuthenticatedHttpClientFactory factory, TokenHandler tokenHandler) {
-        LoginService loginService = new LoginServiceImpl(factory, tokenHandler);
+    static LoginService loginService(HttpClient client, TokenHandler tokenHandler) {
+        LoginService loginService = new LoginServiceImpl(client, tokenHandler);
         return ServiceFactory.createProxy(LoginService.class, loginService);
     }
 
