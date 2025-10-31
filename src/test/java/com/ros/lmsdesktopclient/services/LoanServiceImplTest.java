@@ -42,7 +42,7 @@ class LoanServiceImplTest {
     @BeforeEach
     void setUp() {
         loanDTO = new AddLoanDTO(
-                123L,
+                "8888888887",
                 "john_doe",
                 "staff_1"
         );
@@ -128,7 +128,7 @@ class LoanServiceImplTest {
 
     @Test
     void addLoan_shouldThrowServerErrorException_whenUnexpectedStatusCode() throws Exception {
-        AddLoanDTO dto = new AddLoanDTO(1L, "member", "staff");
+        AddLoanDTO dto = new AddLoanDTO("8888888887", "member", "staff");
 
         // ✅ Mock tokenHandler to return a token so it doesn’t fail early
         when(tokenHandler.getToken()).thenReturn(Optional.of("mock-token"));
@@ -148,7 +148,7 @@ class LoanServiceImplTest {
 
     @Test
     void addLoan_shouldThrowNetworkException_whenIOExceptionOccurs() throws Exception {
-        AddLoanDTO dto = new AddLoanDTO(1L, "member", "staff");
+        AddLoanDTO dto = new AddLoanDTO("8888888887", "member", "staff");
 
         // Mock token to bypass ExpiredSessionException
         when(tokenHandler.getToken()).thenReturn(Optional.of("mock-token"));
@@ -167,7 +167,7 @@ class LoanServiceImplTest {
 
     @Test
     void addLoan_shouldThrowNetworkException_whenInterruptedExceptionOccurs() throws Exception {
-        AddLoanDTO dto = new AddLoanDTO(1L, "member", "staff");
+        AddLoanDTO dto = new AddLoanDTO("8888888887", "member", "staff");
 
         // Mock token to bypass ExpiredSessionException
         when(tokenHandler.getToken()).thenReturn(Optional.of("mock-token"));
@@ -186,7 +186,7 @@ class LoanServiceImplTest {
 
     @Test
     void testFieldsAreSetCorrectly() {
-        assertEquals(123L, loanDTO.bookId());
+        assertEquals("8888888887", loanDTO.bookIsbn());
         assertEquals("john_doe", loanDTO.memberUsername());
         assertEquals("staff_1", loanDTO.staffUsername());
     }

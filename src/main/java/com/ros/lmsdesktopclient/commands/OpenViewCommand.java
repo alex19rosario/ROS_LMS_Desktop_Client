@@ -3,7 +3,6 @@ package com.ros.lmsdesktopclient.commands;
 import com.ros.lmsdesktopclient.util.UiExecutor;
 import com.ros.lmsdesktopclient.util.ViewHandler;
 import com.ros.lmsdesktopclient.util.enums.ViewType;
-import javafx.application.Platform;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;

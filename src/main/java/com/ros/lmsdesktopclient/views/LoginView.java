@@ -34,8 +34,9 @@ public class LoginView implements BaseView {
     public void start(Stage stage) {
         initComponents();
         Scene scene = stage.getScene() == null ?
-                new Scene(createContent(), 1200, 900) :
+                new Scene(createContent(), 1300, 900) :
                 new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        scene.getStylesheets().add(getClass().getResource("/styles/login-view.css").toExternalForm());
         bindComponents();
         stage.setScene(scene);
         stage.show();
@@ -47,6 +48,9 @@ public class LoginView implements BaseView {
         tfUsername = new TextField();
         lblPassword = new Label("Password");
         tfPassword = new PasswordField();
+        lblHeaderTitle.setId("lblHeaderTitle");
+        lblUsername.setId("lblUsername");
+        lblPassword.setId("lblPassword");
         btnLogin = new Button("Log in");
         progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
@@ -65,9 +69,14 @@ public class LoginView implements BaseView {
 
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
+        borderPane.getStyleClass().add("border-pane");
         borderPane.setTop(createHeader());
-        borderPane.setCenter(createForm());
-        // Wrap content in overlay
+
+        VBox card = new VBox(25, createSection(), createButtonSection());
+        card.getStyleClass().add("vbox");
+        borderPane.setCenter(card);
+
+        BorderPane.setAlignment(card, Pos.CENTER);
         return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
@@ -76,12 +85,6 @@ public class LoginView implements BaseView {
         hBox.setPadding(new Insets(25));
         hBox.setAlignment(Pos.CENTER);
         return hBox;
-    }
-
-    private Node createForm() {
-        VBox vBox = new VBox(25, createSection(), createButtonSection());
-        vBox.setAlignment(Pos.CENTER);
-        return vBox;
     }
 
     private Node createSection() {

@@ -39,15 +39,25 @@ public class TokenHandler {
     // Helper method to load an RSA public key from a string
     private RSAPublicKey getPublicKey() {
         try {
+//            String publicKeyPEM = "-----BEGIN PUBLIC KEY-----\n" +
+//                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoxe4hIt5oCkcQoaboPQs\n" +
+//                    "cjzq2BpjC0WuuoX/aeHUs2I65JWNRXJvK5vM8F/eOGQUehEzfzyVm1bI2NjXeRo/\n" +
+//                    "rfDvLAp8G7+yMH8JgY9h51v0KuWmlrDUZCPq+foSsZV7H+fCnTCqAiomR7diEa8q\n" +
+//                    "ges3i3ITONusScIoM5VSGXSvLbti7RPD+7bsyhlBuNY+F7IS0walu0iEJ4uyx/Gj\n" +
+//                    "16aCOxsneOysS+EKhl9nB5B3EzkZXKGL6FG+6nNorXCgPoBpo4gTHdL41a87Fg5l\n" +
+//                    "kWw1Y1rHNXDNJ0ApbJPrmkMX/ooBry6eJt4pmZNallHZf/Ej6koAl6cEhUlLQznP\n" +
+//                    "cwIDAQAB\n" +
+//                    "-----END PUBLIC KEY-----\n";
+
             String publicKeyPEM = "-----BEGIN PUBLIC KEY-----\n" +
-                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoxe4hIt5oCkcQoaboPQs\n" +
-                    "cjzq2BpjC0WuuoX/aeHUs2I65JWNRXJvK5vM8F/eOGQUehEzfzyVm1bI2NjXeRo/\n" +
-                    "rfDvLAp8G7+yMH8JgY9h51v0KuWmlrDUZCPq+foSsZV7H+fCnTCqAiomR7diEa8q\n" +
-                    "ges3i3ITONusScIoM5VSGXSvLbti7RPD+7bsyhlBuNY+F7IS0walu0iEJ4uyx/Gj\n" +
-                    "16aCOxsneOysS+EKhl9nB5B3EzkZXKGL6FG+6nNorXCgPoBpo4gTHdL41a87Fg5l\n" +
-                    "kWw1Y1rHNXDNJ0ApbJPrmkMX/ooBry6eJt4pmZNallHZf/Ej6koAl6cEhUlLQznP\n" +
-                    "cwIDAQAB\n" +
-                    "-----END PUBLIC KEY-----\n";
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqC+aMyho97ZU0IQYRf+h\n" +
+                    "L9nloKOcjkh8/cICh7J4esOn1m1GYvlGBkKh1/J4jRWHwpE/f1TOaRLCUHXuUA0I\n" +
+                    "/ps7B14ewMFnoNGrgPLVjsDARV6N4NaPNNGJh+TmjiM7WL6GoDzmH7bRzct0p0Vf\n" +
+                    "KyyOejUlOqWRgcvuStg378LJwW7b+TiC88iyPUeqCOvQs55oksaMa03LP6zj+Dst\n" +
+                    "nKukHOS1lPWmAxCq9/20oFRXvYw1cIeI9euJRM2+0eDiW8C57OYGHDPOlZO2XWPT\n" +
+                    "v/nJPxNGvRuqvGrj+jZwTDqx3hRqf2pBmlcrSKxrMXLhQmMoznFjb95q0FLqAeFJ\n" +
+                    "CwIDAQAB\n" +
+                    "-----END PUBLIC KEY-----";
 
             publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "")
                     .replace("-----END PUBLIC KEY-----", "")
@@ -62,7 +72,6 @@ public class TokenHandler {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
-
 
     }
 

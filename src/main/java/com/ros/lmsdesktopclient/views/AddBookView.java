@@ -49,6 +49,7 @@ public class AddBookView implements BaseView {
     public void start(Stage stage) {
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        scene.getStylesheets().add(getClass().getResource("/styles/add-book-view.css").toExternalForm());
         bindComponents();
         stage.setScene(scene);
     }
@@ -109,34 +110,61 @@ public class AddBookView implements BaseView {
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
-        borderPane.setCenter(createForm());
+
+        // Form sections (basic info, image/genre, authors)
+        VBox formSections = new VBox(30,
+                createBasicInfoSection(),
+                createImageAndGenreSection(),
+                createAuthorsContainer()
+        );
+        formSections.setAlignment(Pos.CENTER);
+        formSections.setMaxWidth(900); // prevent excessive stretching
+        formSections.getStyleClass().add("form-card");
+
+        // Wrap in a StackPane to center horizontally
+        StackPane centeredWrapper = new StackPane(formSections);
+        centeredWrapper.setPadding(new Insets(20));
+        centeredWrapper.setAlignment(Pos.TOP_CENTER);
+
+        // Scrollable area
+        ScrollPane scrollPane = new ScrollPane(centeredWrapper);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+        borderPane.setCenter(scrollPane);
+
+        // Footer stays fixed
+        borderPane.setBottom(createFooter());
+
         return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {
-        HBox hBox = new HBox(lblHeaderTitle);
-        hBox.setPadding(new Insets(25));
-        hBox.setAlignment(Pos.CENTER);
-        return hBox;
+        HBox header = new HBox(lblHeaderTitle);
+        lblHeaderTitle.setId("lblHeaderTitle");
+        header.setPadding(new Insets(25));
+        header.setAlignment(Pos.CENTER);
+        header.setId("header");
+        return header;
     }
 
-    private Node createForm() {
-        VBox vBox = new VBox(25, createFirstSection(), createAuthorsContainer(), createFooter());
-        vBox.setAlignment(Pos.CENTER);
-        return vBox;
-    }
-
-    private Node createFirstSection() {
-        GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblIsbn, 1, 0 );
-        gridPane.add(tfIsbn, 2, 0);
-        gridPane.add(lblTitle, 3, 0);
-        gridPane.add(tfTitle, 4, 0);
-        gridPane.add(createListViewGenre(), 2, 1);
-        gridPane.add(lblCoverImage, 3, 1);
-        gridPane.add(createAttachFileButton(), 4, 1);
-        gridPane.setAlignment(Pos.TOP_CENTER);
+    private Node createBasicInfoSection() {
+        GridPane gridPane = new GridPane(25, 15);
+        gridPane.add(lblIsbn, 0, 0);
+        gridPane.add(tfIsbn, 1, 0);
+        gridPane.add(lblTitle, 0, 1);
+        gridPane.add(tfTitle, 1, 1);
+        gridPane.setAlignment(Pos.CENTER);
         return gridPane;
+    }
+
+    private Node createImageAndGenreSection() {
+        HBox box = new HBox(40, createAttachFileButton(), createListViewGenre());
+        box.setAlignment(Pos.CENTER);
+        return box;
     }
 
     private Node createAuthorsContainer() {
@@ -212,7 +240,7 @@ public class AddBookView implements BaseView {
     }
 
     private Node createFooter() {
-        HBox hBox = new HBox(400, btnGoBack, btnAddBook);
+        HBox hBox = new HBox(40, btnGoBack, btnAddBook);
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(25));
         return hBox;
