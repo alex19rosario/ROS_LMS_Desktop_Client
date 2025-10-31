@@ -50,7 +50,7 @@ public class IssueBookCommand extends Command {
             checkForm(selectedRowModel, memberUsername);
             checkIfBookAvailable(selectedRowModel);
 
-            AddLoanDTO addLoanDTO = new AddLoanDTO(selectedRowModel.get().getId(), memberUsername.get(), tokenHandler.getUsername());
+            AddLoanDTO addLoanDTO = new AddLoanDTO(selectedRowModel.get().getIsbn(), memberUsername.get(), tokenHandler.getUsername());
             loanService.issueBook(addLoanDTO);
         } catch (Exception ex) {
             this.lastException = ex;

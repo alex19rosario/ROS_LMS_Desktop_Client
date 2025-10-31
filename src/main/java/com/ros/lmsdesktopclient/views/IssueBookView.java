@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class IssueBookView implements BaseView {
 
@@ -70,6 +71,7 @@ public class IssueBookView implements BaseView {
     public void start(Stage stage) {
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/issue-book-view.css")).toExternalForm());
         bindComponents();
         stage.setScene(scene);
     }
@@ -114,6 +116,8 @@ public class IssueBookView implements BaseView {
         tfMemberUsername = new TextField();
         btnGoBack = new Button("Go Back");
         btnIssueBook = new Button("Issue Book");
+        btnGoBack.setId("btnGoBack");
+        btnIssueBook.setId("btnIssueBook");
         progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
 
@@ -225,27 +229,96 @@ public class IssueBookView implements BaseView {
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
-        borderPane.setCenter(createForm());
+
+        // Form Sections (Filter, Table, Details)
+        VBox formSections = new VBox(30,
+                createSectionCard("Filter Books", createFilterSection()),
+                createSectionCard("Books", createTableSection()),
+                createSectionCard("Selected Book & Member", createDetailSection())
+        );
+        formSections.setAlignment(Pos.CENTER);
+        formSections.setMaxWidth(1500);
+        formSections.getStyleClass().add("form-card");
+
+        // Wrap in StackPane to center horizontally
+        StackPane centeredWrapper = new StackPane(formSections);
+        centeredWrapper.setPadding(new Insets(20));
+        centeredWrapper.setAlignment(Pos.TOP_CENTER);
+
+        // Scrollable area
+        ScrollPane scrollPane = new ScrollPane(centeredWrapper);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+        borderPane.setCenter(scrollPane);
+
+        // Footer stays fixed
+        borderPane.setBottom(createFooter());
+
         return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
-    private Node createHeader() {
-        HBox hBox = new HBox(lblHeaderTitle);
-        hBox.setPadding(new Insets(25));
+    private Node createDetailSection() {
+        // Selected Book Card
+        VBox bookCard = new VBox(10,
+                imageSelectedBookCover,
+                lblSelectedBookIsbn,
+                lblSelectedBookTitle,
+                lblSelectedBookAuthors,
+                lblSelectedBookGenres,
+                lblSelectedBookStatus
+        );
+        bookCard.setPadding(new Insets(15));
+        bookCard.getStyleClass().add("section-card");
+
+        imageSelectedBookCover.setFitWidth(200);
+        imageSelectedBookCover.setPreserveRatio(true);
+        imageSelectedBookCover.setSmooth(true);
+        imageSelectedBookCover.setCache(true);
+
+        // Selected Member Card
+        VBox memberCard = new VBox(10,
+                lblMemberUsername,
+                tfMemberUsername
+        );
+        memberCard.setPadding(new Insets(15));
+        memberCard.getStyleClass().add("section-card");
+
+        // Side by side
+        HBox hBox = new HBox(30, bookCard, memberCard);
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }
 
-    private Node createForm() {
-        VBox vBox = new VBox(
-                25,
-                createFilterSection(),
-                createTableSection(),
-                createDetailSection(),
-                createFooter()
-        );
-        vBox.setAlignment(Pos.CENTER);
+    private Node createTableSection() {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(15));
+        borderPane.setCenter(tableViewBook);
+        borderPane.setBottom(pagination);
+        tableViewBook.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        return borderPane;
+    }
+
+    private VBox createSectionCard(String title, Node content) {
+        Label lblTitle = new Label(title);
+        lblTitle.getStyleClass().add("section-title");
+
+        VBox vBox = new VBox(15, lblTitle, content);
+        vBox.setPadding(new Insets(20));
+        vBox.getStyleClass().add("section-card");
         return vBox;
+    }
+
+    private Node createHeader() {
+        HBox hBox = new HBox(lblHeaderTitle);
+        lblHeaderTitle.setId("lblHeaderTitle");
+        hBox.setPadding(new Insets(25));
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setId("header");
+        return hBox;
     }
 
     private Node createFilterSection() {
@@ -267,51 +340,11 @@ public class IssueBookView implements BaseView {
         return gridPane;
     }
 
-    private Node createTableSection() {
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPadding(new Insets(25));
-        borderPane.setCenter(tableViewBook);
-        borderPane.setBottom(pagination);
-        return borderPane;
-    }
-
-    private Node createDetailSection() {
-        return new HBox(50, createSelectedBookSection(), createMemberSection());
-    }
-
-    private Node createSelectedBookSection() {
-        imageSelectedBookCover.setFitWidth(200);
-        imageSelectedBookCover.setPreserveRatio(true);
-        imageSelectedBookCover.setSmooth(true);
-        imageSelectedBookCover.setCache(true);
-
-        VBox vBox = new VBox(
-                15,
-                lblSelectedBookIsbn,
-                lblSelectedBookTitle,
-                lblSelectedBookAuthors,
-                lblSelectedBookGenres,
-                lblSelectedBookStatus
-        );
-        HBox hBox = new HBox(25, imageSelectedBookCover, vBox);
-        hBox.setPadding(new Insets(25));
-        return hBox;
-    }
-
-    private Node createMemberSection() {
-        return new HBox(
-                25,
-                lblMemberUsername,
-                tfMemberUsername
-        );
-    }
-
     private Node createFooter() {
         HBox hBox = new HBox(400, btnGoBack, btnIssueBook);
         hBox.setAlignment(Pos.CENTER);
         hBox.setPadding(new Insets(25));
         return hBox;
     }
-
 
 }

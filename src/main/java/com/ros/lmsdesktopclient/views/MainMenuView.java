@@ -43,6 +43,7 @@ public class MainMenuView implements BaseView{
     public void start(Stage stage) {
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getWidth());
+        scene.getStylesheets().add(getClass().getResource("/styles/main-menu-view.css").toExternalForm());
         bindComponents();
         stage.setScene(scene);
     }
@@ -81,19 +82,22 @@ public class MainMenuView implements BaseView{
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setCenter(createMenu());
+        borderPane.getTop().setId("header");
         return borderPane;
     }
 
     private Node createHeader() {
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPadding(new Insets(25));
-        borderPane.setCenter(lblHeaderTitle);
-        borderPane.setRight(menuBtnAccount);
-        return borderPane;
+        BorderPane header = new BorderPane();
+        header.setPadding(new Insets(25));
+        lblHeaderTitle.setId("lblHeaderTitle");
+        header.setCenter(lblHeaderTitle);
+        header.setRight(menuBtnAccount);
+        header.setId("header");
+        return header;
     }
 
     private Node createMenu() {
-        setSizeToAll(150,
+        setSizeToAll(160,
                 btnAddBook,
                 btnAddMember,
                 btnIssueBook,
@@ -102,10 +106,11 @@ public class MainMenuView implements BaseView{
                 btnShowStats,
                 btnManageAccounts,
                 btnAddStaff);
+
         TilePane tilePane = new TilePane();
         tilePane.setHgap(50);
         tilePane.setVgap(50);
-        tilePane.setPadding(new Insets(50));
+        tilePane.setPadding(new Insets(60));
         tilePane.setAlignment(Pos.CENTER);
         tilePane.getChildren()
                 .addAll(btnAddBook,
@@ -116,6 +121,7 @@ public class MainMenuView implements BaseView{
                         btnShowStats,
                         btnManageAccounts,
                         btnAddStaff);
+        tilePane.setId("menu-container");
         return tilePane;
     }
 

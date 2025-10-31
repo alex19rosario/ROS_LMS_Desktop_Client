@@ -43,10 +43,6 @@ public class AddMemberView implements BaseView {
     private PasswordField tfRepeatedPassword;
     private Button btnGoBack;
     private Button btnAddMember;
-    private Label lblPersonalSectionTitle;
-    private Label lblContactInfoSectionTitle;
-    private Label lblGovernmentIdSectionTitle;
-    private Label lblAccountCredentialSectionTitle;
     private ProgressIndicator progressIndicator;
 
     @Inject
@@ -58,6 +54,7 @@ public class AddMemberView implements BaseView {
     public void start(Stage stage) {
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        scene.getStylesheets().add(getClass().getResource("/styles/add-member-view.css").toExternalForm());
         bindComponents();
         stage.setScene(scene);
     }
@@ -86,10 +83,6 @@ public class AddMemberView implements BaseView {
         tfRepeatedPassword = new PasswordField();
         btnGoBack = new Button("Go Back");
         btnAddMember = new Button("Add Member");
-        lblPersonalSectionTitle = new Label("Personal Information");
-        lblContactInfoSectionTitle = new Label("Contact Information");
-        lblGovernmentIdSectionTitle = new Label("Government Identification");
-        lblAccountCredentialSectionTitle = new Label("Account Credentials");
         progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
 
@@ -126,95 +119,104 @@ public class AddMemberView implements BaseView {
     private Region createContent() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
-        borderPane.setCenter(createForm());
+
+        // Scrollable container for the form sections
+        VBox formSections = new VBox(
+                30,
+                createSectionCard("Personal Information", createPersonalInfoGrid()),
+                createSectionCard("Contact Information", createContactInfoGrid()),
+                createSectionCard("Government Identification", createGovernmentIdGrid()),
+                createSectionCard("Account Credentials", createAccountCredentialGrid())
+        );
+        formSections.setAlignment(Pos.CENTER);
+        formSections.setMaxWidth(900); // max width to keep form from stretching too much
+        formSections.getStyleClass().add("form-card");
+
+        // Centering wrapper
+        StackPane centeredWrapper = new StackPane(formSections);
+        centeredWrapper.setPadding(new Insets(20)); // optional padding
+        centeredWrapper.setAlignment(Pos.TOP_CENTER);
+
+        ScrollPane scrollPane = new ScrollPane(centeredWrapper);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+        borderPane.setCenter(scrollPane);
+
+        // Footer stays outside scroll pane
+        borderPane.setBottom(createFooter());
+
         return LoadingOverlay.wrap(borderPane, progressIndicator);
     }
 
     private Node createHeader() {
         HBox hBox = new HBox(lblHeaderTitle);
+        lblHeaderTitle.setId("lblHeaderTitle");
         hBox.setPadding(new Insets(25));
         hBox.setAlignment(Pos.CENTER);
+        hBox.setId("header");
         return hBox;
     }
 
-    private Node createForm() {
-        VBox vBox = new VBox(
-                25,
-                createPersonalInfoSection(),
-                createContactInfoSection(),
-                createGovernmentIdSection(),
-                createAccountCredentialSection(),
-                createFooter());
-        vBox.setAlignment(Pos.CENTER);
+    private VBox createSectionCard(String title, Node content) {
+        Label lblTitle = new Label(title);
+        lblTitle.getStyleClass().add("section-title");
+
+        VBox vBox = new VBox(15, lblTitle, content);
+        vBox.setPadding(new Insets(20));
+        vBox.getStyleClass().add("section-card");
         return vBox;
     }
 
-    private Node createPersonalInfoSection() {
-        BorderPane borderPane = new BorderPane();
-        HBox hBox = new HBox(lblPersonalSectionTitle);
-        hBox.setPadding(new Insets(15));
-        hBox.setAlignment(Pos.CENTER);
-        borderPane.setTop(hBox);
-        GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblFirstName, 1, 0);
-        gridPane.add(tfFirstName, 2, 0);
-        gridPane.add(lblLastName, 3, 0);
-        gridPane.add(tfLastName, 4, 0);
-        gridPane.add(lblDateOfBirth, 1, 1);
-        gridPane.add(dpDateOfBirth, 2, 1);
-        gridPane.add(lblSex, 3, 1);
-        gridPane.add(cbSex, 4, 1);
-        gridPane.setAlignment(Pos.CENTER);
-        borderPane.setCenter(gridPane);
-        return borderPane;
+    private GridPane createPersonalInfoGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.add(lblFirstName, 0, 0);
+        grid.add(tfFirstName, 1, 0);
+        grid.add(lblLastName, 2, 0);
+        grid.add(tfLastName, 3, 0);
+        grid.add(lblDateOfBirth, 0, 1);
+        grid.add(dpDateOfBirth, 1, 1);
+        grid.add(lblSex, 2, 1);
+        grid.add(cbSex, 3, 1);
+        return grid;
     }
 
-    private Node createContactInfoSection() {
-        BorderPane borderPane = new BorderPane();
-        HBox hBox = new HBox(lblContactInfoSectionTitle);
-        hBox.setPadding(new Insets(15));
-        hBox.setAlignment(Pos.CENTER);
-        borderPane.setTop(hBox);
-        GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblPhone, 1, 0);
-        gridPane.add(tfPhone, 2, 0);
-        gridPane.add(lblEmail, 1, 1);
-        gridPane.add(tfEmail, 2, 1);
-        gridPane.setAlignment(Pos.CENTER);
-        borderPane.setCenter(gridPane);
-        return borderPane;
+    private GridPane createContactInfoGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.add(lblPhone, 0, 0);
+        grid.add(tfPhone, 1, 0);
+        grid.add(lblEmail, 0, 1);
+        grid.add(tfEmail, 1, 1);
+        return grid;
     }
 
-    private Node createGovernmentIdSection() {
-        BorderPane borderPane = new BorderPane();
-        HBox hBox = new HBox(lblGovernmentIdSectionTitle);
-        hBox.setPadding(new Insets(15));
-        hBox.setAlignment(Pos.CENTER);
-        borderPane.setTop(hBox);
-        GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblGovernmentId, 1, 0);
-        gridPane.add(tfGovernmentId, 2, 0);
-        gridPane.setAlignment(Pos.CENTER);
-        borderPane.setCenter(gridPane);
-        return borderPane;
+    private GridPane createGovernmentIdGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.add(lblGovernmentId, 0, 0);
+        grid.add(tfGovernmentId, 1, 0);
+        return grid;
     }
 
-    private Node createAccountCredentialSection() {
-        BorderPane borderPane = new BorderPane();
-        HBox hBox = new HBox(lblAccountCredentialSectionTitle);
-        hBox.setPadding(new Insets(15));
-        hBox.setAlignment(Pos.CENTER);
-        borderPane.setTop(hBox);
-        GridPane gridPane = new GridPane(25, 25);
-        gridPane.add(lblUsername, 1, 0);
-        gridPane.add(tfUsername, 2, 0);
-        gridPane.add(lblPassword, 1, 1);
-        gridPane.add(tfPassword, 2, 1);
-        gridPane.add(lblRepeatedPassword, 1, 2);
-        gridPane.add(tfRepeatedPassword, 2, 2);
-        gridPane.setAlignment(Pos.CENTER);
-        borderPane.setCenter(gridPane);
-        return borderPane;
+    private GridPane createAccountCredentialGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.add(lblUsername, 0, 0);
+        grid.add(tfUsername, 1, 0);
+        grid.add(lblPassword, 0, 1);
+        grid.add(tfPassword, 1, 1);
+        grid.add(lblRepeatedPassword, 0, 2);
+        grid.add(tfRepeatedPassword, 1, 2);
+        return grid;
     }
 
     private Node createFooter() {

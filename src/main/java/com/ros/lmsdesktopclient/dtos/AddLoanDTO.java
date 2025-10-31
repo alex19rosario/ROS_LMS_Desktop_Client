@@ -2,13 +2,13 @@ package com.ros.lmsdesktopclient.dtos;
 
 /**
  *
- * @param bookId
+ * @param bookIsbn
  * @param memberUsername
  * @param staffUsername
  */
 
 public record AddLoanDTO(
-        long bookId,
+        String bookIsbn,
         String memberUsername,
         String staffUsername
 ) {}

@@ -1,0 +1,90 @@
+/* ===== Base Styling ===== */
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Roboto", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #f7f8fa, #eaecef);
+}
+
+/* ===== Header ===== */
+.hbox {
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-text-fill: #2e2e2e;
+}
+
+#lblHeaderTitle {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b2b2b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.2, 0, 2);
+}
+
+/* ===== Login Card ===== */
+.vbox {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 50 60 50 60;
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0.3, 0, 5);
+}
+
+/* ===== Input Fields ===== */
+.text-field, .password-field {
+    -fx-background-color: #f3f5f7;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 10 15;
+    -fx-font-size: 15px;
+    -fx-text-fill: #2c2c2c;
+    -fx-prompt-text-fill: #888;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #3f8efc;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(63,142,252,0.25), 10, 0.3, 0, 3);
+}
+
+/* ===== Labels ===== */
+#lblUsername, #lblPassword {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+    -fx-font-weight: 600;
+}
+
+/* ===== Login Button ===== */
+.button {
+    -fx-background-color: linear-gradient(to right, #3f8efc, #0052cc);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 40;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(63,142,252,0.3), 8, 0.2, 0, 3);
+    -fx-transition: 0.3s;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #5690ff, #2266dd);
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(to right, #2d6ff2, #0040b0);
+    -fx-translate-y: 1;
+}
+
+/* ===== Progress Indicator Overlay ===== */
+.progress-indicator {
+    -fx-progress-color: #3f8efc;
+}
+
+/* ===== Optional Centering for BorderPane ===== */
+.border-pane {
+    -fx-padding: 50;
+    -fx-alignment: center;
+}

@@ -78,7 +78,7 @@ class IssueBookCommandTest {
 
         // Assert
         verify(loanService).issueBook(argThat(dto ->
-                dto.bookId() == 1L &&
+                dto.bookIsbn().equalsIgnoreCase("9788489848") &&
                         dto.memberUsername().equals("member1") &&
                         dto.staffUsername().equals("librarian")
         ));
@@ -210,7 +210,7 @@ class IssueBookCommandTest {
     private BookDisplayModel createTestBook(boolean available) {
         BookDisplayModel book = new BookDisplayModel();
         book.setId(1L);
-        book.setIsbn("12345");
+        book.setIsbn("9788489848");
         book.setTitle("Test Book");
         book.setStatus(available ? BookStatus.AVAILABLE.toString() : BookStatus.UNAVAILABLE.toString());
         return book;
