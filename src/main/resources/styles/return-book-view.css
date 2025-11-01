@@ -1,0 +1,100 @@
+/* ===== Root Background ===== */
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Roboto", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #f7f8fa, #eaecef);
+}
+
+/* ===== Header ===== */
+#header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 3);
+}
+
+#lblHeaderTitle {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b2b2b;
+}
+
+/* ===== Form Section ===== */
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 50 80;
+    -fx-spacing: 35;
+    -fx-alignment: center;
+    -fx-max-width: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0.3, 0, 4);
+}
+
+/* ===== Labels ===== */
+.label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #444;
+    -fx-font-weight: 600;
+}
+
+/* ===== Text Fields ===== */
+.text-field {
+    -fx-background-color: #f3f5f7;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 12 18;
+    -fx-font-size: 15px;
+    -fx-text-fill: #2c2c2c;
+    -fx-pref-width: 280;
+}
+
+.text-field:focused {
+    -fx-border-color: #3f8efc;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(63,142,252,0.25), 8, 0.3, 0, 3);
+}
+
+/* ===== Footer Buttons ===== */
+.button {
+    -fx-background-radius: 12;
+    -fx-padding: 10 35;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0.2, 0, 1);
+}
+
+/* Primary Action */
+#btnReturnBook {
+    -fx-background-color: linear-gradient(to right, #3f8efc, #0052cc);
+    -fx-text-fill: white;
+}
+
+#btnReturnBook:hover {
+    -fx-background-color: linear-gradient(to right, #5690ff, #2266dd);
+}
+
+/* Secondary Action */
+#btnGoBack {
+    -fx-background-color: #f0f2f6;
+    -fx-text-fill: #333;
+}
+
+#btnGoBack:hover {
+    -fx-background-color: #e5e7eb;
+}
+
+/* ===== Progress Indicator ===== */
+.progress-indicator {
+    -fx-progress-color: #3f8efc;
+}
+
+/* ===== Layout Enhancements ===== */
+.grid-pane {
+    -fx-hgap: 20;
+    -fx-vgap: 15;
+    -fx-alignment: center;
+}
+
+/* ===== Smooth Transitions ===== */
+.text-field, .button {
+    -fx-transition: all 0.25s ease-in-out;
+}

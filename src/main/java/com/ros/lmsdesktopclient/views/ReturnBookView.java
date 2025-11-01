@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 public class ReturnBookView implements BaseView {
 
@@ -32,7 +33,7 @@ public class ReturnBookView implements BaseView {
     public void start(Stage stage) {
         initComponents();
         Scene scene = new Scene(createContent(), stage.getScene().getWidth(), stage.getScene().getHeight());
-        scene.getStylesheets().add(getClass().getResource("/styles/return-book-view.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/return-book-view.css")).toExternalForm());
         bindComponents();
         stage.setScene(scene);
     }
@@ -93,7 +94,11 @@ public class ReturnBookView implements BaseView {
         gridPane.add(lblBookIsbn, 0, 0);
         gridPane.add(tfBookIsbn, 1, 0);
         gridPane.setAlignment(Pos.CENTER);
-        return gridPane;
+
+        VBox formCard = new VBox(gridPane);
+        formCard.getStyleClass().add("form-card");
+        formCard.setAlignment(Pos.CENTER);
+        return formCard;
     }
 
     private Node createFooter() {
