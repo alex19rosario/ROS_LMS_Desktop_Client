@@ -6,6 +6,7 @@ public enum CommandType {
     OPEN_VIEW_ADD_BOOK,
     OPEN_VIEW_ADD_MEMBER,
     OPEN_VIEW_ISSUE_BOOK,
+    OPEN_VIEW_RETURN_BOOK,
     OPEN_VIEW_MAIN_MENU,
     ADD_AUTHOR,
     ADD_GENRE,
@@ -17,5 +18,6 @@ public enum CommandType {
     LOAD_BOOKS,
     SELECT_BOOK,
     ISSUE_BOOK,
-    GET_GENRES;
+    GET_GENRES,
+    RETURN_BOOK;
 }

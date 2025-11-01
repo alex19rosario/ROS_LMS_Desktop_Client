@@ -1,8 +1,10 @@
 package com.ros.lmsdesktopclient.services.service_impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
+import com.ros.lmsdesktopclient.dtos.ReturnBookDTO;
 import com.ros.lmsdesktopclient.services.service.LoanService;
 import com.ros.lmsdesktopclient.util.enums.ApiUrls;
 import com.ros.lmsdesktopclient.util.TokenHandler;
@@ -64,6 +66,51 @@ public class LoanServiceImpl implements LoanService {
                         throw new MemberHasActiveLoanException("The member '" + addLoanDTO.memberUsername() + "' has an active loan.");
                     } else if (body.contains("Member Has Overdue Loan")) {
                         throw new MemberHasOverdueLoanException("The member '" + addLoanDTO.memberUsername() + "' has an overdue loan.");
+                    }
+                }
+                case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");
+                default -> throw new ServerErrorException("Unexpected response from server: " + response.statusCode());
+            }
+
+        } catch (IOException e) {
+            throw new NetworkException("Network error: " + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new NetworkException("Request was interrupted: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void returnBook(ReturnBookDTO returnBookDTO) throws NetworkException, ServerErrorException, ExpiredSessionException, BookNotRegisteredException, BookAlreadyInStockException {
+        String token = tokenHandler
+                .getToken()
+                .orElseThrow(() -> new ExpiredSessionException("No token found. Please log in again."));
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+
+            String jsonPayload = objectMapper.writeValueAsString(returnBookDTO);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ApiUrls.LOANS.getUrl()))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            switch (response.statusCode()) {
+                case 200 -> { /* OK */ }
+                case 400 -> {
+                    JsonNode problem = objectMapper.readTree(response.body());
+                    String detail = problem.path("detail").asText();
+                    String body = response.body();
+
+                    if (body.contains("Book Not Registered")) {
+                        throw new BookNotRegisteredException(detail);
+                    } else if (body.contains("Book Already in Stock")) {
+                        throw new BookAlreadyInStockException(detail);
                     }
                 }
                 case 401, 403 -> throw new ExpiredSessionException("Session expired. Please log in again.");

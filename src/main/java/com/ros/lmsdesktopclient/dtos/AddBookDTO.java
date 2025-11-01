@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  *
- * @param ISBN
+ * @param isbn
  * @param title
  * @param authors
  * @param genres
@@ -12,7 +12,7 @@ import java.io.File;
  * @param coverImage
  */
 public record AddBookDTO(
-        String ISBN,
+        String isbn,
         String title,
         String authors,
         String genres,

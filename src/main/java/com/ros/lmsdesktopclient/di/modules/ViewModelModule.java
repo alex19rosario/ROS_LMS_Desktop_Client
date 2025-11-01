@@ -53,6 +53,12 @@ public abstract class ViewModelModule {
 
     @Provides
     @Singleton
+    static ReturnBookViewModel returnBookViewModel(ReturnBookModel returnBookModel, Map<CommandType, Command> commands) {
+        return new ReturnBookViewModel(returnBookModel, commands);
+    }
+
+    @Provides
+    @Singleton
     static LoginViewModel loginViewModel(LoginModel loginModel, Map<CommandType, Command> commands) {
         return new LoginViewModel(loginModel, commands);
     }

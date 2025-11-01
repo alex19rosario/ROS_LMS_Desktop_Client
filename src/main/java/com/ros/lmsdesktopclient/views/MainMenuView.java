@@ -76,6 +76,7 @@ public class MainMenuView implements BaseView{
         btnAddBook.setOnAction(actionEvent -> mainMenuViewModel.executeOpenAddBookViewCommand());
         btnAddMember.setOnAction(actionEvent -> mainMenuViewModel.executeOpenAddMemberViewCommand());
         btnIssueBook.setOnAction(actionEvent -> mainMenuViewModel.executeOpenIssueBookViewCommand());
+        btnReturnBook.setOnAction(actionEvent -> mainMenuViewModel.executeOpenReturnBookViewCommand());
     }
 
     private Region createContent() {

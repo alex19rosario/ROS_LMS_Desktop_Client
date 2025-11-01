@@ -1,6 +1,7 @@
 package com.ros.lmsdesktopclient.services;
 
 import com.ros.lmsdesktopclient.dtos.AddLoanDTO;
+import com.ros.lmsdesktopclient.dtos.ReturnBookDTO;
 import com.ros.lmsdesktopclient.services.service_impl.LoanServiceImpl;
 import com.ros.lmsdesktopclient.util.TokenHandler;
 import com.ros.lmsdesktopclient.util.exceptions.*;
@@ -190,4 +191,141 @@ class LoanServiceImplTest {
         assertEquals("john_doe", loanDTO.memberUsername());
         assertEquals("staff_1", loanDTO.staffUsername());
     }
+
+    // ----------------------------------------------------
+// TESTS FOR returnBook()
+// ----------------------------------------------------
+
+    @Test
+    void returnBook_successful() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(200);
+
+        loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"));
+
+        verify(httpClient).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
+        verify(tokenHandler).getToken();
+    }
+
+    @Test
+    void returnBook_bookNotRegistered() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(400);
+        when(httpResponse.body()).thenReturn("""
+        {
+          "title": "Book Not Registered",
+          "detail": "This book is not registered in the system."
+        }
+    """);
+
+        BookNotRegisteredException ex = assertThrows(
+                BookNotRegisteredException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("This book is not registered"));
+    }
+
+    @Test
+    void returnBook_bookAlreadyInStock() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(400);
+        when(httpResponse.body()).thenReturn("""
+        {
+          "title": "Book Already in Stock",
+          "detail": "The book is already marked as in stock."
+        }
+    """);
+
+        BookAlreadyInStockException ex = assertThrows(
+                BookAlreadyInStockException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("already marked as in stock"));
+    }
+
+    @Test
+    void returnBook_sessionExpired_unauthorized() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(401);
+
+        assertThrows(ExpiredSessionException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1")));
+    }
+
+    @Test
+    void returnBook_sessionExpired_forbidden() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(403);
+
+        assertThrows(ExpiredSessionException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1")));
+    }
+
+    @Test
+    void returnBook_unexpectedStatusCode_shouldThrowServerErrorException() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(httpResponse);
+        when(httpResponse.statusCode()).thenReturn(418);
+
+        ServerErrorException ex = assertThrows(
+                ServerErrorException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("Unexpected response from server: 418"));
+    }
+
+    @Test
+    void returnBook_shouldThrowNetworkException_whenIOExceptionOccurs() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new IOException("connection lost"));
+
+        NetworkException ex = assertThrows(
+                NetworkException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("Network error: connection lost"));
+    }
+
+    @Test
+    void returnBook_shouldThrowNetworkException_whenInterruptedExceptionOccurs() throws Exception {
+        when(tokenHandler.getToken()).thenReturn(Optional.of("token"));
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new InterruptedException("timeout"));
+
+        NetworkException ex = assertThrows(
+                NetworkException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("Request was interrupted: timeout"));
+    }
+
+    @Test
+    void returnBook_shouldThrowExpiredSessionException_whenNoTokenFound() {
+        when(tokenHandler.getToken()).thenReturn(Optional.empty());
+
+        ExpiredSessionException ex = assertThrows(
+                ExpiredSessionException.class,
+                () -> loanService.returnBook(new ReturnBookDTO("1234567890", "staff_1"))
+        );
+
+        assertTrue(ex.getMessage().contains("No token found"));
+    }
+
 }
