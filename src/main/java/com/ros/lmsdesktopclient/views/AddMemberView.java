@@ -108,8 +108,8 @@ public class AddMemberView implements BaseView {
         tfPassword.textProperty().bindBidirectional(addMemberViewModel.getMemberModel().passwordProperty());
         tfRepeatedPassword.textProperty().bindBidirectional(addMemberViewModel.getMemberModel().repeatedPasswordProperty());
 
-        btnAddMember.setOnAction(actionEvent -> addMemberViewModel.executeAddMemberCommand());
-        btnGoBack.setOnAction(actionEvent -> addMemberViewModel.executeOpenMainViewCommand());
+        btnAddMember.setOnAction(_ -> addMemberViewModel.executeAddMemberCommand());
+        btnGoBack.setOnAction(_ -> addMemberViewModel.executeOpenMainViewCommand());
 
         // Bind progress indicator visibility and progress
         progressIndicator.visibleProperty().bind(addMemberViewModel.getAddMemberCommand().runningProperty());

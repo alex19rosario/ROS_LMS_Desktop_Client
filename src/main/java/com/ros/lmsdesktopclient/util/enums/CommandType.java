@@ -18,5 +18,6 @@ public enum CommandType {
     LOAD_BOOKS,
     SELECT_BOOK,
     ISSUE_BOOK,
-    GET_GENRES;
+    GET_GENRES,
+    RETURN_BOOK;
 }

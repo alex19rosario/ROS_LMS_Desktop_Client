@@ -48,7 +48,14 @@ public class ReturnBookView implements BaseView {
     }
 
     private void bindComponents() {
-        
+        tfBookIsbn.textProperty().bindBidirectional(returnBookViewModel.getReturnBookModel().isbnProperty());
+        btnReturnBook.setOnAction(_ -> returnBookViewModel.executeReturnBookCommand());
+        btnGoBack.setOnAction(_ -> returnBookViewModel.executeOpenMainViewCommand());
+
+        // Bind progress indicator visibility and progress
+        progressIndicator.visibleProperty().bind(returnBookViewModel.getReturnBookCommand().runningProperty());
+        progressIndicator.progressProperty().bind(returnBookViewModel.getReturnBookCommand().progressProperty());
+
     }
 
     private Region createContent() {

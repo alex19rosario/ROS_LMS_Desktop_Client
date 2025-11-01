@@ -29,7 +29,10 @@ public enum Alerts {
     BOOK_NOT_AVAILABLE("Book Not Available", "Selected Book is not Available", Alert.AlertType.ERROR),
     MEMBER_NOT_FOUND("Member Not Found", "Member was not Found", Alert.AlertType.ERROR),
     MEMBER_ACTIVE_LOAN("Member Active Loan", "Member has Already an Active Loan", Alert.AlertType.ERROR),
-    MEMBER_OVERDUE_LOAN("Member Overdue Loan", "Member has an Overdue Loan", Alert.AlertType.ERROR);
+    MEMBER_OVERDUE_LOAN("Member Overdue Loan", "Member has an Overdue Loan", Alert.AlertType.ERROR),
+    BOOK_RETURNED_SUCCESS("Success", "Book Returned Successfully", Alert.AlertType.INFORMATION),
+    BOOK_NOT_REGISTERED("Book Not Registered", "Book Not Registered", Alert.AlertType.ERROR),
+    BOOK_IN_STOCK("Book In Stock", "Book is already in Stock", Alert.AlertType.ERROR);
 
 
     private final String title;

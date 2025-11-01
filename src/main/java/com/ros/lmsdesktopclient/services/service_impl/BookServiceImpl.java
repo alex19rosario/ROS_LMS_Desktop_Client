@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
             StringBuilder sb = new StringBuilder();
 
             // Add text fields (isbn, title, authors, genres) with correct boundary and format
-            appendFormField(sb, "isbn", String.valueOf(book.ISBN()), boundary);
+            appendFormField(sb, "isbn", String.valueOf(book.isbn()), boundary);
             appendFormField(sb, "title", book.title(), boundary);
             appendFormField(sb, "authors", book.authors(), boundary);
             appendFormField(sb, "staffUsername", book.staffUsername(), boundary);
@@ -217,7 +217,7 @@ public class BookServiceImpl implements BookService {
         String isbnRegex = "^(\\d{10}|\\d{13})$";
 
         // Check if the book's ISBN matches the regex
-        if (book == null || !String.valueOf(book.ISBN()).matches(isbnRegex)) {
+        if (book == null || !String.valueOf(book.isbn()).matches(isbnRegex)) {
             throw new InvalidISBNException("Invalid ISBN: The specified ISBN does not have the correct format.");
         }
     }

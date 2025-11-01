@@ -118,6 +118,11 @@ public abstract class CommandModule {
     @CommandTypeKey(CommandType.GET_GENRES)
     abstract Command getGenresCommand(GetGenresCommand command);
 
+    @Binds
+    @IntoMap
+    @CommandTypeKey(CommandType.RETURN_BOOK)
+    abstract Command returnBookCommand(ReturnBookCommand command);
+
     @Provides
     @LoginCommandQualifier
     static Command provideLoginViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
