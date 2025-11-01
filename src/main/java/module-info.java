@@ -8,6 +8,7 @@ module com.example.lmsdesktopclient {
     requires javax.inject;
     requires java.desktop;
     requires java.prefs;
+    requires javafx.graphics;
 
     opens com.ros.lmsdesktopclient.models to javafx.base;
     opens com.ros.lmsdesktopclient.util to com.fasterxml.jackson.databind;

@@ -11,6 +11,7 @@ public class MainMenuViewModel {
     private final Command openAddBookViewCommand;
     private final Command openAddMemberViewCommand;
     private final Command openIssueBookViewCommand;
+    private final Command openReturnBookViewCommand;
 
     @Inject
     public MainMenuViewModel(Map<CommandType, Command> commands){
@@ -18,6 +19,7 @@ public class MainMenuViewModel {
         openAddBookViewCommand = commands.get(CommandType.OPEN_VIEW_ADD_BOOK);
         openAddMemberViewCommand = commands.get(CommandType.OPEN_VIEW_ADD_MEMBER);
         openIssueBookViewCommand = commands.get(CommandType.OPEN_VIEW_ISSUE_BOOK);
+        openReturnBookViewCommand = commands.get(CommandType.OPEN_VIEW_RETURN_BOOK);
     }
 
     public void executeLogOutCommand(){
@@ -35,4 +37,6 @@ public class MainMenuViewModel {
     public void executeOpenIssueBookViewCommand() {
         openIssueBookViewCommand.execute();
     }
+
+    public void executeOpenReturnBookViewCommand() { openReturnBookViewCommand.execute(); }
 }

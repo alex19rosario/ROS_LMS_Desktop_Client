@@ -5,5 +5,6 @@ public enum ViewType {
     MAIN_MENU,
     ADD_BOOK,
     ADD_MEMBER,
-    ISSUE_BOOK
+    ISSUE_BOOK,
+    RETURN_BOOK
 }

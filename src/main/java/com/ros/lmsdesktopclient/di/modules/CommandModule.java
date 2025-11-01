@@ -54,6 +54,13 @@ public abstract class CommandModule {
 
     @Provides
     @IntoMap
+    @CommandTypeKey(CommandType.OPEN_VIEW_RETURN_BOOK)
+    static Command openReturnBookViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
+        return new OpenViewCommand(ViewType.RETURN_BOOK, executorService, viewHandler, javaFxUiExecutor);
+    }
+
+    @Provides
+    @IntoMap
     @CommandTypeKey(CommandType.OPEN_VIEW_MAIN_MENU)
     static Command openMainViewCommand(ExecutorService executorService, ViewHandler viewHandler, UiExecutor javaFxUiExecutor) {
         return new OpenViewCommand(ViewType.MAIN_MENU, executorService, viewHandler, javaFxUiExecutor);

@@ -34,4 +34,9 @@ public abstract class ViewModule {
     @IntoMap
     @ViewTypeKey(ViewType.ISSUE_BOOK)
     abstract BaseView issueBookView(IssueBookView view);
+
+    @Binds
+    @IntoMap
+    @ViewTypeKey(ViewType.RETURN_BOOK)
+    abstract BaseView returnBookView(ReturnBookView view);
 }
